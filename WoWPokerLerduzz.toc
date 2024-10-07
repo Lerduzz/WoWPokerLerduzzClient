@@ -1,0 +1,16 @@
+## Interface: 100002
+## Title : WoW Poker Lerduzz
+## Author: Lerduzz
+## Notes: Web: www.lerduzz.com
+## Version: v4.1.7
+## SavedVariables: FHS_ArtWork, FHS_StartChips, FHS_BlindIncrease, FHS_BigBlindStart, FHS_minimapIcon
+Libs\LibStub\LibStub.lua
+Libs\LibSimpleOptions-1.0\lib.xml
+##Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\CallbackHandler-1.0\CallbackHandler-1.0\CallbackHandler-1.0.xml
+Libs\libdatabroker-1-1\LibDataBroker-1.1.lua
+localization.enUS.lua
+localization.deDE.lua
+localization.frFR.lua
+localization.ruRU.lua
+WoWPokerLerduzz.lua
