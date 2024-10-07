@@ -224,7 +224,7 @@ function FHSPoker_OnLoad()
 
 	StaticPopupDialogs["FHS_DEALER"] = 
 	{
-		text = L["Do you wish to start Dealing?"] .."\n".. L['To join a game use /holdem dealer <playername>'],
+		text = L["Do you wish to start Dealing?"] .."\n".. L["To join a game use '/holdem dealer <playername>'"],
 			button1 = L['Start Dealing'],
 			button2 = L['Cancel'],
 			button3 = L['Options'],

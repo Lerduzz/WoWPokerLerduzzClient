@@ -58,9 +58,9 @@ MyLocalization = setmetatable(
 		['Royal Flush'] = 'Escalera real',
 		['%s full of %s'] = '%s full of %s',
 		['Straight Flush to the %s'] = 'Straight Flush to the %s',
-		['Flush: %s high'] = 'Flush: %s high',
+		['Flush: %s high'] = 'Color: %s (carta mayor)',
 		['Straight to the %s'] = 'Straight to the %s',
-		['%s over %s'] = '%s over %s',
+		['%s over %s'] = '%s sobre %s',
 		
 		["Do you wish to start Dealing?"] = '¿Deseas comenzar la partida?',
 		["To join a game use '/holdem dealer <playername>'"] = "Para unirte a un juego usa '/holdem dealer <playername>'",
