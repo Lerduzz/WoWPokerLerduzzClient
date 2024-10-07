@@ -224,7 +224,7 @@ function FHSPoker_OnLoad()
 
 	StaticPopupDialogs["FHS_DEALER"] = 
 	{
-		text = L["Do you wish to start Dealing?"] .."\n".. L["To join a game use '/holdem dealer <playername>'"],
+		text = L["Do you wish to start Dealing?"] .."\n".. L["To join a game use '/poker dealer <playername>'"],
 			button1 = L['Start Dealing'],
 			button2 = L['Cancel'],
 			button3 = L['Options'],
@@ -247,7 +247,7 @@ function FHSPoker_OnLoad()
     FHSPoker_registerEvents();
 	    
 	FHS_Console_Feedback("::  "..L['WoW Poker Lerduzz'] .." ".. FHS_HOLDEM_version.." "..L['a Fork of AnzacHoldem']);
-	FHS_Console_Feedback("::  "..L['Use \'/holdem help\' for slash command options'])
+	FHS_Console_Feedback("::  "..L['Use \'/poker help\' for slash command options'])
 	
 	-- Initialize Seat Rings
 	for j=1,5 do
@@ -361,11 +361,11 @@ function SeatSlashCommand(msg)
 			
 		elseif ( args[1]=="help") then
 			-- Otherwise output usage text
-			FHS_Console_Feedback("::  "..L['Use \'/holdem\' to start a table as the dealer.']);
-			FHS_Console_Feedback("::  "..L['Use \'/holdem dealer <playername>\' to join someone elses table.']);
-			FHS_Console_Feedback("::  "..L['Use \'/holdem dealers\' to find dealers in your guild/party/raid.']);
-			FHS_Console_Feedback("::  "..L['Use \'/holdem clients\' to find clients in your guild/party/raid.']);
-			FHS_Console_Feedback("::  "..L['Use \'/holdem options\' for options panel']);
+			FHS_Console_Feedback("::  "..L['Use \'/poker\' to start a table as the dealer.']);
+			FHS_Console_Feedback("::  "..L['Use \'/poker dealer <playername>\' to join someone elses table.']);
+			FHS_Console_Feedback("::  "..L['Use \'/poker dealers\' to find dealers in your guild/party/raid.']);
+			FHS_Console_Feedback("::  "..L['Use \'/poker clients\' to find clients in your guild/party/raid.']);
+			FHS_Console_Feedback("::  "..L['Use \'/poker options\' for options panel']);
 			
 		else
 			SeatSlashCommand("help")
@@ -467,7 +467,7 @@ function FHSPoker_registerEvents()
 	FHSPokerFrame:RegisterEvent("CHAT_MSG_ADDON");
     
 	--Initialize Commands
-	SLASH_FHSPOKER1 = "/holdem";
+	SLASH_FHSPOKER1 = "/poker";
 	
 	SlashCmdList["FHSPOKER"] = function(msg)
 		SeatSlashCommand(msg);
@@ -1356,7 +1356,7 @@ function FHS_HandleAddonComms(msg, channel, sender)
 	if (tab[3]=="!seat") then
 		--player tried to seat themselves.. assume they want to be a dealer
 		if (sender==UnitName("player")) then
-			FHS_Console_Feedback(L['Use just /holdem instead'])
+			FHS_Console_Feedback(L['Use just /poker instead'])
 		elseif (IsDealer==1) then
 			FHS_SendMessage("ping!",sender)
 		end
