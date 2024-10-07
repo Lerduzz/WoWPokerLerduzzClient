@@ -485,7 +485,7 @@ function FHSPoker_OnEvent(self, event, ...)
 
 	if (event == "PLAYER_ENTERING_WORLD") then
 		FHS_Debug_Feedback("PLAYER_ENTERING_WORLD" );
-		RegisterAddonMessagePrefix("VodkaHoldem")
+		-- C_ChatInfo.RegisterAddonMessagePrefix("VodkaHoldem") : No se como es en LK.
 		
 	elseif (event == "ADDON_LOADED") then
 		arg1 = ...;
