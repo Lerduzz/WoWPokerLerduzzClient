@@ -663,7 +663,7 @@ function FHSPoker_OnEvent(self, event, ...)
 
 	if (event == "PLAYER_ENTERING_WORLD") then
 		FHS_Debug_Feedback("PLAYER_ENTERING_WORLD" );
-		C_ChatInfo.RegisterAddonMessagePrefix("VodkaHoldem")
+		RegisterAddonMessagePrefix("VodkaHoldem")
 		
 	elseif (event == "ADDON_LOADED") then
 		arg1 = ...;
@@ -1829,7 +1829,7 @@ end
 
 function FHS_SendMessage(msg,username)
 	FHS_Debug_Feedback("addon whisper "..msg.." to "..username);
-	C_ChatInfo.SendAddonMessage("VodkaHoldem", "FHS_".. FHS_COMMS_version.."_"..msg, "WHISPER", username);
+	SendAddonMessage("VodkaHoldem", "FHS_".. FHS_COMMS_version.."_"..msg, "WHISPER", username);
 end;
 
 
