@@ -47,10 +47,10 @@ local RoundCount=0;
 
 local VodkaHoldem_options_panel;
 
-local OriginalCardTexture = "interface\\addons\\WoWTexasHoldem\\textures\\blank"
-local NeutralCardTexture = "interface\\addons\\WoWTexasHoldem\\textures\\blank_n"
-local AllianceCardTexture = "interface\\addons\\WoWTexasHoldem\\textures\\blank_a"
-local HordeCardTexture = "interface\\addons\\WoWTexasHoldem\\textures\\blank_h"
+local OriginalCardTexture = "interface\\addons\\WoWPokerLerduzz\\textures\\blank"
+local NeutralCardTexture = "interface\\addons\\WoWPokerLerduzz\\textures\\blank_n"
+local AllianceCardTexture = "interface\\addons\\WoWPokerLerduzz\\textures\\blank_a"
+local HordeCardTexture = "interface\\addons\\WoWPokerLerduzz\\textures\\blank_h"
 
 --Single
 
@@ -489,7 +489,7 @@ function FHSPoker_OnEvent(self, event, ...)
 		
 	elseif (event == "ADDON_LOADED") then
 		arg1 = ...;
-		if (arg1 == "WoWTexasHoldem") then
+		if (arg1 == "WoWPokerLerduzz") then
 		
 			FHS_Debug_Feedback("Addon loaded" .. arg1);
 			if ( FHS_Artwork == nil) then
@@ -1685,7 +1685,7 @@ end
 function FHS_Debug_Feedback(msg)
 	if ( FHS_DEBUGING) then
 		if DLAPI then
-			DLAPI.DebugLog("WoWTexasHoldem", msg)
+			DLAPI.DebugLog("WoWPokerLerduzz", msg)
 		else
 			DEFAULT_CHAT_FRAME:AddMessage(msg);
 		end
@@ -3263,12 +3263,12 @@ end
 function FHS_Setup_LDB()
 	if ( FHS_ldbIcon ) then
 		FHS_LDBObject = ldb:NewDataObject(
-			"WoWTexasHoldem",
+			"WoWPokerLerduzz",
 			{
 				type = "data source",
 				text = L['WoW Poker Lerduzz'],
-				label = "WoWTexasHoldem",
-				icon = "interface\\addons\\WoWTexasHoldem\\textures\\mapicon",
+				label = "WoWPokerLerduzz",
+				icon = "interface\\addons\\WoWPokerLerduzz\\textures\\mapicon",
 				OnClick  = function(clickedframe, button) FHS_LauncherClicked(button) end,
 				iconCoords = {0.25,.75,0.25,.75},
 			})
@@ -3330,14 +3330,14 @@ function FHS_SetupTableFrame()
 	tableFrame:SetPoint("CENTER",UIParent,"CENTER",0,0);
 	
 	tableFrame:SetBackdrop( { 
-		bgFile = "interface\\addons\\WoWTexasHoldem\\textures\\felt", 
+		bgFile = "interface\\addons\\WoWPokerLerduzz\\textures\\felt", 
 		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
 		tile = true, tileSize = 16, edgeSize = 16, 
 		insets = { left = 5, right = 5, top = 5, bottom = 5 }
 	});
 	
 	local circleTexture = tableFrame:CreateTexture("FHS_CCirc","OVERLAY");
-	circleTexture:SetTexture("interface\\addons\\WoWTexasHoldem\\textures\\circle");
+	circleTexture:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\circle");
 	circleTexture:SetTexCoord(0,1,0,1);
 	circleTexture:SetWidth(512);tableFrame:SetHeight(512);
 	circleTexture:SetPoint("CENTER",tableFrame,"CENTER",0,10)
@@ -3380,7 +3380,7 @@ function FHS_SetupMiniMapButton()
 	
 	local miniMapButtonTexture = miniMapButton:CreateTexture("FHSPoker_MapIcon", "BACKGROUND")
 	
-	miniMapButtonTexture:SetTexture("interface\\addons\\WoWTexasHoldem\\textures\\mapicon");
+	miniMapButtonTexture:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\mapicon");
 	miniMapButtonTexture:SetWidth(32);miniMapButtonTexture:SetHeight(32);
 	miniMapButtonTexture:SetPoint("CENTER",miniMapButton,"CENTER",0,0);
 	
@@ -3431,7 +3431,7 @@ function FHS_SetupTopButtons()
 	setSizeButton:SetPoint("TOPRIGHT",FHSPokerFrame,"TOPRIGHT",-40,-10);
 	
 	local setSizeIconButton = setSizeButton:CreateTexture("FHSPoker_MinimizeMapIcon", "BACKGROUND")
-	setSizeIconButton:SetTexture("interface\\addons\\WoWTexasHoldem\\textures\\mapicon_g");
+	setSizeIconButton:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\mapicon_g");
 	setSizeIconButton:SetHeight(32);setSizeIconButton:SetWidth(32);
 	setSizeIconButton:SetPoint("CENTER",setSizeButton,"CENTER",0,0);
 	
@@ -3445,7 +3445,7 @@ function FHS_SetupTopButtons()
 	minimizeButton:SetPoint("TOPRIGHT",FHSPokerFrame,"TOPRIGHT",-10,-10);
 	
 	local minimizeIconButton = minimizeButton:CreateTexture("FHSPoker_MinimizeMapIcon", "BACKGROUND")
-	minimizeIconButton:SetTexture("interface\\addons\\WoWTexasHoldem\\textures\\mapicon");
+	minimizeIconButton:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\mapicon");
 	minimizeIconButton:SetHeight(32);minimizeIconButton:SetWidth(32);
 	minimizeIconButton:SetPoint("CENTER",minimizeButton,"CENTER",0,0);
 	
@@ -3735,26 +3735,26 @@ function FHS_SetupSeatFrames()
 		seatFramePort:SetPoint("CENTER",seatFrame,"CENTER",100,0);
 		
 		local seatFramePortWho = seatFrame:CreateTexture(seatFrame:GetName().."_PortWho","BACKGROUND");
-		seatFramePortWho:SetTexture("interface\\addons\\WoWTexasHoldem\\textures\\unknown");
+		seatFramePortWho:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\unknown");
 		seatFramePortWho:SetWidth(60);seatFramePortWho:SetHeight(60);
 		seatFramePortWho:SetTexCoord(0,1,0,1);
 		seatFramePortWho:SetPoint("CENTER",seatFrame,"CENTER",100,0);
 		
 		local seatFrameRing = seatFrame:CreateTexture(seatFrame:GetName().."_Ring","BORDER");
-		seatFrameRing:SetTexture("interface\\addons\\WoWTexasHoldem\\textures\\ring");
+		seatFrameRing:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\ring");
 		seatFrameRing:SetWidth(128);seatFrameRing:SetHeight(128);
 		seatFrameRing:SetTexCoord(0,1,0,1);
 		seatFrameRing:SetPoint("CENTER",seatFrame,"CENTER",116,-22);
 		
 		local seatFrameRingSelect = seatFrame:CreateTexture(seatFrame:GetName().."_RingSelect","BORDER");
-		seatFrameRingSelect:SetTexture("interface\\addons\\WoWTexasHoldem\\textures\\ring_select");
+		seatFrameRingSelect:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\ring_select");
 		seatFrameRingSelect:Hide();
 		seatFrameRingSelect:SetWidth(128);seatFrameRingSelect:SetHeight(128);
 		seatFrameRingSelect:SetTexCoord(0,1,0,1);
 		seatFrameRingSelect:SetPoint("CENTER",seatFrame,"CENTER",116,-22);
 		
 		local seatFrameButton = seatFrame:CreateTexture(seatFrame:GetName().."_Button","BACKGROUND");
-		seatFrameButton:SetTexture("interface\\addons\\WoWTexasHoldem\\textures\\button");
+		seatFrameButton:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\button");
 		seatFrameButton:Hide();
 		seatFrameButton:SetWidth(16);seatFrameButton:SetHeight(16);
 		seatFrameButton:SetTexCoord(0,1,0,1);
@@ -3785,25 +3785,25 @@ function FHS_SetupCardFrames()
 		thiscard = cardFrame:CreateTexture("FHS_Card_C"..card,"ARTWORK");
 		thiscard:SetHeight(128);cardFrame:SetWidth(128);
 		thiscard:SetPoint("CENTER",nil,nil);
-		thiscard:SetTexture("interface\\addons\\WoWTexasHoldem\\textures\\c"..card);
+		thiscard:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\c"..card);
 		
 		-- diamonds
 		thiscard = cardFrame:CreateTexture("FHS_Card_D"..card,"ARTWORK");
 		thiscard:SetHeight(128);cardFrame:SetWidth(128);
 		thiscard:SetPoint("CENTER",nil,nil);
-		thiscard:SetTexture("interface\\addons\\WoWTexasHoldem\\textures\\d"..card);
+		thiscard:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\d"..card);
 		
 		-- hearts
 		thiscard = cardFrame:CreateTexture("FHS_Card_H"..card,"ARTWORK");
 		thiscard:SetHeight(128);cardFrame:SetWidth(128);
 		thiscard:SetPoint("CENTER",nil,nil);
-		thiscard:SetTexture("interface\\addons\\WoWTexasHoldem\\textures\\h"..card);
+		thiscard:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\h"..card);
 		
 		-- spades
 		thiscard = cardFrame:CreateTexture("FHS_Card_S"..card,"ARTWORK");
 		thiscard:SetHeight(128);cardFrame:SetWidth(128);
 		thiscard:SetPoint("CENTER",nil,nil);
-		thiscard:SetTexture("interface\\addons\\WoWTexasHoldem\\textures\\s"..card);
+		thiscard:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\s"..card);
 		
 	end
 	
