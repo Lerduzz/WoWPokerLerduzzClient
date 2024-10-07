@@ -3064,14 +3064,14 @@ function FHS_handDescription(rank)
 
 	local descriptions = {}
 	descriptions[0] = L['High Card']..": "..CardRank[card1]
-	descriptions[1] = L['2 of a Kind']..": "..CardRanks[card1]
-	descriptions[2] = string.format(L['%s over %s'], CardRanks[card1], CardRanks[card2])
+	descriptions[1] = L['1 Pair']..": "..CardRanks[card1]
+	descriptions[2] = string.format(L['2 Pair: %s, %s'], CardRanks[card1], CardRanks[card2])
 	descriptions[3] = L['3 of a Kind']..": "..CardRanks[card1]
-	descriptions[4] = string.format(L['Straight to the %s'], CardRank[card1])
-	descriptions[5] = string.format(L['Flush: %s high'],CardRank[card1])
-	descriptions[6] = string.format(L['%s full of %s'], CardRanks[card1], CardRanks[card2])
+	descriptions[4] = string.format(L['Straight: %s (high)'], CardRank[card1])
+	descriptions[5] = string.format(L['Flush: %s (high)'],CardRank[card1])
+	descriptions[6] = string.format(L['Full House: %s, %s'], CardRanks[card1], CardRanks[card2])
 	descriptions[7] = L['4 of a Kind']..": "..CardRanks[card1]
-	descriptions[8] = string.format(L['Straight Flush to the %s'], CardRank[card1])
+	descriptions[8] = string.format(L['Straight Flush: %s (high)'], CardRank[card1])
 	descriptions[9] = L['Royal Flush']
 		
 	if (handType==8 and card1==14) then -- Royal Flush
