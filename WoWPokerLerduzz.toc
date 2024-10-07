@@ -10,7 +10,5 @@ Libs\LibSimpleOptions-1.0\lib.xml
 Libs\CallbackHandler-1.0\CallbackHandler-1.0\CallbackHandler-1.0.xml
 Libs\libdatabroker-1-1\LibDataBroker-1.1.lua
 localization.enUS.lua
-localization.deDE.lua
-localization.frFR.lua
-localization.ruRU.lua
+localization.esMX.lua
 WoWPokerLerduzz.lua

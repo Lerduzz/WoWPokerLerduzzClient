@@ -246,7 +246,7 @@ function FHSPoker_OnLoad()
     -- Events
     FHSPoker_registerEvents();
 	    
-	FHS_Console_Feedback("::  "..L['WoW Texas Hold\'em'] .." ".. FHS_HOLDEM_version.." "..L['a Fork of AnzacHoldem']);
+	FHS_Console_Feedback("::  "..L['WoW Poker Lerduzz'] .." ".. FHS_HOLDEM_version.." "..L['a Fork of AnzacHoldem']);
 	FHS_Console_Feedback("::  "..L['Use \'/holdem help\' for slash command options'])
 	
 	-- Initialize Seat Rings
@@ -263,7 +263,7 @@ function FHSPoker_OnLoad()
 		PlayerTurnEndTime=GetTime()+(24*60*60*365);
 	end;
 
-	FHS_Version:SetText(L['WoW Texas Hold\'em'].." "..FHS_HOLDEM_version.." "..L['a Fork of AnzacHoldem']);
+	FHS_Version:SetText(L['WoW Poker Lerduzz'].." "..FHS_HOLDEM_version.." "..L['a Fork of AnzacHoldem']);
 	
 	-- Assign all Cards their objects
 	for key, object in pairs(Cards) do 
@@ -452,7 +452,7 @@ function FHS_ClearTable()
 	FHS_ClearCards()
 	FHS_SelectPlayerRing(0)
 	FHS_StatusText("")
-	FHS_Pot_Text:SetText(L['WoW Texas Hold\'em'])
+	FHS_Pot_Text:SetText(L['WoW Poker Lerduzz'])
 
 	FHS_HideAllButtons(true)
 
@@ -616,7 +616,7 @@ function FHS_LDB_OnUpdate()
 		FHS_LDBObject.iconG = varG;
 		FHS_LDBObject.iconR = varR;
 	else
-		FHS_LDBObject.text = L['WoW Texas Hold\'em'];
+		FHS_LDBObject.text = L['WoW Poker Lerduzz'];
 		FHS_LDBObject.iconB = 255;
 		FHS_LDBObject.iconG = 255;
 		FHS_LDBObject.iconR = 255;
@@ -1813,7 +1813,7 @@ function FHS_TotalPot()
 	end
 	
 	if (total==0) then
-		FHS_Pot_Text:SetText(L['WoW Texas Hold\'em'])
+		FHS_Pot_Text:SetText(L['WoW Poker Lerduzz'])
 	else
 		FHS_Pot_Text:SetText(L['Total Pot']..": "..total)
 	end
@@ -3148,7 +3148,7 @@ end
 function FHS_SetupOptionsPanel()
 
 	FHS_Debug_Feedback("Do options panel");
-	VodkaHoldem_options_panel = LibStub("LibSimpleOptions-1.0").AddOptionsPanel(L['WoW Texas Hold\'em'],function()  end)
+	VodkaHoldem_options_panel = LibStub("LibSimpleOptions-1.0").AddOptionsPanel(L['WoW Poker Lerduzz'],function()  end)
 
 	
 	local VodkaHoldem_Options_Minimap_toggle = VodkaHoldem_options_panel:MakeToggle(
@@ -3224,7 +3224,7 @@ function FHS_SetupOptionsPanel()
 
 	
 	local title, subText = VodkaHoldem_options_panel:MakeTitleTextAndSubText(
-		L['WoW Texas Hold\'em Options'], 
+		L['WoW Poker Lerduzz Options'], 
 		L['These options are saved between sessions']
 	)
 	
@@ -3256,7 +3256,7 @@ function FHS_SetupXMLButtons()
 	_G["FHS_BootPlayer"]:SetText(L['Boot']);
 	_G["FHS_PopOk"]:SetText(L['Ok']);
 	_G["FHS_Feedback"]:SetText("www.FreeHoldemStrategy.com");
-	_G["FHS_Pot_Text"]:SetText(L['WoW Texas Hold\'em']);
+	_G["FHS_Pot_Text"]:SetText(L['WoW Poker Lerduzz']);
 end
 		
 
@@ -3266,7 +3266,7 @@ function FHS_Setup_LDB()
 			"WoWTexasHoldem",
 			{
 				type = "data source",
-				text = L['WoW Texas Hold\'em'],
+				text = L['WoW Poker Lerduzz'],
 				label = "WoWTexasHoldem",
 				icon = "interface\\addons\\WoWTexasHoldem\\textures\\mapicon",
 				OnClick  = function(clickedframe, button) FHS_LauncherClicked(button) end,
