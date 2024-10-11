@@ -7,8 +7,8 @@ local UPDATEPERIOD, elapsed = 1, 0
 local FHS_ldbIcon = true;
 
 local FHS_DEBUGING = false;
-local FHS_HOLDEM_version             = "v4.1.7";
-local FHS_COMMS_version              = "v8.1.0"; 
+local FHS_HOLDEM_version = "v4.1.7";
+local FHS_COMMS_version = "v8.1.0"; 
 local StuffLoaded = 0;
 local FHS_DraggingIcon = 0;
 
@@ -18,32 +18,32 @@ local FHS_SetSize = 0;
 local minimapIcon = true;
 -----------------
 
-local lasttime=0;
-local timedelta=0;
-local PlayerTurnEndTime=0;
-local RandomSeed=0;
-local AFKTimeLimit=60;
+local lasttime = 0;
+local timedelta = 0;
+local PlayerTurnEndTime = 0;
+local RandomSeed = 0;
+local AFKTimeLimit = 60;
 
-local BigBlindStart=20; -- Starting Big Blind
-local BlindIncrease=0.25; -- % increase of Big Blind per round
-local StartChips=500;
+local BigBlindStart = 20; -- Starting Big Blind
+local BlindIncrease = 0.25; -- % increase of Big Blind per round
+local StartChips = 500;
 
-local NextRefresh=0; --for player portraits
+local NextRefresh = 0; --for player portraits
 
-local FHS_PopupName=""; --for tracking the poped up menu
-local FHS_PopupIndex=0;
+local FHS_PopupName = ""; --for tracking the poped up menu
+local FHS_PopupIndex = 0;
 
-local GameLevel=0;
-local TheButton=1;
-local WhosTurn=0;
-local HighestBet=0;
+local GameLevel = 0;
+local TheButton = 1;
+local WhosTurn = 0;
+local HighestBet = 0;
 
-local BetSize=BigBlindStart;
+local BetSize = BigBlindStart;
 
-local Blinds=0;
-local SidePot={};
+local Blinds = 0;
+local SidePot = {};
 
-local RoundCount=0;
+local RoundCount = 0;
 
 local VodkaHoldem_options_panel;
 
@@ -263,8 +263,6 @@ function FHSPoker_OnLoad()
 		PlayerTurnEndTime=GetTime()+(24*60*60*365);
 	end;
 
-	FHS_Version:SetText(L['WoW Poker Lerduzz'].." "..FHS_HOLDEM_version.." "..L['a Fork of AnzacHoldem']);
-	
 	-- Assign all Cards their objects
 	for key, object in pairs(Cards) do 
 		Cards[key].Artwork=_G[Cards[key].object];
@@ -3243,7 +3241,6 @@ end
 
 function FHS_SetupXMLButtons()
 
-	_G["FHS_Strategy"]:SetText(L['Learn How to Play Texas Holdem']);
 	_G["FHS_Quit"]:SetText(L['Quit']);
 	_G["FHS_SitOutIn"]:SetText(L['Sit Out']);
 	_G["FHS_Play"]:SetText(L['Play']);
@@ -3255,7 +3252,6 @@ function FHS_SetupXMLButtons()
 	_G["FHS_GiveChips"]:SetText(L['+100 Chips']);
 	_G["FHS_BootPlayer"]:SetText(L['Boot']);
 	_G["FHS_PopOk"]:SetText(L['Ok']);
-	_G["FHS_Feedback"]:SetText("www.FreeHoldemStrategy.com");
 	_G["FHS_Pot_Text"]:SetText(L['WoW Poker Lerduzz']);
 end
 		
@@ -3300,7 +3296,7 @@ end
 
 function FHS_SetupTableFrame()
 
-	local tableFrame =CreateFrame("Frame", "FHSPokerFrame", UIParent, BackdropTemplateMixin and "BackdropTemplate");
+	local tableFrame = CreateFrame("Frame", "FHSPokerFrame", UIParent, BackdropTemplateMixin and "BackdropTemplate");
 	tableFrame:Hide();
 	tableFrame:SetMovable(true);
 	tableFrame:EnableMouse();
@@ -3326,30 +3322,21 @@ function FHS_SetupTableFrame()
 			end
 		end);
 		
-	tableFrame:SetWidth(860);tableFrame:SetHeight(560);
+	tableFrame:SetWidth(1024);tableFrame:SetHeight(560);
 	tableFrame:SetPoint("CENTER",UIParent,"CENTER",0,0);
 	
-	tableFrame:SetBackdrop( { 
-		bgFile = "interface\\addons\\WoWPokerLerduzz\\textures\\felt", 
-		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-		tile = true, tileSize = 16, edgeSize = 16, 
-		insets = { left = 5, right = 5, top = 5, bottom = 5 }
-	});
+	-- tableFrame:SetBackdrop( { 
+	-- 	bgFile = "interface\\addons\\WoWPokerLerduzz\\textures\\felt", 
+	-- 	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+	-- 	tile = true, tileSize = 16, edgeSize = 16, 
+	-- 	insets = { left = 5, right = 5, top = 5, bottom = 5 }
+	-- });
 	
 	local circleTexture = tableFrame:CreateTexture("FHS_CCirc","OVERLAY");
 	circleTexture:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\circle");
 	circleTexture:SetTexCoord(0,1,0,1);
-	circleTexture:SetWidth(512);tableFrame:SetHeight(512);
+	circleTexture:SetWidth(1024);tableFrame:SetHeight(512);
 	circleTexture:SetPoint("CENTER",tableFrame,"CENTER",0,10)
-	
-	local versionString = tableFrame:CreateFontString("FHS_Version","BACKGROUND","GameTooltipText");
-	versionString:SetPoint("BOTTOMLEFT",tableFrame,"BOTTOMLEFT",10,34);
-	
-	local feedbackString = tableFrame:CreateFontString("FHS_Feedback","BACKGROUND","GameTooltipText");
-	feedbackString:SetPoint("BOTTOMLEFT",tableFrame,"BOTTOMLEFT",10,10);
-	
-	local strategyString = tableFrame:CreateFontString("FHS_Strategy","BACKGROUND","GameTooltipText");
-	strategyString:SetPoint("BOTTOMLEFT",tableFrame,"BOTTOMLEFT",10,22);
 	
 end
 

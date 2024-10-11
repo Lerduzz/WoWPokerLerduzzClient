@@ -5,7 +5,6 @@ local debug = false
 MyLocalization = setmetatable(
 	{
 		['WoW Poker Lerduzz'] = 'WoW Poker Lerduzz',
-		['Learn How to Play Texas Holdem'] = 'Learn How to Play Texas Holdem',
 		['Quit'] = 'Quit',
 		['Sit Out'] = 'Sit Out',
 		['Play'] = 'Play',
@@ -118,7 +117,6 @@ MyLocalization = setmetatable(
 		['Winner!'] = 'Winner!',
 		['Default'] = 'Default',
 		['Showdown'] = 'Showdown',
-		['Feedback: www.FreeHoldemStrategy.com/forum/'] = 'Feedback: www.FreeHoldemStrategy.com/forum/',
 		['Next Round\'s Big Blind'] = 'Next Round\'s Big Blind',
 		['Current Blind Increment per round'] = 'Current Blind Increment per round',
 		['%s sits %s in Seat %d'] = '%s sits %s in Seat %d',
