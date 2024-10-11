@@ -176,17 +176,17 @@ local Cards =
 }
 
 
---Player Seats
+-- Asientos de los jugadores.
 local Seats	= {
-	{object="FHS_Seat_1",name="",	x=180, y=190,	chips=0,bet=0,status="", seated=0,hole1=0,hole2=0,dealt=0,alpha=1, inout="" },
-	{object="FHS_Seat_2",name="",	x=240, y=70,	chips=0,bet=0,status="", seated=0,hole1=0,hole2=0,dealt=0,alpha=1, inout="" },
-	{object="FHS_Seat_3",name="",	x=240, y=-60,	chips=0,bet=0,status="", seated=0,hole1=0,hole2=0,dealt=0,alpha=1, inout="" },
-	{object="FHS_Seat_4",name="",	x=170, y=-200,	chips=0,bet=0,status="", seated=0,hole1=0,hole2=0,dealt=0,alpha=1, inout="" },
-	{object="FHS_Seat_5",name="",	x=-0, y=-230,	chips=0,bet=0,status="", seated=0,hole1=0,hole2=0,dealt=0,alpha=1, inout="" },
-	{object="FHS_Seat_6",name="",	x=-170, y=-200,	chips=0,bet=0,status="", seated=0,hole1=0,hole2=0,dealt=0,alpha=1, inout="" },
-	{object="FHS_Seat_7",name="",	x=-240, y=-60,	chips=0,bet=0,status="", seated=0,hole1=0,hole2=0,dealt=0,alpha=1, inout="" },
-	{object="FHS_Seat_8",name="",	x=-240, y=70,	chips=0,bet=0,status="", seated=0,hole1=0,hole2=0,dealt=0,alpha=1, inout="" },
-	{object="FHS_Seat_9",name="",	x=-180, y=190,	chips=0,bet=0,status="", seated=0,hole1=0,hole2=0,dealt=0,alpha=1, inout="" },
+	{ object="FHS_Seat_1", name="", x=180,  y=190,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="" },
+	{ object="FHS_Seat_2", name="", x=240,  y=70,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="" },
+	{ object="FHS_Seat_3", name="", x=240,  y=-60,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="" },
+	{ object="FHS_Seat_4", name="", x=170,  y=-200,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="" },
+	{ object="FHS_Seat_5", name="", x=-0,   y=-230,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="" },
+	{ object="FHS_Seat_6", name="", x=-170, y=-200,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="" },
+	{ object="FHS_Seat_7", name="", x=-240, y=-60,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="" },
+	{ object="FHS_Seat_8", name="", x=-240, y=70,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="" },
+	{ object="FHS_Seat_9", name="", x=-180, y=190,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="" },
 }
 
 local LocalSeat=0;
