@@ -80,7 +80,7 @@ MyLocalization = setmetatable(
 		['The dealer booted you.'] = 'The dealer booted you.',
 		['has quit. GG.'] = 'has quit. GG.',
 		['You are now a dealer.'] = 'You are now a dealer.',
-		['Total Pot'] = 'Total Pot',
+		['Total Pot'] = 'Apuesta Total',
 		['wins'] = 'ha ganado',
 		['Split'] = 'Split',
 		['No Winners. Game Seed = '] = 'No Winners. Game Seed = ',
