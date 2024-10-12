@@ -134,6 +134,7 @@ MyLocalization = setmetatable(
 		['Tick to act automatically'] = 'Tick to automatically act',
 		['Call any'] = 'Call any',
 		['Sticky'] = 'Sticky',
+		['Empty'] = 'Nada',
 	}
 	,
 	{__index = function(self, key)

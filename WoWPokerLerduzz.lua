@@ -801,7 +801,7 @@ function FHS_UpdateSeat(j)
 	-- If no player at position then hide/clear all data
 	if (Seats[j].seated==0) then
 		_G[seat.."_Name"]:SetText("")
-		_G[seat.."_Chips"]:SetText("Empty")
+		_G[seat.."_Chips"]:SetText(L["Empty"])
 		_G[seat.."_Status"]:SetText("")
 		_G[seat.."_Port"]:Hide()
 		_G[seat.."_PortWho"]:Hide()
@@ -1087,7 +1087,7 @@ function FHS_UpdateWhosTurn()
 		--Set the text based on the action required
 		delta = HighestBet-Seats[LocalSeat].bet;
 		FHS_Debug_Feedback("Delta:"..delta)
-		FHS_Call:SetText("Call "..delta)
+		FHS_Call:SetText(L["Call"].." "..delta)
 
 		if (Seats[LocalSeat].bet==HighestBet) then
 			FHS_Call:SetText(L['Check']);
@@ -1413,15 +1413,15 @@ function FHS_Receive_Showdown( j, status)
 
 	----- Locally, we might have already folded and still want to flash our cards
 	----- Logically, the FHS_Fold button will already be hidden if we've shown already
-	FHS_Fold:SetText("Show Cards");
-	Seats[LocalSeat].dealt=0;
+	FHS_Fold:SetText(L["Show Cards"]);
+	Seats[LocalSeat].dealt = 0;
 	---
 
 	FHS_StatusText(status);
 
 	if (LocalSeat == j) then
 		-- you won by default, you are allowed to flash your cards
-		Seats[LocalSeat].dealt=0;
+		Seats[LocalSeat].dealt = 0;
 		
 		FHS_Fold:SetText(L['Show Cards']);
 		FHS_Fold:Show();
@@ -1564,13 +1564,13 @@ function FHS_Client_Hole( hole1, hole2 )
 	FHS_SetCard(hole1,DealerX,DealerY, ThisSeat.x, ThisSeat.y,1,CC*DealerDelay,0,1)
 	CC=CC-1
 
-	ThisSeat.status="Playing"
-	ThisSeat.dealt=1
-	ThisSeat.alpha=1
+	ThisSeat.status = L["Playing"]
+	ThisSeat.dealt = 1
+	ThisSeat.alpha = 1
 	FHS_UpdateSeat(LocalSeat)
 	
 	--Fold Button
-	FHS_Fold:SetText("Fold")
+	FHS_Fold:SetText(L["Fold"])
 	FHS_Fold:Show()
 
 	FHS_StatusTextCards()
@@ -2356,9 +2356,9 @@ function FHS_ShowDown()
 		end
 
 		--We may still want to flash our cards, even if we've folded
-		FHS_Fold:SetText("Show Cards")
+		FHS_Fold:SetText(L["Show Cards"])
 		FHS_Fold:Show()
-		Seats[LocalSeat].dealt=0;
+		Seats[LocalSeat].dealt = 0;
 		-------------------------------------------------
 	end
 
