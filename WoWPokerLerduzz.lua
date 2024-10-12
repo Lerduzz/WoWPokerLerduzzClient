@@ -3591,11 +3591,11 @@ function FHS_SetupSeatFrames()
 	local seatFrame;
 	local seatlocations =
 	{
-		{x=2, y=-295}, -- {x=300, y=220},
+		{x=-220, y=-295},
 		{x=360, y=90},
 		{x=360, y=-40},
 		{x=288, y=-165},
-		{x=100, y=-236},
+		{x=2, y=-295},
 		{x=-288, y=-165},
 		{x=-360, y=-40},
 		{x=-360, y=90},
