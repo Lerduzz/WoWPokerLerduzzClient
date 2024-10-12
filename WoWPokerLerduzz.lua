@@ -3704,56 +3704,56 @@ function FHS_SetupSeatFrames()
 		tile = false, tileSize = 16, edgeSize = 16, 
 		insets = { left = 5, right = 5, top = 5, bottom = 5 }
 	});
-		-- alpha appears to have changed from 0-255 to 0-1 a while back, but in API 10 it started erroring
-		seatFrame:SetBackdropColor(0, 0, 0,.5);
 		
-		local seatFrameName = seatFrame:CreateFontString(seatFrame:GetName().."_Name","BACKGROUND","GameTooltipTextSmall");
-		seatFrameName:SetPoint("CENTER",seatFrame,"CENTER",0,13);
-		
-		local seatFrameChips = seatFrame:CreateFontString(seatFrame:GetName().."_Chips","BACKGROUND","GameTooltipTextSmall");
-		seatFrameChips:SetPoint("CENTER",seatFrame,"CENTER",0,1);
-		
-		local seatFrameStatus = seatFrame:CreateFontString(seatFrame:GetName().."_Status","BACKGROUND","GameTooltipTextSmall");
-		seatFrameStatus:SetPoint("CENTER",seatFrame,"CENTER",0,-11);
-		
-		local seatFramePort = seatFrame:CreateTexture(seatFrame:GetName().."_Port","BACKGROUND");
-		seatFramePort:SetWidth(60);seatFramePort:SetHeight(60);
-		seatFramePort:SetTexCoord(0,1,0,1);
-		seatFramePort:SetPoint("CENTER",seatFrame,"CENTER",100,0);
-		
-		local seatFramePortWho = seatFrame:CreateTexture(seatFrame:GetName().."_PortWho","BACKGROUND");
-		seatFramePortWho:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\unknown");
-		seatFramePortWho:SetWidth(60);seatFramePortWho:SetHeight(60);
-		seatFramePortWho:SetTexCoord(0,1,0,1);
-		seatFramePortWho:SetPoint("CENTER",seatFrame,"CENTER",100,0);
-		
-		local seatFrameRing = seatFrame:CreateTexture(seatFrame:GetName().."_Ring","BORDER");
-		seatFrameRing:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\ring");
-		seatFrameRing:SetWidth(128);seatFrameRing:SetHeight(128);
-		seatFrameRing:SetTexCoord(0,1,0,1);
-		seatFrameRing:SetPoint("CENTER",seatFrame,"CENTER",116,-22);
-		
-		local seatFrameRingSelect = seatFrame:CreateTexture(seatFrame:GetName().."_RingSelect","BORDER");
-		seatFrameRingSelect:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\ring_select");
-		seatFrameRingSelect:Hide();
-		seatFrameRingSelect:SetWidth(128);seatFrameRingSelect:SetHeight(128);
-		seatFrameRingSelect:SetTexCoord(0,1,0,1);
-		seatFrameRingSelect:SetPoint("CENTER",seatFrame,"CENTER",116,-22);
-		
-		local seatFrameButton = seatFrame:CreateTexture(seatFrame:GetName().."_Button","BACKGROUND");
-		seatFrameButton:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\button");
-		seatFrameButton:Hide();
-		seatFrameButton:SetWidth(16);seatFrameButton:SetHeight(16);
-		seatFrameButton:SetTexCoord(0,1,0,1);
-		seatFrameButton:SetPoint("CENTER",seatFrame,"CENTER",-46,11);
-		
-		seatFrame:SetScript("OnMouseDown",
-			function(self, button)
-				if ( button == "RightButton" ) then
-					FHS_PopupMenu(self:GetName());
-				end
-			end);
-			
+	-- alpha appears to have changed from 0-255 to 0-1 a while back, but in API 10 it started erroring
+	seatFrame:SetBackdropColor(0, 0, 0,.5);
+	
+	local seatFrameName = seatFrame:CreateFontString(seatFrame:GetName().."_Name","BACKGROUND","GameTooltipTextSmall");
+	seatFrameName:SetPoint("CENTER",seatFrame,"CENTER",0,13);
+	
+	local seatFrameChips = seatFrame:CreateFontString(seatFrame:GetName().."_Chips","BACKGROUND","GameTooltipTextSmall");
+	seatFrameChips:SetPoint("CENTER",seatFrame,"CENTER",0,1);
+	
+	local seatFrameStatus = seatFrame:CreateFontString(seatFrame:GetName().."_Status","BACKGROUND","GameTooltipTextSmall");
+	seatFrameStatus:SetPoint("CENTER",seatFrame,"CENTER",0,-11);
+	
+	local seatFramePort = seatFrame:CreateTexture(seatFrame:GetName().."_Port","BACKGROUND");
+	seatFramePort:SetWidth(60);seatFramePort:SetHeight(60);
+	seatFramePort:SetTexCoord(0,1,0,1);
+	seatFramePort:SetPoint("CENTER",seatFrame,"CENTER",100,0);
+	
+	local seatFramePortWho = seatFrame:CreateTexture(seatFrame:GetName().."_PortWho","BACKGROUND");
+	seatFramePortWho:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\unknown");
+	seatFramePortWho:SetWidth(60);seatFramePortWho:SetHeight(60);
+	seatFramePortWho:SetTexCoord(0,1,0,1);
+	seatFramePortWho:SetPoint("CENTER",seatFrame,"CENTER",100,0);
+	
+	local seatFrameRing = seatFrame:CreateTexture(seatFrame:GetName().."_Ring","BORDER");
+	seatFrameRing:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\ring");
+	seatFrameRing:SetWidth(128);seatFrameRing:SetHeight(128);
+	seatFrameRing:SetTexCoord(0,1,0,1);
+	seatFrameRing:SetPoint("CENTER",seatFrame,"CENTER",116,-22);
+	
+	local seatFrameRingSelect = seatFrame:CreateTexture(seatFrame:GetName().."_RingSelect","BORDER");
+	seatFrameRingSelect:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\ring_select");
+	seatFrameRingSelect:Hide();
+	seatFrameRingSelect:SetWidth(128);seatFrameRingSelect:SetHeight(128);
+	seatFrameRingSelect:SetTexCoord(0,1,0,1);
+	seatFrameRingSelect:SetPoint("CENTER",seatFrame,"CENTER",116,-22);
+	
+	local seatFrameButton = seatFrame:CreateTexture(seatFrame:GetName().."_Button","BACKGROUND");
+	seatFrameButton:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\button");
+	seatFrameButton:Hide();
+	seatFrameButton:SetWidth(16);seatFrameButton:SetHeight(16);
+	seatFrameButton:SetTexCoord(0,1,0,1);
+	seatFrameButton:SetPoint("CENTER",seatFrame,"CENTER",-46,11);
+	
+	seatFrame:SetScript("OnMouseDown",
+		function(self, button)
+			if ( button == "RightButton" ) then
+				FHS_PopupMenu(self:GetName());
+			end
+		end);			
 	end
 end		
 
