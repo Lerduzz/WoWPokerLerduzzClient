@@ -3544,22 +3544,19 @@ end
 			
 			
 function FHS_SetupPotFrame()
-
-	-- This frame is missing the rounded borderes, need to fix...
 	local potFrame = CreateFrame("Frame", "FHS_Pot", FHSPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
 	potFrame:SetHeight(30);
-	potFrame:SetWidth(360);
-	potFrame:SetPoint("CENTER",FHSPokerFrame,"CENTER",0,85);
+	potFrame:SetWidth(180);
+	potFrame:SetPoint("CENTER", FHSPokerFrame, "CENTER", 0, 135);
 	potFrame:SetBackdrop( { 
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
 		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
 		tile = false, tileSize = 16, edgeSize = 16, 
 		insets = { left = 5, right = 5, top = 5, bottom = 5 }
 	});
-	-- alpha appears to have changed from 0-255 to 0-1 a while back, but in API 10 it started erroring
-	potFrame:SetBackdropColor(0,0,0,.5);
-	local potFrameString = potFrame:CreateFontString("FHS_Pot_Text","BACKGROUND","GameTooltipText");
-	potFrameString:SetPoint("CENTER",potFrame,"CENTER",0,2);
+	potFrame:SetBackdropColor(0, 0, 0, .5);
+	local potFrameString = potFrame:CreateFontString("FHS_Pot_Text", "BACKGROUND", "GameTooltipText");
+	potFrameString:SetPoint("CENTER", potFrame, "CENTER", 0, 2);
 
 end
 
@@ -3568,8 +3565,8 @@ function FHS_SetupStatusFrame()
 
 	local statusFrame = CreateFrame("Frame", "FHS_Status", FHSPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
 	statusFrame:SetHeight(30);
-	statusFrame:SetWidth(340);
-	statusFrame:SetPoint("CENTER", FHSPokerFrame, "CENTER", 0, -120);
+	statusFrame:SetWidth(330);
+	statusFrame:SetPoint("CENTER", FHSPokerFrame, "CENTER", 0, 85);
 	statusFrame:SetBackdrop( { 
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
 		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
