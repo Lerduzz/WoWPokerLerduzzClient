@@ -586,7 +586,6 @@ function FHSPoker_MapIconUpdate()
 		var= (sin(GetTime() *400 )+1)/2;
 		FHSPoker_MapIcon:SetAlpha(var);
 	end
-
 end
 
 
@@ -1719,13 +1718,12 @@ end
 
 
 -------------   SERVER NETWORKING ---------------------------------
-function FHS_StartDealer()
-	
+function FHS_StartDealer()	
 	FHS_Console_Feedback(L['You are now a dealer.'])
-	LocalSeat=1
-	IsDealer=1
-	TheButton=LocalSeat
-	DealerName=""
+	LocalSeat = 1
+	IsDealer = 1
+	TheButton = LocalSeat
+	DealerName = ""
 
 	FHS_ClearTable()
 	
@@ -3591,20 +3589,20 @@ function FHS_SetupSeatFrames()
 	local seatFrame;
 	local seatlocations =
 	{
-		{x=-435,  y=-201},
+		{x=-220,  y=296},
 		{x=360,  y=90},
 		{x=450,  y=-190},
 		{x=220,  y=-295},
 		{x=2,    y=-295},
 		{x=-220, y=-295},
-		{x=-360, y=-40},
+		{x=-435,  y=-201},
 		{x=-360, y=90},
 		{x=-300, y=220}
 	}	
 	
 	for seat=1,9 do
 		seatFrame = CreateFrame("Frame", "FHS_Seat_"..seat, FHSPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
-		seatFrame:EnableMouse();
+		-- seatFrame:EnableMouse();
 		seatFrame:SetHeight(35);
 		seatFrame:SetWidth(175);
 		seatFrame:SetPoint("CENTER", FHSPokerFrame, "CENTER", seatlocations[seat].x, seatlocations[seat].y);
@@ -3645,21 +3643,33 @@ function FHS_SetupSeatFrames()
 		seatFramePort:SetWidth(60);
 		seatFramePort:SetHeight(60);
 		seatFramePort:SetTexCoord(0, 1, 0, 1);
-		seatFramePort:SetPoint("CENTER", seatFrame, "CENTER", 0, 55);
+		if seat > 2 and seat < 8 then
+			seatFramePort:SetPoint("CENTER", seatFrame, "CENTER", 0, 55);
+		else
+			seatFramePort:SetPoint("CENTER", seatFrame, "CENTER", 0, -52);
+		end
 		
 		local seatFramePortWho = seatFrame:CreateTexture(seatFrame:GetName().."_PortWho", "BACKGROUND");
 		seatFramePortWho:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\unknown");
 		seatFramePortWho:SetWidth(60);
 		seatFramePortWho:SetHeight(60);
-		seatFramePortWho:SetTexCoord(0,1,0,1);
-		seatFramePortWho:SetPoint("CENTER", seatFrame, "CENTER", 0, 55);
+		seatFramePortWho:SetTexCoord(0, 1, 0, 1);
+		if seat > 2 and seat < 8 then
+			seatFramePortWho:SetPoint("CENTER", seatFrame, "CENTER", 0, 55);
+		else
+			seatFramePortWho:SetPoint("CENTER", seatFrame, "CENTER", 0, -52);
+		end
 		
 		local seatFrameRing = seatFrame:CreateTexture(seatFrame:GetName().."_Ring", "BORDER");
 		seatFrameRing:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\ring");
 		seatFrameRing:SetWidth(128);
 		seatFrameRing:SetHeight(128);
 		seatFrameRing:SetTexCoord(0, 1, 0, 1);
-		seatFrameRing:SetPoint("CENTER", seatFrame, "CENTER", 16, 33);
+		if seat > 2 and seat < 8 then
+			seatFrameRing:SetPoint("CENTER", seatFrame, "CENTER", 16, 33);
+		else
+			seatFrameRing:SetPoint("CENTER", seatFrame, "CENTER", 16, -74);
+		end
 		
 		local seatFrameRingSelect = seatFrame:CreateTexture(seatFrame:GetName().."_RingSelect", "BORDER");
 		seatFrameRingSelect:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\ring_select");
@@ -3667,7 +3677,11 @@ function FHS_SetupSeatFrames()
 		seatFrameRingSelect:SetWidth(128);
 		seatFrameRingSelect:SetHeight(128);
 		seatFrameRingSelect:SetTexCoord(0, 1, 0, 1);
-		seatFrameRingSelect:SetPoint("CENTER", seatFrame, "CENTER", 16, 33);
+		if seat > 2 and seat < 8 then
+			seatFrameRingSelect:SetPoint("CENTER", seatFrame, "CENTER", 16, 33);
+		else
+			seatFrameRingSelect:SetPoint("CENTER", seatFrame, "CENTER", 16, -74);
+		end
 	end
 end		
 
