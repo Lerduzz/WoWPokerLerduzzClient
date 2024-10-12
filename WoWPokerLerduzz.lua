@@ -3311,15 +3311,15 @@ function FHS_SetupTableFrame()
 		end);
 		
 	tableFrame:SetWidth(1024);
-	tableFrame:SetHeight(512);
+	tableFrame:SetHeight(627);
 	tableFrame:SetPoint("CENTER",UIParent,"CENTER",0,0);
 	
 	local circleTexture = tableFrame:CreateTexture("FHS_CCirc", "OVERLAY");
-	circleTexture:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\circle");
+	circleTexture:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\table");
 	circleTexture:SetTexCoord(0, 1, 0, 1);
 	circleTexture:SetWidth(1024);
-	circleTexture:SetHeight(512);
-	circleTexture:SetPoint("CENTER", tableFrame, "CENTER", 0, 0)	
+	circleTexture:SetHeight(1024);
+	circleTexture:SetPoint("TOPLEFT", tableFrame, "TOPLEFT", 0, 0)	
 end
 
 
