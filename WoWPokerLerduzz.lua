@@ -3418,7 +3418,7 @@ function FHS_SetupButtonsFrame()
 	local buttonsFrame = CreateFrame("Frame", "FHS_Buttons", FHSPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
 	buttonsFrame:SetHeight(30);
 	buttonsFrame:SetWidth(540);
-	buttonsFrame:SetPoint("CENTER", FHSPokerFrame, "CENTER", 0, -192);
+	buttonsFrame:SetPoint("CENTER", FHSPokerFrame, "CENTER", 0, -183);
 	buttonsFrame:SetBackdrop( { 
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
 		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
