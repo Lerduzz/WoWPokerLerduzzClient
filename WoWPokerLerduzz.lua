@@ -3310,7 +3310,7 @@ function FHS_SetupTableFrame()
 			end
 		end);
 		
-	tableFrame:SetWidth(1024);tableFrame:SetHeight(560);
+	tableFrame:SetWidth(1024);tableFrame:SetHeight(512);
 	tableFrame:SetPoint("CENTER",UIParent,"CENTER",0,0);
 	
 	local circleTexture = tableFrame:CreateTexture("FHS_CCirc","OVERLAY");
@@ -3355,9 +3355,6 @@ function FHS_SetupMiniMapButton()
 	miniMapButton:SetScript("OnMouseDown",function(self, button) if (button=="RightButton") then FHS_Dragging(1); self:StartMoving() end end);
 	miniMapButton:SetScript("OnMouseUp",function(self, button) if (button=="RightButton") then FHS_Dragging(0); self:StopMovingOrSizing() end end);
 	miniMapButton:SetScript("OnClick",function(self, button, down) FHS_MapIconClick(button);  end);
-	--miniMapButton:SetScript("OnClick",function(self, button, down) print("OnClick: "..button..down);  end);
-    --miniMapButton:SetScript("OnMouseUp",function(self, button) print("OnMouseUp: "..button); end);
-    --miniMapButton:SetScript("OnMouseDown",function(self, button) print("OnMouseDown: "..button); end);
 
 	if ( not minimapIcon ) then
 		FHSPoker_MapIconFrame:Hide();
@@ -3389,7 +3386,7 @@ end
 function FHS_SetupTopButtons()
 	local setSizeButton = CreateFrame("Button", "FHSPoker_SetSizeButton", FHSPokerFrame);
 	setSizeButton:SetHeight(32);setSizeButton:SetWidth(32);
-	setSizeButton:SetPoint("TOPRIGHT",FHSPokerFrame,"TOPRIGHT",-40,-10);
+	setSizeButton:SetPoint("TOPRIGHT", FHSPokerFrame, "TOPRIGHT", -200, -5);
 	
 	local setSizeIconButton = setSizeButton:CreateTexture("FHSPoker_MinimizeMapIcon", "BACKGROUND")
 	setSizeIconButton:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\mapicon_g");
@@ -3398,17 +3395,16 @@ function FHS_SetupTopButtons()
 	
 	setSizeButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight","ADD");
 	
-	setSizeButton:SetScript("OnClick",function() FHS_SizeClick(); end);
-	
+	setSizeButton:SetScript("OnClick",function() FHS_SizeClick(); end);	
 	
 	local minimizeButton = CreateFrame("Button", "FHSPoker_Minimize", FHSPokerFrame);
 	minimizeButton:SetHeight(32);minimizeButton:SetWidth(32);
-	minimizeButton:SetPoint("TOPRIGHT",FHSPokerFrame,"TOPRIGHT",-10,-10);
+	minimizeButton:SetPoint("TOPRIGHT", FHSPokerFrame, "TOPRIGHT", -170, -10);
 	
 	local minimizeIconButton = minimizeButton:CreateTexture("FHSPoker_MinimizeMapIcon", "BACKGROUND")
 	minimizeIconButton:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\mapicon");
 	minimizeIconButton:SetHeight(32);minimizeIconButton:SetWidth(32);
-	minimizeIconButton:SetPoint("CENTER",minimizeButton,"CENTER",0,0);
+	minimizeIconButton:SetPoint("CENTER", minimizeButton, "CENTER", 0, 0);
 	
 	minimizeButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight","ADD");
 	
