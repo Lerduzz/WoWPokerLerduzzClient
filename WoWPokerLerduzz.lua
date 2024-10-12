@@ -1100,7 +1100,7 @@ function FHS_UpdateWhosTurn()
 -- ******************
 		-- Make sure we have enough chips
 		if (Call==1) then
-			FHS_Raise:SetText(L['Call'].." "..delta..", "..L['Raise'].." "..BetSize);
+			FHS_Raise:SetText(L['Raise'].." "..delta.."+"..BetSize);
 		else
 			FHS_Raise:SetText(L['Raise'].." "..BetSize);
 		end;
