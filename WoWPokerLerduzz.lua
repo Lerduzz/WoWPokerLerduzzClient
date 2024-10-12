@@ -3414,8 +3414,9 @@ end
 
 function FHS_SetupButtonsFrame()	
 	local buttonsFrame = CreateFrame("Frame", "FHS_Buttons", FHSPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
-	buttonsFrame:SetHeight(60);buttonsFrame:SetWidth(380);
-	buttonsFrame:SetPoint("CENTER",FHSPokerFrame,"CENTER",0,-70);
+	buttonsFrame:SetHeight(30);
+	buttonsFrame:SetWidth(540);
+	buttonsFrame:SetPoint("CENTER", FHSPokerFrame, "CENTER", 0, -182);
 	buttonsFrame:SetBackdrop( { 
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
 		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -3423,46 +3424,52 @@ function FHS_SetupButtonsFrame()
 		insets = { left = 5, right = 5, top = 5, bottom = 5 }
 	});
 	-- alpha appears to have changed from 0-255 to 0-1 a while back, but in API 10 it started erroring
-	buttonsFrame:SetBackdropColor(0,0,0,.5);
+	buttonsFrame:SetBackdropColor(0, 0, 0, .5);
 	
 	local foldButton = CreateFrame("Button", "FHS_Fold", buttonsFrame, "UIPanelButtonTemplate");
 	foldButton:Hide();
-	foldButton:SetHeight(20);foldButton:SetWidth(100);
-	foldButton:SetPoint("CENTER",buttonsFrame,"CENTER",-130,12)
-	foldButton:SetScript("OnClick",function()FHS_FoldClick();end);
+	foldButton:SetHeight(20);
+	foldButton:SetWidth(120);
+	foldButton:SetPoint("CENTER", buttonsFrame, "CENTER", -205, 0)
+	foldButton:SetScript("OnClick", function() FHS_FoldClick(); end);
 	
 	local callButton = CreateFrame("Button", "FHS_Call", buttonsFrame, "UIPanelButtonTemplate");
 	callButton:Hide();
-	callButton:SetHeight(20);callButton:SetWidth(100);
-	callButton:SetPoint("CENTER",buttonsFrame,"CENTER",-26,12)
-	callButton:SetScript("OnClick",function()FHS_CallClick();end);
-	
-	local allInButton = CreateFrame("Button", "FHS_AllIn", buttonsFrame, "UIPanelButtonTemplate");
-	allInButton:Hide();
-	allInButton:SetText(L['All In']);
-	allInButton:SetHeight(20);allInButton:SetWidth(120);
-	allInButton:SetPoint("CENTER",buttonsFrame,"CENTER",86,-12)
-	allInButton:SetScript("OnClick",function()FHS_AllInClick();end);
+	callButton:SetHeight(20);
+	callButton:SetWidth(120);
+	callButton:SetPoint("CENTER", buttonsFrame, "CENTER", -80, 0)
+	callButton:SetScript("OnClick", function() FHS_CallClick(); end);
 	
 	local raiseButton = CreateFrame("Button", "FHS_Raise", buttonsFrame, "UIPanelButtonTemplate");
 	raiseButton:Hide();
-	raiseButton:SetHeight(20);raiseButton:SetWidth(120);
-	raiseButton:SetPoint("CENTER",buttonsFrame,"CENTER",86,12)
-	raiseButton:SetScript("OnClick",function()FHS_RaiseClick();end);
+	raiseButton:SetHeight(20);
+	raiseButton:SetWidth(120);
+	raiseButton:SetPoint("CENTER", buttonsFrame, "CENTER", 45, 0)
+	raiseButton:SetScript("OnClick", function() FHS_RaiseClick(); end);
 	
 	local lowerButton = CreateFrame("Button", "FHS_Raise_Lower", buttonsFrame, "UIPanelButtonTemplate");
 	lowerButton:Hide();
 	lowerButton:SetText("-");
-	lowerButton:SetHeight(20);lowerButton:SetWidth(20);
-	lowerButton:SetPoint("CENTER",buttonsFrame,"CENTER",153,12)
-	lowerButton:SetScript("OnClick",function()FHS_RaiseChange(-1);end);
+	lowerButton:SetHeight(20);
+	lowerButton:SetWidth(20);
+	lowerButton:SetPoint("CENTER", buttonsFrame, "CENTER", 115, 0)
+	lowerButton:SetScript("OnClick", function() FHS_RaiseChange(-1); end);
 	
 	local higherButton = CreateFrame("Button", "FHS_Raise_Higher", buttonsFrame, "UIPanelButtonTemplate");
 	higherButton:Hide();
 	higherButton:SetText("+");
-	higherButton:SetHeight(20);higherButton:SetWidth(20);
-	higherButton:SetPoint("CENTER",buttonsFrame,"CENTER",173,12)
-	higherButton:SetScript("OnClick",function()FHS_RaiseChange(1);end);
+	higherButton:SetHeight(20);
+	higherButton:SetWidth(20);
+	higherButton:SetPoint("CENTER", buttonsFrame, "CENTER", 135, 0)
+	higherButton:SetScript("OnClick", function() FHS_RaiseChange(1); end);
+
+	local allInButton = CreateFrame("Button", "FHS_AllIn", buttonsFrame, "UIPanelButtonTemplate");
+	allInButton:Hide();
+	allInButton:SetText(L['All In']);
+	allInButton:SetHeight(20);
+	allInButton:SetWidth(120);
+	allInButton:SetPoint("CENTER", buttonsFrame, "CENTER", 205, 0)
+	allInButton:SetScript("OnClick", function() FHS_AllInClick(); end);
 end
 
 
