@@ -3591,7 +3591,7 @@ function FHS_SetupSeatFrames()
 	local seatFrame;
 	local seatlocations =
 	{
-		{x=0, y=-250}, -- {x=300, y=220},
+		{x=2, y=-295}, -- {x=300, y=220},
 		{x=360, y=90},
 		{x=360, y=-40},
 		{x=288, y=-165},
@@ -3605,8 +3605,8 @@ function FHS_SetupSeatFrames()
 	for seat=1,9 do
 		seatFrame = CreateFrame("Frame", "FHS_Seat_"..seat, FHSPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
 		seatFrame:EnableMouse();
-		seatFrame:SetHeight(50);
-		seatFrame:SetWidth(120);
+		seatFrame:SetHeight(35);
+		seatFrame:SetWidth(175);
 		seatFrame:SetPoint("CENTER", FHSPokerFrame, "CENTER", seatlocations[seat].x, seatlocations[seat].y);
 		seatFrame:SetBackdrop({ 
 			bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
@@ -3615,35 +3615,51 @@ function FHS_SetupSeatFrames()
 			insets = { left = 5, right = 5, top = 5, bottom = 5 }
 		});
 		seatFrame:SetBackdropColor(0, 0, 0,.5);
-		
+
+		local seatFrameButton = seatFrame:CreateTexture(seatFrame:GetName().."_Button", "BACKGROUND");
+		seatFrameButton:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\button");
+		seatFrameButton:Hide();
+		seatFrameButton:SetWidth(12);
+		seatFrameButton:SetHeight(12);
+		seatFrameButton:SetTexCoord(0, 1, 0, 1);
+		seatFrameButton:SetPoint("CENTER", seatFrame, "CENTER", -73, -6);
+
 		local seatFrameName = seatFrame:CreateFontString(seatFrame:GetName().."_Name", "BACKGROUND", "GameTooltipTextSmall");
-		seatFrameName:SetPoint("CENTER", seatFrame, "CENTER", 0, 13);
+		seatFrameName:SetPoint("TOPLEFT", seatFrame, "CENTER", -80, 12);
 		
 		local seatFrameChips = seatFrame:CreateFontString(seatFrame:GetName().."_Chips", "BACKGROUND", "GameTooltipTextSmall");
-		seatFrameChips:SetPoint("CENTER", seatFrame, "CENTER", 0, 1);
+		seatFrameChips:SetPoint("TOPRIGHT", seatFrame, "CENTER", 80, 12);
 		
 		local seatFrameStatus = seatFrame:CreateFontString(seatFrame:GetName().."_Status", "BACKGROUND", "GameTooltipTextSmall");
-		seatFrameStatus:SetPoint("CENTER", seatFrame, "CENTER", 0, -11);
+		seatFrameStatus:SetPoint("BOTTOMRIGHT", seatFrame, "CENTER", 80, -10);
+		
+		-- seatFrame:SetScript("OnMouseDown",
+		-- 	function(self, button)
+		-- 		if ( button == "RightButton" ) then
+		-- 			FHS_PopupMenu(self:GetName());
+		-- 		end
+		-- 	end
+		-- );
 		
 		local seatFramePort = seatFrame:CreateTexture(seatFrame:GetName().."_Port", "BACKGROUND");
 		seatFramePort:SetWidth(60);
 		seatFramePort:SetHeight(60);
 		seatFramePort:SetTexCoord(0, 1, 0, 1);
-		seatFramePort:SetPoint("CENTER", seatFrame, "CENTER", 100, 0);
+		seatFramePort:SetPoint("CENTER", seatFrame, "CENTER", 0, 55);
 		
 		local seatFramePortWho = seatFrame:CreateTexture(seatFrame:GetName().."_PortWho", "BACKGROUND");
 		seatFramePortWho:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\unknown");
 		seatFramePortWho:SetWidth(60);
 		seatFramePortWho:SetHeight(60);
 		seatFramePortWho:SetTexCoord(0,1,0,1);
-		seatFramePortWho:SetPoint("CENTER", seatFrame, "CENTER", 100, 0);
+		seatFramePortWho:SetPoint("CENTER", seatFrame, "CENTER", 0, 55);
 		
 		local seatFrameRing = seatFrame:CreateTexture(seatFrame:GetName().."_Ring", "BORDER");
 		seatFrameRing:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\ring");
 		seatFrameRing:SetWidth(128);
 		seatFrameRing:SetHeight(128);
 		seatFrameRing:SetTexCoord(0, 1, 0, 1);
-		seatFrameRing:SetPoint("CENTER", seatFrame, "CENTER", 116, -22);
+		seatFrameRing:SetPoint("CENTER", seatFrame, "CENTER", 16, 33);
 		
 		local seatFrameRingSelect = seatFrame:CreateTexture(seatFrame:GetName().."_RingSelect", "BORDER");
 		seatFrameRingSelect:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\ring_select");
@@ -3651,23 +3667,7 @@ function FHS_SetupSeatFrames()
 		seatFrameRingSelect:SetWidth(128);
 		seatFrameRingSelect:SetHeight(128);
 		seatFrameRingSelect:SetTexCoord(0, 1, 0, 1);
-		seatFrameRingSelect:SetPoint("CENTER", seatFrame, "CENTER", 116, -22);
-		
-		local seatFrameButton = seatFrame:CreateTexture(seatFrame:GetName().."_Button", "BACKGROUND");
-		seatFrameButton:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\button");
-		seatFrameButton:Hide();
-		seatFrameButton:SetWidth(16);
-		seatFrameButton:SetHeight(16);
-		seatFrameButton:SetTexCoord(0, 1, 0, 1);
-		seatFrameButton:SetPoint("CENTER", seatFrame, "CENTER", -46, 11);
-		
-		seatFrame:SetScript("OnMouseDown",
-			function(self, button)
-				if ( button == "RightButton" ) then
-					FHS_PopupMenu(self:GetName());
-				end
-			end
-		);			
+		seatFrameRingSelect:SetPoint("CENTER", seatFrame, "CENTER", 16, 33);
 	end
 end		
 
