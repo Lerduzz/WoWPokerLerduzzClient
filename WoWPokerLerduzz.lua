@@ -1879,7 +1879,7 @@ function FHS_DealHoleCards()
 		if(ThisSeat.inout=="IN") then
 			ThisSeat.status=""
 		else
-			ThisSeat.status="Sitting Out"
+			ThisSeat.status="Sitting Out" -- TODO: Lerduzz: Traducir esto en todas las instancias.
 		end;
 
 		--Deal them in
@@ -1894,7 +1894,7 @@ function FHS_DealHoleCards()
 			ThisSeat.bet=0
 			ThisSeat.alpha=0.5
 			ThisSeat.forcedbet=1
-			ThisSeat.status="Playing"
+			ThisSeat.status="Playing" -- TODO: Lerduzz: Traducir esto en todas las instancias.
 
 			FHS_UpdateSeat(j) -- local view
 
@@ -2337,7 +2337,7 @@ function FHS_ShowDown()
 		for j=1,9 do
 			-- If you're still in at this point, you have to show your hand
 			if (Seats[j].dealt==1) then
-				FHS_ShowCard(j,"Showdown")
+				FHS_ShowCard(j,"Showdown") -- TODO: Lerduzz: Traducir esto en todas las instancias.
 			end
 		end
 
