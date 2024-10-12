@@ -1750,8 +1750,7 @@ function FHS_StartDealer()
 	FHS_ShowTable()
 	
 	FHS_Play:Show()
-	FHS_DealerButtons:Show()
-	
+
 	--Set the initial Blinds
 	FHS_Set_CurrentBlind(BigBlindStart / (1+BlindIncrease))
 	-- Dividing by BlindIncrease here saves worrying about checking on new round if it is the first round.
@@ -1768,7 +1767,6 @@ function FHS_StopServer()
 	WhosTurn=0
 	
 	FHS_ClearTable()
-	FHS_DealerButtons:Hide()
 end
 
 
@@ -3076,8 +3074,7 @@ function FHS_handDescription(rank)
 		handType = 9
 	end
 	
-	return descriptions[handType]
-	
+	return descriptions[handType]	
 end
 
 --------------
@@ -3088,8 +3085,7 @@ function FHS_Set_BigBlindStart(value)
 		value = StartChips
 	end
 	BigBlindStart = value;
-	FHS_BigBlindStart = value
-	
+	FHS_BigBlindStart = value	
 end
 
 
@@ -3099,7 +3095,6 @@ function FHS_Set_CurrentBlind(value)
 	elseif ( value % 1 <= .1 ) then
 		Blinds = math.floor(value)
 	end
-	FHS_bigBlindText:SetText(L['Next Round\'s Big Blind']..": "..('%.0f'):format(FHS_IncrementBlind(Blinds)));
 end
 
 
@@ -3118,18 +3113,13 @@ function FHS_ChangeIncrement(whichway)
 	elseif ( whichway == 1 and BlindIncrease<0.96) then
 		FHS_SetBlindIncr(BlindIncrease+0.05);
 	end
-
 end
 
 
-function FHS_SetBlindIncr(value)
-	
+function FHS_SetBlindIncr(value)	
 	value = tonumber(('%g'):format(value));
 	BlindIncrease = value;
 	FHS_BlindIncrease = value;
-	FHS_bigBlindIncText:SetText(L['Current Blind Increment per round']..": "..('%.0f'):format(BlindIncrease*100).."\%");
-	FHS_bigBlindText:SetText(L['Next Round\'s Big Blind']..": "..('%.0f'):format(FHS_IncrementBlind(Blinds)));
-	
 end
 
 
@@ -3138,8 +3128,7 @@ function FHS_Set_StartChips(value)
 	FHS_StartChips = value;
 	if ( StartChips < BigBlindStart ) then
 		FHS_Set_BigBlindStart(value)
-	end
-	
+	end	
 end
 
 
@@ -3289,7 +3278,6 @@ function FHS_SetupFrames()
 	FHS_SetupSeatFrames();
 	FHS_SetupCardFrames();
 	FHS_SetupMiniMapButton();
-	FHS_SetupDealerButtonsFrame();
 	FHS_SetupAutoButtonsFrame();
 end
 
@@ -3325,24 +3313,15 @@ function FHS_SetupTableFrame()
 	tableFrame:SetWidth(1024);tableFrame:SetHeight(560);
 	tableFrame:SetPoint("CENTER",UIParent,"CENTER",0,0);
 	
-	-- tableFrame:SetBackdrop( { 
-	-- 	bgFile = "interface\\addons\\WoWPokerLerduzz\\textures\\felt", 
-	-- 	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-	-- 	tile = true, tileSize = 16, edgeSize = 16, 
-	-- 	insets = { left = 5, right = 5, top = 5, bottom = 5 }
-	-- });
-	
 	local circleTexture = tableFrame:CreateTexture("FHS_CCirc","OVERLAY");
 	circleTexture:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\circle");
 	circleTexture:SetTexCoord(0,1,0,1);
 	circleTexture:SetWidth(1024);tableFrame:SetHeight(512);
-	circleTexture:SetPoint("CENTER",tableFrame,"CENTER",0,10)
-	
+	circleTexture:SetPoint("CENTER",tableFrame,"CENTER",0,10)	
 end
 
 
 function FHS_Toggle_MiniMap(toggle)
-
 	if ( toggle ) then
 		minimapIcon = true;
 		FHS_minimapIcon = true;
@@ -3352,7 +3331,6 @@ function FHS_Toggle_MiniMap(toggle)
 		FHS_minimapIcon = false;
 		FHSPoker_MapIconFrame:Hide();
 	end
-
 end
 		
 		
@@ -3384,12 +3362,10 @@ function FHS_SetupMiniMapButton()
 	if ( not minimapIcon ) then
 		FHSPoker_MapIconFrame:Hide();
 	end
-
 end
 
 
 function FHS_SetupButtonButtons()
-
 	local quitButton = CreateFrame("Button", "FHS_Quit", FHSPokerFrame, "UIPanelButtonTemplate");
 	quitButton:SetText(L['Quit']);
 	quitButton:SetHeight(20);quitButton:SetWidth(100);
@@ -3407,12 +3383,10 @@ function FHS_SetupButtonButtons()
 	playButton:SetHeight(20);playButton:SetWidth(90);
 	playButton:SetPoint("BOTTOM",FHSPokerFrame,"BOTTOM",270,10)
 	playButton:SetScript("OnClick",function() FHS_Popup:Hide(); FHS_Popup:Hide(); FHS_PlayClick(); end);
-
 end
 
 
 function FHS_SetupTopButtons()
-
 	local setSizeButton = CreateFrame("Button", "FHSPoker_SetSizeButton", FHSPokerFrame);
 	setSizeButton:SetHeight(32);setSizeButton:SetWidth(32);
 	setSizeButton:SetPoint("TOPRIGHT",FHSPokerFrame,"TOPRIGHT",-40,-10);
@@ -3442,8 +3416,7 @@ function FHS_SetupTopButtons()
 end
 
 
-function FHS_SetupButtonsFrame()
-	
+function FHS_SetupButtonsFrame()	
 	local buttonsFrame = CreateFrame("Frame", "FHS_Buttons", FHSPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
 	buttonsFrame:SetHeight(60);buttonsFrame:SetWidth(380);
 	buttonsFrame:SetPoint("CENTER",FHSPokerFrame,"CENTER",0,-70);
@@ -3494,62 +3467,10 @@ function FHS_SetupButtonsFrame()
 	higherButton:SetHeight(20);higherButton:SetWidth(20);
 	higherButton:SetPoint("CENTER",buttonsFrame,"CENTER",173,12)
 	higherButton:SetScript("OnClick",function()FHS_RaiseChange(1);end);
-
-end
-
-
-function FHS_SetupDealerButtonsFrame()
-
-	local buttonsFrame = CreateFrame("Frame", "FHS_DealerButtons", FHSPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
-	buttonsFrame:Hide();
-	buttonsFrame:SetHeight(40);buttonsFrame:SetWidth(300);
-	buttonsFrame:SetPoint("CENTER",FHSPokerFrame,"CENTER",0,145);
-	buttonsFrame:SetBackdrop( { 
-		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
-		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-		tile = false, tileSize = 16, edgeSize = 16, 
-		insets = { left = 5, right = 5, top = 5, bottom = 5 }
-	});
-	-- alpha appears to have changed from 0-255 to 0-1 a while back, but in API 10 it started erroring
-	buttonsFrame:SetBackdropColor(0,0,0,.5);
-	
-	local bigBlindText = buttonsFrame:CreateFontString("FHS_bigBlindText","BACKGROUND","GameTooltipText");
-	bigBlindText:SetText(L['Next Round\'s Big Blind']..": "..('%.0f'):format(FHS_IncrementBlind(Blinds)));
-	bigBlindText:SetPoint("TOPLEFT",buttonsFrame,"TOPLEFT",40,-6);
-	
-	local lowerButtonBlind = CreateFrame("Button", "FHS_Blind_Lower", buttonsFrame, "UIPanelButtonTemplate");
-	lowerButtonBlind:SetText("-");
-	lowerButtonBlind:SetHeight(15);lowerButtonBlind:SetWidth(15);
-	lowerButtonBlind:SetPoint("TOPLEFT",buttonsFrame,"TOPLEFT",5,-4)
-	lowerButtonBlind:SetScript("OnClick",function()FHS_ChangeBigBlind(-1);end);
-	
-	local higherButtonBlind = CreateFrame("Button", "FHS_Blind_Higher", buttonsFrame, "UIPanelButtonTemplate");
-	higherButtonBlind:SetText("+");
-	higherButtonBlind:SetHeight(15);higherButtonBlind:SetWidth(15);
-	higherButtonBlind:SetPoint("TOPLEFT",buttonsFrame,"TOPLEFT",22,-4)
-	higherButtonBlind:SetScript("OnClick",function() FHS_ChangeBigBlind(1);end);
-	
-	local bigBlindIncText = buttonsFrame:CreateFontString("FHS_bigBlindIncText","BACKGROUND","GameTooltipText");
-	bigBlindIncText:SetText(L['Current Blind Increment per round']..": "..(BlindIncrease*100).."\%");
-	bigBlindIncText:SetPoint("BOTTOMLEFT",buttonsFrame,"BOTTOMLEFT",40,6);
-	
-	local lowerButton = CreateFrame("Button", "FHS_Incr_Lower", buttonsFrame, "UIPanelButtonTemplate");
-	lowerButton:SetText("-");
-	lowerButton:SetHeight(15);lowerButton:SetWidth(15);
-	lowerButton:SetPoint("BOTTOMLEFT",buttonsFrame,"BOTTOMLEFT",5,4)
-	lowerButton:SetScript("OnClick",function()FHS_ChangeIncrement(-1);end);
-	
-	local higherButton = CreateFrame("Button", "FHS_Incr_Higher", buttonsFrame, "UIPanelButtonTemplate");
-	higherButton:SetText("+");
-	higherButton:SetHeight(15);higherButton:SetWidth(15);
-	higherButton:SetPoint("BOTTOMLEFT",buttonsFrame,"BOTTOMLEFT",22,4)
-	higherButton:SetScript("OnClick",function()FHS_ChangeIncrement(1);end);
-
 end
 
 
 function FHS_SetupAutoButtonsFrame()
-
 	local autoButtonsFrame = CreateFrame("Frame", "FHS_AutoButtons", FHSPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
 	autoButtonsFrame:SetHeight(40);autoButtonsFrame:SetWidth(240);
 	autoButtonsFrame:SetPoint("CENTER",FHSPokerFrame,"CENTER",0,195);
@@ -3596,12 +3517,10 @@ function FHS_SetupAutoButtonsFrame()
 	AutoCheckCheck:SetHeight(15);AutoCheckCheck:SetWidth(15);
 	AutoCheckCheck:SetPoint("BOTTOMLEFT",autoButtonsFrame,"BOTTOMLEFT",220,4)
 	AutoCheckCheck:SetScript("OnClick",function() if ( FHS_AutoCheckCheck:GetChecked() )then FHS_AutoFoldCheck:SetChecked(false); FHS_AutoBetCheck:SetChecked(false); end; end);
-
 end
 
 
 function FHS_SetupPopUpFrame()
-
 	local popUpFrame = CreateFrame("Frame", "FHS_Popup", FHSPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
 	popUpFrame:Hide();
 	popUpFrame:SetHeight(100);
@@ -3631,7 +3550,6 @@ function FHS_SetupPopUpFrame()
 	local popOkbutton = CreateFrame("Button", "FHS_PopOk", popUpFrame, "UIPanelButtonTemplate");
 	popOkbutton:SetPoint("CENTER",popUpFrame,"CENTER",0,-30)
 	popOkbutton:SetScript("OnClick",function()FHS_Popup:Hide()end);
-
 end
 			
 			
