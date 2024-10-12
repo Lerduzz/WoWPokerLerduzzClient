@@ -1720,7 +1720,7 @@ end
 -------------   SERVER NETWORKING ---------------------------------
 function FHS_StartDealer()	
 	FHS_Console_Feedback(L['You are now a dealer.'])
-	LocalSeat = 1
+	LocalSeat = 2
 	IsDealer = 1
 	TheButton = LocalSeat
 	DealerName = ""
@@ -3590,7 +3590,7 @@ function FHS_SetupSeatFrames()
 	local seatlocations =
 	{
 		{x=219,  y=296},
-		{x=360,  y=90},
+		{x=441,  y=201},
 		{x=450,  y=-190},
 		{x=220,  y=-295},
 		{x=2,    y=-295},
