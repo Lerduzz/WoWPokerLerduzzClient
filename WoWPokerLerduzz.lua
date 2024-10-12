@@ -2198,7 +2198,7 @@ function FHS_ShowDown()
 
 		local j=Winners[1]
 		local ThisSeat=Seats[j]
-		ThisSeat.status="Default"
+		ThisSeat.status = L["Default"]
 		FHS_BroadCastToTable("st_"..j.."_"..ThisSeat.chips.."_"..ThisSeat.bet.."_"..ThisSeat.status.."_1")
 		text = ThisSeat.name.." "..L['wins'].."."
 		FHS_BroadCastToTable("showdown_"..j.."_"..text)
@@ -2639,29 +2639,29 @@ function FHS_PostBlinds()
 	
 	local SmallBlind = math.floor(Blinds/10)*5
 
-	if (pc==1) then --If theres just one player, post a blind
-		FHS_PlayerBet(TheButton,Blinds,"Blinds");
+	if (pc == 1) then --If theres just one player, post a blind
+		FHS_PlayerBet(TheButton, Blinds, L["Blinds"]);
 		
-		NextPlayer=TheButton; --This person goes first
+		NextPlayer = TheButton; --This person goes first
 		
 	elseif (pc==2) then
 
-		j=FHS_WhosTurnAfter(TheButton);
-		FHS_PlayerBet(j,Blinds,"Blinds");
+		j = FHS_WhosTurnAfter(TheButton);
+		FHS_PlayerBet(j, Blinds, L["Blinds"]);
 
-		NextPlayer=TheButton; --person after this goes first
+		NextPlayer = TheButton; --person after this goes first
 		
-		FHS_PlayerBet(TheButton, SmallBlind, "Blinds");
+		FHS_PlayerBet(TheButton, SmallBlind, L["Blinds"]);
 		NextPlayer=FHS_WhosTurnAfter(TheButton);
 		
 	elseif (pc>1) then -- We have 3 players or more, so big and little blinds
 
-		j=FHS_WhosTurnAfter(TheButton);
+		j = FHS_WhosTurnAfter(TheButton);
 		
-		FHS_PlayerBet(j, SmallBlind, "Small Blind");
+		FHS_PlayerBet(j, SmallBlind, L["Small Blind"]);
 
-		j=FHS_WhosTurnAfter(j);
-		FHS_PlayerBet(j,Blinds,"Big Blind" );
+		j = FHS_WhosTurnAfter(j);
+		FHS_PlayerBet(j, Blinds, L["Big Blind"]);
 
 		NextPlayer=j; --person after this goes first
 	end;
@@ -2693,7 +2693,7 @@ function FHS_PlayerBet(j,size,status)
 	if ( Seats[j].chips < size ) then
 	    -- reduce bet to remaining chips
 		size = Seats[j].chips
-		status = "All In"
+		status = L["All In"]
 	end
 	
 	Seats[j].chips=Seats[j].chips-size;
@@ -2806,7 +2806,7 @@ function FHS_PlayerAction(j,delta)
 	-- Update the players bet, move the turn
 	if (delta==0) then
 		if (Seats[j].bet==HighestBet) then
-			FHS_PlayerBet(j,0,"Checked");
+			FHS_PlayerBet(j, 0, L["Checked"]);
 		else
 			--Shouldnt ever occur, the player sent a "check" 
 			-- when they were not equal to the highest bet
@@ -2816,15 +2816,15 @@ function FHS_PlayerAction(j,delta)
 
 	if (delta>0) then
 		if (Seats[j].bet+delta==HighestBet) then
-			FHS_PlayerBet(j,delta,"Called");
+			FHS_PlayerBet(j, delta, L["Called"]);
 			
 		else
 			if (Seats[j].bet+delta>=Seats[j].chips) then
 				delta=Seats[j].chips;
-				FHS_PlayerBet(j,delta,"All In");
+				FHS_PlayerBet(j, delta, L["All In"]);
 
 			else
-				FHS_PlayerBet(j,delta,"Raised");
+				FHS_PlayerBet(j, delta, L["Raised"]);
 			end;
 		end;
 	end;
