@@ -61,7 +61,6 @@ MyLocalization = setmetatable(
 		['Start Dealing'] = 'Start Dealing',
 		['Cancel'] = 'Cancel',
 		['Options'] = 'Options',
-		['a Fork of AnzacHoldem'] = 'a Fork of AnzacHoldem',
 		['Use \'/poker\' to start a table as the dealer.'] = 'Use \'/poker\' to start a table as the dealer.',
 		['Use \'/poker dealer <playername>\' to join someone elses table.'] = 'Use \'/poker dealer <playername>\' to join someone elses table.',
 		['Use \'/poker artwork <number>\' to set artwork.'] = 'Use \'/poker artwork <number>\' to set artwork.',

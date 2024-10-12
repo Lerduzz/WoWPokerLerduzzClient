@@ -246,22 +246,10 @@ function FHSPoker_OnLoad()
     -- Events
     FHSPoker_registerEvents();
 	    
-	FHS_Console_Feedback("::  "..L['WoW Poker Lerduzz'] .." ".. FHS_HOLDEM_version.." "..L['a Fork of AnzacHoldem']);
+	FHS_Console_Feedback("::  "..L['WoW Poker Lerduzz'] .." ".. FHS_HOLDEM_version);
 	FHS_Console_Feedback("::  "..L['Use \'/poker help\' for slash command options'])
 	
-	-- Initialize Seat Rings
-	for j=1,5 do
-		--swap the side for a few of them
-		_G["FHS_Seat_"..j.."_Port"]:SetPoint("CENTER", "FHS_Seat_"..j, "CENTER", -100, 0);
-		_G["FHS_Seat_"..j.."_PortWho"]:SetPoint("CENTER", "FHS_Seat_"..j, "CENTER", -100, 0);
-		_G["FHS_Seat_"..j.."_Ring"]:SetPoint("CENTER", "FHS_Seat_"..j, "CENTER", -82, -22);
-		_G["FHS_Seat_"..j.."_RingSelect"]:SetPoint("CENTER", "FHS_Seat_"..j, "CENTER", -82, -22);
-	end
-
-	for j=6,9 do
-		Seats[j].x=Seats[j].x+12;
-		PlayerTurnEndTime=GetTime()+(24*60*60*365);
-	end;
+	PlayerTurnEndTime=GetTime()+(24*60*60*365);
 
 	-- Assign all Cards their objects
 	for key, object in pairs(Cards) do 
