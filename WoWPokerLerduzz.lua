@@ -3206,8 +3206,8 @@ end
 function FHS_SetupAutoButtonsFrame()
 	local autoButtonsFrame = CreateFrame("Frame", "FHS_AutoButtons", FHSPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
 	autoButtonsFrame:SetHeight(40);
-	autoButtonsFrame:SetWidth(240);
-	autoButtonsFrame:SetPoint("CENTER", FHSPokerFrame, "CENTER", 0, 205);
+	autoButtonsFrame:SetWidth(245);
+	autoButtonsFrame:SetPoint("CENTER", FHSPokerFrame, "CENTER", 0, 177);
 	autoButtonsFrame:SetBackdrop( { 
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
 		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -3216,40 +3216,43 @@ function FHS_SetupAutoButtonsFrame()
 	});
 	autoButtonsFrame:SetBackdropColor(0, 0, 0, 0.5);
 	
-	local AutoText = autoButtonsFrame:CreateFontString("FHS_AutoText","BACKGROUND","GameTooltipText");
-	AutoText:SetText(L['Tick to act automatically']);
-	AutoText:SetPoint("TOPLEFT",autoButtonsFrame,"TOPLEFT",20,-6);
+	local AutoText = autoButtonsFrame:CreateFontString("FHS_AutoText", "BACKGROUND", "GameTooltipText");
+	AutoText:SetText(L['Autoplay']);
+	AutoText:SetPoint("TOPLEFT", autoButtonsFrame, "TOPLEFT", 7, -6);
 	
-	local AutoStickyText = autoButtonsFrame:CreateFontString("FHS_AutoStickyText","BACKGROUND","GameTooltipText");
-	AutoStickyText:SetText(L['Sticky']);
-	AutoStickyText:SetPoint("TOPLEFT",autoButtonsFrame,"TOPLEFT",180,-6);
 	local AutoStickyCheck = CreateFrame("CheckButton", "FHS_AutoStickyCheck", autoButtonsFrame, "UICheckButtonTemplate");
-	AutoStickyCheck:SetHeight(15);AutoStickyCheck:SetWidth(15);
-	AutoStickyCheck:SetPoint("TOPLEFT",autoButtonsFrame,"TOPLEFT",220,-6)
+	AutoStickyCheck:SetHeight(15);
+	AutoStickyCheck:SetWidth(15);
+	AutoStickyCheck:SetPoint("TOPRIGHT", autoButtonsFrame, "TOPRIGHT", -8, -6)
+	local AutoStickyText = autoButtonsFrame:CreateFontString("FHS_AutoStickyText", "BACKGROUND", "GameTooltipText");
+	AutoStickyText:SetText(L['Sticky']);
+	AutoStickyText:SetPoint("TOPRIGHT", AutoStickyCheck, "TOPLEFT", -1, 0);
 	
-	local AutoBetText = autoButtonsFrame:CreateFontString("FHS_AutoBetText","BACKGROUND","GameTooltipText");
-	AutoBetText:SetText(L['Call any']);
-	AutoBetText:SetPoint("BOTTOMLEFT",autoButtonsFrame,"BOTTOMLEFT",20,6);
 	local AutoBetCheck = CreateFrame("CheckButton", "FHS_AutoBetCheck", autoButtonsFrame, "UICheckButtonTemplate");
 	AutoBetCheck:SetHeight(15);AutoBetCheck:SetWidth(15);
-	AutoBetCheck:SetPoint("BOTTOMLEFT",autoButtonsFrame,"BOTTOMLEFT",70,4)
+	AutoBetCheck:SetPoint("BOTTOMRIGHT",autoButtonsFrame, "BOTTOMRIGHT", -145, 6)
 	AutoBetCheck:SetScript("OnClick",function() if ( FHS_AutoBetCheck:GetChecked() )then FHS_AutoFoldCheck:SetChecked(false); FHS_AutoCheckCheck:SetChecked(false); end; end);
+	local AutoBetText = autoButtonsFrame:CreateFontString("FHS_AutoBetText","BACKGROUND","GameTooltipText");
+	AutoBetText:SetText(L['Call any']);
+	AutoBetText:SetPoint("TOPRIGHT", AutoBetCheck, "TOPLEFT", -1, 0);
 	
-	local AutoFoldText = autoButtonsFrame:CreateFontString("FHS_AutoFoldText","BACKGROUND","GameTooltipText");
-	AutoFoldText:SetText(L['Fold']);
-	AutoFoldText:SetPoint("BOTTOMLEFT",autoButtonsFrame,"BOTTOMLEFT",100,6);
 	local AutoFoldCheck = CreateFrame("CheckButton", "FHS_AutoFoldCheck", autoButtonsFrame, "UICheckButtonTemplate");
-	AutoFoldCheck:SetHeight(15);AutoFoldCheck:SetWidth(15);
-	AutoFoldCheck:SetPoint("BOTTOMLEFT",autoButtonsFrame,"BOTTOMLEFT",130,4)
+	AutoFoldCheck:SetHeight(15);
+	AutoFoldCheck:SetWidth(15);
+	AutoFoldCheck:SetPoint("BOTTOMRIGHT", autoButtonsFrame, "BOTTOMRIGHT", -70, 6)
 	AutoFoldCheck:SetScript("OnClick",function() if ( FHS_AutoFoldCheck:GetChecked() )then FHS_AutoBetCheck:SetChecked(false); FHS_AutoCheckCheck:SetChecked(false); end; end);
+	local AutoFoldText = autoButtonsFrame:CreateFontString("FHS_AutoFoldText", "BACKGROUND", "GameTooltipText");
+	AutoFoldText:SetText(L['Fold']);
+	AutoFoldText:SetPoint("TOPRIGHT", AutoFoldCheck, "TOPLEFT", -1, 0);
 	
-	local AutoCheckText = autoButtonsFrame:CreateFontString("FHS_AutoCheckText","BACKGROUND","GameTooltipText");
-	AutoCheckText:SetText(L['Check']);
-	AutoCheckText:SetPoint("BOTTOMLEFT",autoButtonsFrame,"BOTTOMLEFT",180,6);
 	local AutoCheckCheck = CreateFrame("CheckButton", "FHS_AutoCheckCheck", autoButtonsFrame, "UICheckButtonTemplate");
-	AutoCheckCheck:SetHeight(15);AutoCheckCheck:SetWidth(15);
-	AutoCheckCheck:SetPoint("BOTTOMLEFT",autoButtonsFrame,"BOTTOMLEFT",220,4)
+	AutoCheckCheck:SetHeight(15);
+	AutoCheckCheck:SetWidth(15);
+	AutoCheckCheck:SetPoint("BOTTOMRIGHT", autoButtonsFrame, "BOTTOMRIGHT", -8, 6)
 	AutoCheckCheck:SetScript("OnClick",function() if ( FHS_AutoCheckCheck:GetChecked() )then FHS_AutoFoldCheck:SetChecked(false); FHS_AutoBetCheck:SetChecked(false); end; end);
+	local AutoCheckText = autoButtonsFrame:CreateFontString("FHS_AutoCheckText", "BACKGROUND", "GameTooltipText");
+	AutoCheckText:SetText(L['Check']);
+	AutoCheckText:SetPoint("TOPRIGHT", AutoCheckCheck, "TOPLEFT", -1, 0);
 end
 
 

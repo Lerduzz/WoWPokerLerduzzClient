@@ -130,9 +130,9 @@ MyLocalization = setmetatable(
 		['Use \'/poker help\' for slash command options'] = 'Use \'/poker help\' for slash command options',
 		['Looking for dealers'] = 'Looking for dealers',
 		['Looking for clients'] = 'Looking for clients',
-		['Tick to act automatically'] = 'Tick to automatically act',
-		['Call any'] = 'Call any',
-		['Sticky'] = 'Sticky',
+		['Autoplay'] = 'Juego automático',
+		['Call any'] = 'Igualar todo',
+		['Sticky'] = 'Mantener',
 		['Empty'] = 'Nada',
 	}
 	,
