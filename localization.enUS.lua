@@ -97,7 +97,6 @@ MyLocalization = setmetatable(
 		['Horde'] = 'Horde',
 		['Original'] = 'Original',
 		['Artwork'] = 'Artwork',
-		['Select card back artwork'] = 'Select card back artwork',
 		['Starting Chips'] = 'Starting Chips',
 		['Set the starting Chips'] = 'Set the starting Chips',
 		['Blind increase percent per round'] = 'Blind increase percent per round',
