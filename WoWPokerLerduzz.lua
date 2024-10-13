@@ -30,9 +30,6 @@ local StartChips = 500;
 
 local NextRefresh = 0; --for player portraits
 
-local FHS_PopupName = ""; --for tracking the poped up menu
-local FHS_PopupIndex = 0;
-
 local GameLevel = 0;
 local TheButton = 1;
 local WhosTurn = 0;
@@ -215,7 +212,6 @@ local BlinkOn = 1;
 -- Functions --
 ------------------
 function FHSPoker_OnLoad()
-
 	StaticPopupDialogs["FHS_DEALER"] = 
 	{
 		text = L["Do you wish to start Dealing?"] .."\n".. L["To join a game use '/poker dealer <playername>'"],
@@ -263,13 +259,10 @@ function FHSPoker_OnLoad()
 	FHS_ClearTable();
 
 	StuffLoaded=1;
-
-	--FHSPokerFrame:Hide();
 end;
 
 
 function SeatSlashCommand(msg)
-
 	--Recenter the frame
 	FHSPokerFrame:ClearAllPoints();
 	FHSPokerFrame:SetPoint("CENTER", "UIParent", "CENTER", 0, 0);
@@ -322,15 +315,13 @@ function SeatSlashCommand(msg)
 			FHS_Console_Feedback("::  "..L['Use \'/poker options\' for options panel']);
 			
 		else
-			SeatSlashCommand("help")
-				
+			SeatSlashCommand("help")				
 		end
 	end
 end
 
 
 function FHS_SizeClick()
-
 	FHS_SetSize=FHS_SetSize+1;
 	
 	if (FHS_SetSize>2) then
@@ -354,7 +345,6 @@ end
 
 
 function FHS_DealerClick()
-
 	if (IsDealer==1) then
 		FHS_StopServer();
 	end
@@ -364,7 +354,6 @@ end;
 
 --clear all the cards off the table
 function FHS_ClearCards()
-
 	CC=0;
 	for key, object in pairs(Cards) do
 		FHS_SetCard(key,DealerX,DealerY,0,0,0,0,0,0);
@@ -373,13 +362,11 @@ function FHS_ClearCards()
 	Flop={};
 	FlopBlank={};
 	BlankCard=53;
-
 end
 
 
 --Clear the table of everything
 function FHS_InitializeSeat(j)
-
 	Seats[j].name="";
 	Seats[j].HavePort=0;
 	Seats[j].seated=0;
@@ -393,8 +380,7 @@ function FHS_InitializeSeat(j)
 end;
 
 
-function FHS_ClearTable()
-	
+function FHS_ClearTable()	
 	for j=1,9 do
 		FHS_InitializeSeat(j)
 	end;
@@ -409,13 +395,10 @@ function FHS_ClearTable()
 	FHS_Pot_Text:SetText(L['WoW Poker Lerduzz'])
 
 	FHS_HideAllButtons(true)
-
-	FHS_Popup:Hide()
 end;
 
 
-function FHSPoker_registerEvents()
-    
+function FHSPoker_registerEvents()    
     FHSPokerFrame:RegisterEvent("ADDON_LOADED");
     FHSPokerFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 	FHSPokerFrame:RegisterEvent("CHAT_MSG_ADDON");
@@ -430,7 +413,6 @@ end
 
 
 function FHSPoker_OnEvent(self, event, ...)
-
 -- prefix = arg1;
 -- msg = arg2;
 -- distrib = arg3;
@@ -477,12 +459,10 @@ function FHSPoker_OnEvent(self, event, ...)
 			FHS_HandleAddonComms(arg2, arg3, arg4)
 		end
 	end
-
 end;
 
 
-function FHSPoker_Update(arg1)
-	
+function FHSPoker_Update(arg1)	
 	--Animation is handled here
 	if (StuffLoaded==1) then
 --		SetPortraitTexture(FHS_Seat_Port_9, "player");
@@ -513,8 +493,7 @@ function FHSPoker_Update(arg1)
 
 			-- And update it
 			FHS_DrawCard(key);
-		end 
-
+		end
 
 		if ( time>NextRefresh ) then
 			NextRefresh=time+1;
@@ -532,7 +511,6 @@ end;
 
 
 function FHSPoker_MapIconUpdate()
-
 	if (FHS_DraggingIcon==1) then
 
 		local xpos,ypos = GetCursorPosition();
@@ -557,7 +535,6 @@ end
 
 
 function FHS_LDB_OnUpdate()
-
 	if ((LocalSeat==WhosTurn)and(LocalSeat>0)) then
 		varR= (sin(GetTime()*400)*128);
 		varG= (cos(GetTime()*400)*128);
@@ -577,7 +554,6 @@ end
 
 
 function FHS_Hidden_frame_OnUpdate(self, elap)
-
 	if (StuffLoaded==1) then
 
 		if (IsDealer==1 ) then
@@ -606,14 +582,12 @@ function FHS_Hidden_frame_OnUpdate(self, elap)
 end
 
 
-function FHS_MapIconClick(arg1)
-	
+function FHS_MapIconClick(arg1)	
 	FHS_LauncherClicked(arg1)
 end
 
 
 function FHS_LauncherClicked(button)
-
 	if ( button == "RightButton" ) then
 		InterfaceOptionsFrame_OpenToCategory(VodkaHoldem_options_panel)
 	elseif ( button == "LeftButton" ) then
@@ -651,12 +625,10 @@ function FHS_CheckPlayerTime()
 
 		PlayerTurnEndTime=GetTime()+(24*60*60*365) -- set the time to next year	
 	end;
-
 end;
 
 
-function FHS_BlinkWhosTurn()
-	
+function FHS_BlinkWhosTurn()	
 	if (BlinkOn == 0) then
 		BlinkOn = 1
 		if (WhosTurn>0) then
@@ -670,7 +642,6 @@ function FHS_BlinkWhosTurn()
 			_G["FHS_Seat_"..WhosTurn.."_Ring"]:Show()
 		end
 	end
-
 end
 
 
@@ -679,8 +650,7 @@ function FHS_StatusText(text)
 end
 
 
-function FHS_StatusTextCards()
-	
+function FHS_StatusTextCards()	
 	if (LocalSeat>0) then
 		FHS_StatusText(FHS_handDescription(FHS_FindHandForPlayer(LocalSeat)))
 	end
@@ -688,7 +658,6 @@ end
 
 
 function FHS_SetCard(index,dealerx,dealery,x,y,visible,fraction,fadeout,highlayer)
-
 	Cards[index].x=x
 	Cards[index].y=y
 	Cards[index].startx=dealerx
@@ -704,13 +673,11 @@ end
 
 
 function FHS_DrawCard(index)
-
 	local dx
 	local dy
 	local card = Cards[index]
 	local frac = card.fraction
-	local mfrac = 1-frac
-	
+	local mfrac = 1-frac	
 	
 	if (frac<0) then
 		card.Artwork:Hide()
@@ -748,8 +715,7 @@ function FHS_DrawCard(index)
 end
 
 
-function FHS_UpdateSeat(j)
-	
+function FHS_UpdateSeat(j)	
 	local seat = "FHS_Seat_"..j
 	
 	-- If no player at position then hide/clear all data
@@ -812,25 +778,22 @@ function FHS_UpdateSeat(j)
 		if (Seats[j].HavePort==0) then
 			portraitObj:Hide();	
 			_G[seat.."_PortWho"]:Show()
-		end
-		
+		end		
 	end
 end
 
 
 function FHS_StopClient()
-
-	IsDealer=0;
-	LocalSeat=0;
-	WhosTurn=0;
-	DealerName="";
+	IsDealer = 0;
+	LocalSeat = 0;
+	WhosTurn = 0;
+	DealerName = "";
 	FHS_ClearTable();
 end
 
 
 function FHS_QuitClick()
-
-	if (IsDealer==0) then
+	if (IsDealer == 0) then
 		if (DealerName ~= "" ) then
 			FHS_SendMessage("q_"..LocalSeat,DealerName)
 		end;
@@ -840,21 +803,13 @@ function FHS_QuitClick()
 		FHS_StopServer()
 	end
 
-	--Hide the buttons cause we're done
 	FHS_HideAllButtons(true)
 
 	FHSPokerFrame:Hide()
 end;
 
 
---function FHS_SitOutInClick()
---
---	FHS_SitOutIn(LocalSeat)
---end
-
-
 function FHS_SitOutInClick()
-
 	if (IsDealer==0) then
 		if(Seats[LocalSeat].inout=="IN") then
 			FHS_FoldClick();
@@ -886,9 +841,7 @@ end;
 
 
 function FHS_FoldClick()
-
-	if (IsDealer==0) then
-		
+	if (IsDealer==0) then		
 		if (Seats[LocalSeat].dealt==1) then
 			FHS_SendMessage("fold_"..LocalSeat,DealerName)
 		
@@ -913,12 +866,10 @@ function FHS_FoldClick()
 			FHS_Fold:Hide()
 		end
 	end
-	FHS_UpdateSeat(LocalSeat);
-	
+	FHS_UpdateSeat(LocalSeat);	
 
 	--its no longer our turn, obviously
 	FHS_HideAllButtons(false)
-
 end
 
 
@@ -962,12 +913,10 @@ function FHS_AllInClick()
 end;
 
 
-function FHS_CallClick()
-	
+function FHS_CallClick()	
 	if (LocalSeat==0) then return; end
 		
-	--Called/Checked
-	
+	--Called/Checked	
 	delta=-1
 	
 	if (Seats[LocalSeat].bet<HighestBet) then
@@ -995,7 +944,6 @@ end;
 
 
 function FHS_StartClient()
-
 	FHS_Console_Feedback(string.format(L['%s has seated you in Seat %d'],DealerName, LocalSeat));
 	FHS_ClearTable();
 	
@@ -1005,14 +953,12 @@ function FHS_StartClient()
 	
 	IsDealer=0;
 	FHS_ShowTable();
-	FHS_Play:Hide();	
-	
+	FHS_Play:Hide();
 end
 
 
 -- Enable or disable the buttons based on whats going on
-function FHS_UpdateWhosTurn()
-	
+function FHS_UpdateWhosTurn()	
 	if (LocalSeat==0) then
 		return;
 	end;
@@ -1102,7 +1048,6 @@ end;
 
 
 function FHS_RaiseChange(dir)
-
 	local CallAmount = 0;
 	
 	CallAmount = HighestBet-Seats[LocalSeat].bet;
@@ -1118,7 +1063,6 @@ end;
 
 
 function FHS_SelectPlayerRing(j)
-
 	--Hide everyones selection
 	for r=1,9 do
 		_G["FHS_Seat_"..r.."_RingSelect"]:Hide()
@@ -1129,13 +1073,11 @@ function FHS_SelectPlayerRing(j)
 		_G["FHS_Seat_"..j.."_RingSelect"]:Show()
 		_G["FHS_Seat_"..j.."_RingSelect"]:SetAlpha(1)
 		_G["FHS_Seat_"..j.."_Ring"]:Hide()
-
 	end
 end
 
 
 function FHS_SelectPlayerButton(j)
-
 	--Hide everyones button
 	for r=1,9 do
 		_G["FHS_Seat_"..r.."_Button"]:Hide()
@@ -1148,16 +1090,13 @@ end
 
 
 function FHS_UpdateButtons()
-
 	if (LocalSeat==0) then
 		return;
 	end;
-
 end;
 
 
 function FHS_HandleAddonComms(msg, channel, sender)
-
 	FHS_Debug_Feedback("FHS_HandleAddonComms");
 	FHS_Debug_Feedback(sender..":"..msg)
 	FHS_Debug_Feedback("RoundCount:"..RoundCount)
@@ -1298,8 +1237,7 @@ function FHS_HandleAddonComms(msg, channel, sender)
 		
 			elseif (tab[3]=="betsize") then
 				Blinds=tonumber(tab[4])
-				BetSize=Blinds
-			
+				BetSize=Blinds			
 			end
 		end
 	end
@@ -1338,14 +1276,11 @@ function FHS_HandleAddonComms(msg, channel, sender)
 	-- outside table whsiper
 	elseif ( tab[3]=="outside") then
 		FHS_HandleOutsideWhisper(tab, sender)
-
 	end
-	
 end
 
 
 function FHS_Receive_InOut( j, inout, sender)
-
 	Seats[j].inout=inout
 
 	if (IsDealer==1) then
@@ -1456,8 +1391,7 @@ function FHS_Client_Show(hole1, hole2, j, status)
 end
 
 				
-function FHS_Client_Flop1(flop1, flop2, flop3)
-				
+function FHS_Client_Flop1(flop1, flop2, flop3)				
 	Flop={}
 	Flop[1]=flop1
 	Flop[2]=flop2
@@ -1477,20 +1411,17 @@ function FHS_Client_Flop1(flop1, flop2, flop3)
 end
 
 
-function FHS_Client_Flop0()
-	
+function FHS_Client_Flop0()	
 	for i=1,3 do
 		FlopBlank[i]=BlankCard
 		FHS_SetCard(BlankCard,DealerX,DealerY, -CardWidth*(3-i),0,1,CC*DealerDelay,0,0)
 		BlankCard=BlankCard+1
 		CC=CC-1
 	end
-	
 end
 
 
 function FHS_Client_Deal(j)
-
 	FHS_SetCard(BlankCard,DealerX,DealerY, Seats[j].x-12 , Seats[j].y+12,1,CC*DealerDelay,500,0)
 	BlankCard=BlankCard+1
 	CC=CC-1
@@ -1507,7 +1438,6 @@ end
 
 
 function FHS_Client_Hole( hole1, hole2 )
-
 	local ThisSeat = Seats[LocalSeat]
 	ThisSeat.hole1=hole1
 	ThisSeat.hole2=hole2
@@ -1557,7 +1487,6 @@ end
 
 
 function FHS_HandleOutsideBroadcast(tab, sender, channel)
-
 	FHS_Debug_Feedback("Broadcast received");
 	-- Ignore own broadcasts
 	if (sender == GetUnitName("player")) then
@@ -1580,7 +1509,6 @@ end
 
 
 function FHS_HandleOutsideWhisper(tab, sender)
-
 	if ( tab[4] == "dealer" ) then
 		FHS_Console_Feedback(string.format(L['%s is a dealer and has %s seats available'], sender, tab[5]))
 	
@@ -1591,7 +1519,6 @@ end
 
 
 function IsPlaying(name)
-
 	for j=1,9 do
 		if (Seats[j].seated==1 and Seats[j].name==name) then
 			return 1
@@ -1646,7 +1573,6 @@ end
 
 
 function FHS_PlayClick()
-
 --	FHSPokerFrame:SetScale(0.75);
 	if (IsDealer==0) then
 		return
@@ -1662,7 +1588,6 @@ end;
 
 
 function FHS_NextLevel()
-	
 	GameLevel=GameLevel+1
 	
 	if (GameLevel==1) then  --Pre Flop
@@ -1679,7 +1604,6 @@ function FHS_NextLevel()
 		
 	elseif (GameLevel==5) then
 		FHS_ShowDown()
-		
 	end
 end
 
@@ -1711,7 +1635,6 @@ end
 
 
 function FHS_StopServer()
-
 	--bump everyone off
 	FHS_BroadCastToTable("hostquit",-1)
 
@@ -1724,7 +1647,6 @@ end
 
 
 function FHS_FoldPlayer(j)
-
 	if (IsDealer==0 or Seats[j].seated==0 or Seats[j].dealt==0) then
 		return
 	end
@@ -1752,7 +1674,6 @@ end
 
 
 function FHS_TotalPot()
-
 	local total=0
 	
 	for j=1,9 do
@@ -1773,7 +1694,6 @@ end
 
 --Loop through all seats, add up everyone who has bet less then this
 function FHS_SidePot(bet)
-
 	local total=0
 	local r
 	
@@ -1793,7 +1713,6 @@ end
 
 
 function FHS_DealHoleCards()
-	
 	if (IsDealer==0) then
 		return
 	end
@@ -1831,7 +1750,6 @@ function FHS_DealHoleCards()
 
 	--Deal out the hole cards
 	for index=1,9 do
-		
 		local j=TheButton+index+1  -- Player after the button gets dealt first
 		if (j>9) then j=j-9; end
 		if (j>9) then j=j-9; end
@@ -2017,7 +1935,6 @@ end
 
 
 function FHS_DealRiver()
-
 	if (IsDealer==0) then
 		return;
 	end;
@@ -2035,12 +1952,10 @@ function FHS_DealRiver()
 	FHS_SetupBets();
 	WhosTurn=TheButton;
 	FHS_GoNextPlayersTurn();
-
 end
 
 
 function FHS_ShowDown()
-
 	-- Only Dealer runs this function
 	if (IsDealer==0) then
 		return
@@ -2314,19 +2229,16 @@ function FHS_ShowDown()
 		Seats[LocalSeat].dealt = 0;
 		-------------------------------------------------
 	end
-
 end
 
 
-function FHS_round( num, idp )
+function FHS_round(num, idp)
 	return tonumber( string.format("%."..idp.."f", num ) )
 end
 
 
-function FHS_ShowCard(j,status)
-
+function FHS_ShowCard(j, status)
 	if ((Seats[j].seated==1)) then
-		
 		Seats[j].status=status;
 		
 		if ((Seats[j].hole1==0)or(Seats[j].hole2==0)) then 
@@ -2350,7 +2262,6 @@ end
 
 
 function FHS_Shuffle(seed, fake)
-
 	RandomSeed=seed
 	--randomseed(seed);
 
@@ -2397,7 +2308,6 @@ end
 
 
 function FHS_SeatPlayer(name)
-	
 	found=-1;
 	foldplayer=0;
 	
@@ -2462,7 +2372,6 @@ end;
 --Returns the next player to take a turn after j.
 --It will return j if theres nobody 
 function FHS_WhosTurnAfter(j)
-	
 	local index
 	for r=1,9 do
 		index=j+r;
@@ -2481,7 +2390,6 @@ end;
 --Returns the next player to take the button
 --It will return j if theres nobody 
 function FHS_WhosButtonAfter(j)
-	
 	local index
 	for r=1,9 do
 		index=j+r;
@@ -2501,7 +2409,6 @@ end;
 -- You need to bet if you were forced to post blinds, or if you are below the current highest
 --It will return 0 if theres nobody 
 function FHS_WhosBetAfter(j)
-	
 	local maxbet=FHS_HighestBet();
 	
 	for r=1,9 do
@@ -2522,7 +2429,6 @@ end;
 
 
 function FHS_HighestBet()
-
 	local maxbet=0;
 	--Find out what the highest bet on the table 
 	for r=1,9 do
@@ -2537,7 +2443,6 @@ end;
 
 
 function FHS_GetPlayingPlayers()
-	
 	local j=0;
 	for r=1,9 do
 		if ((Seats[r].seated==1)and(Seats[r].dealt==1)) then
@@ -2550,7 +2455,6 @@ end;
 
 
 function FHS_GetSeatedPlayers()
-	
 	local j=0;
 	for r=1,9 do
 		if ((Seats[r].seated==1)) then
@@ -2563,7 +2467,6 @@ end;
 
 
 function FHS_IncrementBlind(Blind)
-
 	-- Increase blind by BlindIncrease % to the nearest 5 chips (round up at 2.5).
 	local newBlind = Blind * (1 + BlindIncrease)
 	
@@ -2574,12 +2477,10 @@ function FHS_IncrementBlind(Blind)
 	end
 	
 	return newBlind;
-
 end;
 
 
 function FHS_PostBlinds()
-	
 	if (IsDealer==0) then 
 		return; 
 	end;
@@ -2622,8 +2523,7 @@ function FHS_PostBlinds()
 end;
 
 
-function FHS_PlayerBet(j,size,status)
-
+function FHS_PlayerBet(j, size, status)
 	if (IsDealer==0) then 
 		return; 
 	end;
@@ -2651,7 +2551,6 @@ function FHS_PlayerBet(j,size,status)
 	Seats[j].bet=Seats[j].bet+size;
 	Seats[j].status=status..": "..Seats[j].bet;	
 
-	
 	FHS_BroadCastToTable("st_"..j.."_"..Seats[j].chips.."_"..Seats[j].bet.."_"..Seats[j].status.."_1");
 
 	--local view
@@ -2677,18 +2576,15 @@ function FHS_PlayerBet(j,size,status)
 			SidePot[j].pot=FHS_SidePot(SidePot[j].bet);
 	--	end;
 	end;
-
 end;
 
 
 function FHS_GoNextPlayersTurn()
-
 	if (IsDealer==0) then 
 		return; 
 	end;
 	
 	WhosTurn=FHS_WhosBetAfter(WhosTurn);
-
 
 	if (WhosTurn==0) then 
 		FHS_NextLevel(); --All betting is satisfied
@@ -2719,8 +2615,7 @@ function FHS_GoNextPlayersTurn()
 end
 
 
-function FHS_PlayerAction(j,delta)
-
+function FHS_PlayerAction(j, delta)
 	if (IsDealer==0) then 
 		return; 
 	end;
@@ -2786,69 +2681,6 @@ function FHS_PlayerAction(j,delta)
 	--Next turn
 	FHS_GoNextPlayersTurn();
 end;
-
-
-function FHS_PopupMenu(name)
-	
-	if (IsDealer==0) then 
-		return; 
-	end;
-
-	FHS_Popup:SetPoint("CENTER", name, "CENTER", 20, -70);
-	FHS_Popup:Show();
-
-	FHS_PopupName=name;
-	for j=1,9 do
-		if (Seats[j].object==FHS_PopupName) then
-			FHS_PopupIndex=j;
-			return;
-		end;
-	end;
-end
-
-
-function FHS_Popup_GiveChipsClick()
-
-	local j=FHS_PopupIndex;
-
-	Seats[j].chips=Seats[j].chips+100;
-	FHS_BroadCastToTable("st_"..j.."_"..Seats[j].chips.."_"..Seats[j].bet.."_"..Seats[j].status.."_1",0);
-	FHS_UpdateSeat(j);
-end
-
-
-function FHS_Popup_BootPlayerClick()
-
-	local j=FHS_PopupIndex;
-
-	if (j==LocalSeat) then
-		FHS_Console_Feedback(L['Cannot boot the dealer.']);	
-	else
-		--Tell the other seats about the change
-		FHS_BroadCastToTable("q_"..j,0);
-		FHS_Console_Feedback(Seats[j].name.." "..L['has left the table.']);
-		Seats[j].seated=0;
-		Seats[j].HavePort=0;
-		FHS_UpdateSeat(j);
-
-		FHS_Popup:Hide();
-
-		if (WhosTurn==j) then
-			FHS_GoNextPlayersTurn();
-		end;
-
-	end;
-
-end;
-
-
-function FHS_Popup_ClearChipsClick()
-	local j=FHS_PopupIndex;
-
-	Seats[j].chips=0;
-	FHS_BroadCastToTable("st_"..j.."_"..Seats[j].chips.."_"..Seats[j].bet.."_"..Seats[j].status.."_0.5",0);
-	FHS_UpdateSeat(j);
-end
 
 
 ------------------------------------------------------------------------
@@ -2928,7 +2760,6 @@ end
 -- and aa, bb, cc,... are card values in order of ranking relevance 02 (deuce) - 14 (ace)
 -- e.g. 807 (straight flush to the 7) 70611 (four sixes, jack kicker) 60208 (twos full of eights)
 function FHS_rank(cards)
-
 	-- create table of ranks by count of each
 	local rankCount={}
 
@@ -2988,14 +2819,12 @@ function FHS_rank(cards)
 	if (sortedGroups[1]>"200" and sortedGroups[2]>"200") then return "2"..string.sub(sortedGroups[1],2)..string.sub(sortedGroups[2],2)..string.sub(sortedGroups[3],2) end
 	-- 2 of a kind
 	if (sortedGroups[1]>"200") then return "1"..string.sub(sortedGroups[1],2)..string.sub(sortedGroups[2],2)..string.sub(sortedGroups[3],2)..string.sub(sortedGroups[4],2) end
-	return "0"..table.concat(ranks)
-	 
+	return "0"..table.concat(ranks) 
 end
 	
 	
 -- takes a rank string and returns a text descriptor of it
 function FHS_handDescription(rank)
-
 	if (rank==nil or rank=="") then
 		return ""
 	end
@@ -3051,24 +2880,6 @@ function FHS_Set_CurrentBlind(value)
 end
 
 
-function FHS_ChangeBigBlind(whichway)
-	if ( whichway == -1 and Blinds>20) then
-		FHS_Set_CurrentBlind(Blinds-20);
-	elseif ( whichway == 1 ) then
-		FHS_Set_CurrentBlind(Blinds+20);
-	end
-end
-
-
-function FHS_ChangeIncrement(whichway)
-	if ( whichway == -1 and BlindIncrease>0.04) then
-		FHS_SetBlindIncr(BlindIncrease-0.05);
-	elseif ( whichway == 1 and BlindIncrease<0.96) then
-		FHS_SetBlindIncr(BlindIncrease+0.05);
-	end
-end
-
-
 function FHS_SetBlindIncr(value)	
 	value = tonumber(('%g'):format(value));
 	BlindIncrease = value;
@@ -3086,11 +2897,9 @@ end
 
 
 function FHS_SetupOptionsPanel()
-
 	FHS_Debug_Feedback("Do options panel");
 	VodkaHoldem_options_panel = LibStub("LibSimpleOptions-1.0").AddOptionsPanel(L['WoW Poker Lerduzz'],function()  end)
 
-	
 	local VodkaHoldem_Options_Minimap_toggle = VodkaHoldem_options_panel:MakeToggle(
 	    'name', L['Minimap Icon'],
 	    'description', L['Turn minimap icon on/off'],
@@ -3099,7 +2908,6 @@ function FHS_SetupOptionsPanel()
 	    'setFunc', function(value) FHS_Toggle_MiniMap(value) end
 	)
 
-	
 	local VodkaHoldem_Options_Blind_slider = VodkaHoldem_options_panel:MakeSlider(
 	    'name', L['Starting Blind'],
 	    'description', L['Set the starting Blind'],
@@ -3113,7 +2921,7 @@ function FHS_SetupOptionsPanel()
 	    'setFunc', function(value) FHS_Set_BigBlindStart(value) end,
 	    'currentTextFunc', function(value) return ("%.0f"):format(value) end
 	)
-	
+
 	local VodkaHoldem_Options_Increment_slider = VodkaHoldem_options_panel:MakeSlider(
 	    'name', L['Blind increase percent per round'],
 	    'description', L['Set the by what percent the Blind increases each round'],
@@ -3127,7 +2935,7 @@ function FHS_SetupOptionsPanel()
 	    'setFunc', function(value) FHS_SetBlindIncr(value) end,
 	    'currentTextFunc', function(value) return ("%.0f%%"):format(value*100) end
 	)
-	
+
 	local VodkaHoldem_Options_Chips_slider = VodkaHoldem_options_panel:MakeSlider(
 	    'name', L['Starting Chips'],
 	    'description', L['Set the starting Chips'],
@@ -3146,12 +2954,12 @@ function FHS_SetupOptionsPanel()
 			end,
 	    'currentTextFunc', function(value) return ("%.0f"):format(value) end
 	)
-	
+
 	local title, subText = VodkaHoldem_options_panel:MakeTitleTextAndSubText(
 		L['WoW Poker Lerduzz Options'], 
 		L['These options are saved between sessions']
 	)
-	
+
 	VodkaHoldem_Options_Chips_slider:SetPoint("TOPLEFT", 50, -100)
 	VodkaHoldem_Options_Blind_slider:SetPoint("TOPLEFT", 50, -175)
 	VodkaHoldem_Options_Increment_slider:SetPoint("TOPLEFT", 50, -250)
@@ -3160,7 +2968,6 @@ end
 
 
 function FHS_SetupXMLButtons()
-
 	_G["FHS_Quit"]:SetText(L['Quit']);
 	_G["FHS_SitOutIn"]:SetText(L['Sit Out']);
 	_G["FHS_Play"]:SetText(L['Play']);
@@ -3168,10 +2975,6 @@ function FHS_SetupXMLButtons()
 	_G["FHS_Call"]:SetText(L['Call']);
 	_G["FHS_AllIn"]:SetText(L['All In']);
 	_G["FHS_Raise"]:SetText(L['Raise']);
-	_G["FHS_ClearChips"]:SetText(L['Clear Chips']);
-	_G["FHS_GiveChips"]:SetText(L['+100 Chips']);
-	_G["FHS_BootPlayer"]:SetText(L['Boot']);
-	_G["FHS_PopOk"]:SetText(L['Ok']);
 	_G["FHS_Pot_Text"]:SetText(L['WoW Poker Lerduzz']);
 end
 		
@@ -3193,17 +2996,14 @@ function FHS_Setup_LDB()
 	local f = CreateFrame("frame");
 	
 	f:SetScript("OnUpdate", function(self, elap) FHS_Hidden_frame_OnUpdate(self, elap) end)
-
 end
 
 			
 function FHS_SetupFrames()
-
 	FHS_SetupTableFrame();
 	FHS_SetupTopButtons();
 	FHS_SetupButtonButtons();
 	FHS_SetupButtonsFrame();
-	FHS_SetupPopUpFrame();
 	FHS_SetupStatusFrame();
 	FHS_SetupPotFrame();
 	FHS_SetupSeatFrames();
@@ -3214,7 +3014,6 @@ end
 
 
 function FHS_SetupTableFrame()
-
 	local tableFrame = CreateFrame("Frame", "FHSPokerFrame", UIParent, BackdropTemplateMixin and "BackdropTemplate");
 	tableFrame:Hide();
 	tableFrame:SetMovable(true);
@@ -3231,7 +3030,6 @@ function FHS_SetupTableFrame()
 		function()
 			if ( arg1 == "LeftButton" ) then
 				this:StartMoving();
-				FHS_Popup:Hide();
 			end
 		end);
 	tableFrame:SetScript("OnMouseUp",
@@ -3251,6 +3049,27 @@ function FHS_SetupTableFrame()
 	circleTexture:SetWidth(1024);
 	circleTexture:SetHeight(1024);
 	circleTexture:SetPoint("TOPLEFT", tableFrame, "TOPLEFT", 0, 0)	
+end
+
+
+function FHS_SetupButtonButtons()
+	local quitButton = CreateFrame("Button", "FHS_Quit", FHSPokerFrame, "UIPanelButtonTemplate");
+	quitButton:SetText(L['Quit']);
+	quitButton:SetHeight(20);quitButton:SetWidth(100);
+	quitButton:SetPoint("BOTTOM",FHSPokerFrame,"BOTTOM",370,10)
+	quitButton:SetScript("OnClick",function() FHS_QuitClick(); end);
+	
+	local sitInOutButton = CreateFrame("Button", "FHS_SitOutIn", FHSPokerFrame, "UIPanelButtonTemplate");
+	sitInOutButton:SetText(L['Sit Out']);
+	sitInOutButton:SetHeight(20);sitInOutButton:SetWidth(100);
+	sitInOutButton:SetPoint("BOTTOM",FHSPokerFrame,"BOTTOM",370,35)
+	sitInOutButton:SetScript("OnClick",function() FHS_SitOutInClick(); end);
+	
+	local playButton = CreateFrame("Button", "FHS_Play", FHSPokerFrame, "UIPanelButtonTemplate");
+	playButton:SetText(L['Play']);
+	playButton:SetHeight(20);playButton:SetWidth(90);
+	playButton:SetPoint("BOTTOM",FHSPokerFrame,"BOTTOM",270,10)
+	playButton:SetScript("OnClick",function() FHS_PlayClick(); end);
 end
 
 
@@ -3292,27 +3111,6 @@ function FHS_SetupMiniMapButton()
 	if ( not minimapIcon ) then
 		FHSPoker_MapIconFrame:Hide();
 	end
-end
-
-
-function FHS_SetupButtonButtons()
-	local quitButton = CreateFrame("Button", "FHS_Quit", FHSPokerFrame, "UIPanelButtonTemplate");
-	quitButton:SetText(L['Quit']);
-	quitButton:SetHeight(20);quitButton:SetWidth(100);
-	quitButton:SetPoint("BOTTOM",FHSPokerFrame,"BOTTOM",370,10)
-	quitButton:SetScript("OnClick",function() FHS_Popup:Hide(); FHS_QuitClick(); end);
-	
-	local sitInOutButton = CreateFrame("Button", "FHS_SitOutIn", FHSPokerFrame, "UIPanelButtonTemplate");
-	sitInOutButton:SetText(L['Sit Out']);
-	sitInOutButton:SetHeight(20);sitInOutButton:SetWidth(100);
-	sitInOutButton:SetPoint("BOTTOM",FHSPokerFrame,"BOTTOM",370,35)
-	sitInOutButton:SetScript("OnClick",function() FHS_SitOutInClick(); end);
-	
-	local playButton = CreateFrame("Button", "FHS_Play", FHSPokerFrame, "UIPanelButtonTemplate");
-	playButton:SetText(L['Play']);
-	playButton:SetHeight(20);playButton:SetWidth(90);
-	playButton:SetPoint("BOTTOM",FHSPokerFrame,"BOTTOM",270,10)
-	playButton:SetScript("OnClick",function() FHS_Popup:Hide(); FHS_Popup:Hide(); FHS_PlayClick(); end);
 end
 
 
@@ -3455,39 +3253,6 @@ function FHS_SetupAutoButtonsFrame()
 end
 
 
-function FHS_SetupPopUpFrame()
-	local popUpFrame = CreateFrame("Frame", "FHS_Popup", FHSPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
-	popUpFrame:Hide();
-	popUpFrame:SetHeight(100);
-	popUpFrame:SetWidth(130);
-	popUpFrame:SetPoint("CENTER",FHSPokerFrame,"CENTER",0,0);
-	popUpFrame:SetBackdrop( { 
-		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
-		edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-		tile = false, tileSize = 16, edgeSize = 16, 
-		insets = { left = 5, right = 5, top = 5, bottom = 5 }
-	});
-	-- alpha appears to have changed from 0-255 to 0-1 a while back, but in API 10 it started erroring
-	popUpFrame:SetBackdropColor(0,0,0,.5);
-	
-	local clearChipsbutton = CreateFrame("Button", "FHS_ClearChips", popUpFrame, "UIPanelButtonTemplate");
-	clearChipsbutton:SetPoint("CENTER",popUpFrame,"CENTER",0,30)
-	clearChipsbutton:SetScript("OnClick",function()FHS_Popup_ClearChipsClick()end);
-	
-	local giveChipsbutton = CreateFrame("Button", "FHS_GiveChips", popUpFrame, "UIPanelButtonTemplate");
-	giveChipsbutton:SetPoint("CENTER",popUpFrame,"CENTER",0,10)
-	giveChipsbutton:SetScript("OnClick",function()FHS_Popup_GiveChipsClick()end);
-	
-	local bootPlayerbutton = CreateFrame("Button", "FHS_BootPlayer", popUpFrame, "UIPanelButtonTemplate");
-	bootPlayerbutton:SetPoint("CENTER",popUpFrame,"CENTER",0,-10)
-	bootPlayerbutton:SetScript("OnClick",function()FHS_Popup_BootPlayerClick()end);
-	
-	local popOkbutton = CreateFrame("Button", "FHS_PopOk", popUpFrame, "UIPanelButtonTemplate");
-	popOkbutton:SetPoint("CENTER",popUpFrame,"CENTER",0,-30)
-	popOkbutton:SetScript("OnClick",function()FHS_Popup:Hide()end);
-end
-			
-			
 function FHS_SetupPotFrame()
 	local potFrame = CreateFrame("Frame", "FHS_Pot", FHSPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
 	potFrame:SetHeight(30);
@@ -3507,7 +3272,6 @@ end
 
 
 function FHS_SetupStatusFrame()
-
 	local statusFrame = CreateFrame("Frame", "FHS_Status", FHSPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
 	statusFrame:SetHeight(30);
 	statusFrame:SetWidth(330);
@@ -3522,12 +3286,10 @@ function FHS_SetupStatusFrame()
 	statusFrame:SetBackdropColor(0,0,0,0.5);
 	local statusFrameString = statusFrame:CreateFontString("FHS_Status_Text","BACKGROUND","GameTooltipText");
 	statusFrameString:SetPoint("CENTER",statusFrame,"CENTER",0,2);
-
 end
 	
 
 function FHS_SetupSeatFrames()
-
 	local seatFrame;
 	local seatlocations =
 	{
@@ -3544,7 +3306,6 @@ function FHS_SetupSeatFrames()
 	
 	for seat=1,9 do
 		seatFrame = CreateFrame("Frame", "FHS_Seat_"..seat, FHSPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
-		-- seatFrame:EnableMouse();
 		seatFrame:SetHeight(35);
 		seatFrame:SetWidth(175);
 		seatFrame:SetPoint("CENTER", FHSPokerFrame, "CENTER", seatlocations[seat].x, seatlocations[seat].y);
@@ -3572,14 +3333,6 @@ function FHS_SetupSeatFrames()
 		
 		local seatFrameStatus = seatFrame:CreateFontString(seatFrame:GetName().."_Status", "BACKGROUND", "GameTooltipTextSmall");
 		seatFrameStatus:SetPoint("BOTTOMRIGHT", seatFrame, "CENTER", 80, -10);
-		
-		-- seatFrame:SetScript("OnMouseDown",
-		-- 	function(self, button)
-		-- 		if ( button == "RightButton" ) then
-		-- 			FHS_PopupMenu(self:GetName());
-		-- 		end
-		-- 	end
-		-- );
 		
 		local seatFramePort = seatFrame:CreateTexture(seatFrame:GetName().."_Port", "BACKGROUND");
 		seatFramePort:SetWidth(60);
