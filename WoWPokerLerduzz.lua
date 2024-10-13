@@ -3277,7 +3277,7 @@ end
 function FHS_SetupStatusFrame()
 	local statusFrame = CreateFrame("Frame", "FHS_Status", FHSPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
 	statusFrame:SetHeight(30);
-	statusFrame:SetWidth(330);
+	statusFrame:SetWidth(340);
 	statusFrame:SetPoint("CENTER", FHSPokerFrame, "CENTER", 0, 85);
 	statusFrame:SetBackdrop( { 
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
