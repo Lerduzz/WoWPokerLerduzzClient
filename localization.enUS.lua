@@ -86,7 +86,6 @@ MyLocalization = setmetatable(
 		['No Winners. Game Seed = '] = 'No Winners. Game Seed = ',
 		['Error case'] = 'Error case',
 		['Player Invalid Action'] = 'Player Invalid Action',
-		['Cannot boot the dealer.'] = 'Cannot boot the dealer.',
 		['Folded'] = 'Folded',
 		['Showing'] = 'Showing',
 		['No such player'] = 'No such player',
