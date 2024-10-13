@@ -3557,7 +3557,7 @@ function FHS_SetupSeatFrames()
 		seatFrame:SetBackdropColor(0, 0, 0,.5);
 
 		local seatFrameButton = seatFrame:CreateTexture(seatFrame:GetName().."_Button", "BACKGROUND");
-		seatFrameButton:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\button");
+		seatFrameButton:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\boton");
 		seatFrameButton:Hide();
 		seatFrameButton:SetWidth(12);
 		seatFrameButton:SetHeight(12);
