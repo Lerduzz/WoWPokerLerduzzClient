@@ -3116,21 +3116,24 @@ end
 
 function FHS_SetupTopButtons()
 	local setSizeButton = CreateFrame("Button", "FHSPoker_SetSizeButton", FHSPokerFrame);
-	setSizeButton:SetHeight(32);setSizeButton:SetWidth(32);
-	setSizeButton:SetPoint("TOPRIGHT", FHSPokerFrame, "TOPRIGHT", -200, -5);
+	setSizeButton:SetHeight(32);
+	setSizeButton:SetWidth(32);
+	setSizeButton:SetPoint("CENTER", FHSPokerFrame, "CENTER", -14, 217);
 	
 	local setSizeIconButton = setSizeButton:CreateTexture("FHSPoker_MinimizeMapIcon", "BACKGROUND")
 	setSizeIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\mapicon_g");
-	setSizeIconButton:SetHeight(32);setSizeIconButton:SetWidth(32);
-	setSizeIconButton:SetPoint("CENTER",setSizeButton,"CENTER",0,0);
+	setSizeIconButton:SetHeight(32);
+	setSizeIconButton:SetWidth(32);
+	setSizeIconButton:SetPoint("CENTER", setSizeButton, "CENTER", 0, 0);
 	
-	setSizeButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight","ADD");
+	setSizeButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD");
 	
-	setSizeButton:SetScript("OnClick",function() FHS_SizeClick(); end);	
+	setSizeButton:SetScript("OnClick", function() FHS_SizeClick(); end);	
 	
 	local minimizeButton = CreateFrame("Button", "FHSPoker_Minimize", FHSPokerFrame);
-	minimizeButton:SetHeight(32);minimizeButton:SetWidth(32);
-	minimizeButton:SetPoint("TOPRIGHT", FHSPokerFrame, "TOPRIGHT", -170, -10);
+	minimizeButton:SetHeight(32);
+	minimizeButton:SetWidth(32);
+	minimizeButton:SetPoint("CENTER", FHSPokerFrame, "CENTER", 14, 217);
 	
 	local minimizeIconButton = minimizeButton:CreateTexture("FHSPoker_MinimizeMapIcon", "BACKGROUND")
 	minimizeIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\mapicon");
