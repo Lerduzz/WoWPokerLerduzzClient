@@ -47,12 +47,6 @@ local RoundCount = 0;
 
 local VodkaHoldem_options_panel;
 
-local OriginalCardTexture = "interface\\addons\\WoWPokerLerduzz\\textures\\blank"
-local NeutralCardTexture = "interface\\addons\\WoWPokerLerduzz\\textures\\blank_n"
-local AllianceCardTexture = "interface\\addons\\WoWPokerLerduzz\\textures\\blank_a"
-local HordeCardTexture = "interface\\addons\\WoWPokerLerduzz\\textures\\blank_h"
-
---Single
 
 local CardRank=
 {
@@ -274,32 +268,6 @@ function FHSPoker_OnLoad()
 end;
 
 
-function FHS_SetCardTextures()
-
-	-- Pick Artwork to use and assign to CardTexture
-	if FHS_ArtWork == 4 then
-		CardTexture = OriginalCardTexture
-	elseif FHS_ArtWork == 1 then
-		CardTexture = NeutralCardTexture
-	elseif FHS_ArtWork == 2 then
-		CardTexture = AllianceCardTexture
-	elseif FHS_ArtWork == 3 then
-		CardTexture = HordeCardTexture
-	else
-		CardTexture = NeutralCardTexture
-	end
-
-	-- Go through all cards
-	for key, object in pairs(Cards) do 
-		-- if card is a blank then assign artwork from above
-		if string.find(Cards[key].object, "Blank") then 
-			Cards[key].Artwork:SetTexture(CardTexture)
-		end
-	end
-	_G["FHS_Blank_Example"]:SetTexture(CardTexture)
-end
-
-
 function SeatSlashCommand(msg)
 
 	--Recenter the frame
@@ -499,7 +467,6 @@ function FHSPoker_OnEvent(self, event, ...)
 			end
 			
 			FHS_SetupOptionsPanel();
-			FHS_SetCardTextures();
 			FHS_SetupXMLButtons();
 		end
 
@@ -3180,37 +3147,15 @@ function FHS_SetupOptionsPanel()
 	    'currentTextFunc', function(value) return ("%.0f"):format(value) end
 	)
 	
-	-- 4 = Original, 1 = Neutral, 2 = Alliance, 3 = Horde
-	local VodkaHoldem_Options_Artwork_Drop = VodkaHoldem_options_panel:MakeDropDown(
-	    'name', L['Artwork'],
-	    'description', L['Select card back artwork'],
-	    'values', {
-	        1, L['Neutral'],
-	        2, L['Alliance'],
-	        3, L['Horde'],
-			4, L['Original']
-	     },
-	    'default', 1,
-	    'getFunc', function() return FHS_ArtWork end,
-	    'setFunc', function(value) FHS_ArtWork = value; FHS_SetCardTextures() end
-	)
-
-	
 	local title, subText = VodkaHoldem_options_panel:MakeTitleTextAndSubText(
 		L['WoW Poker Lerduzz Options'], 
 		L['These options are saved between sessions']
 	)
 	
-	local VodkaHoldem_Options_CardArtwork = VodkaHoldem_options_panel:CreateTexture("FHS_Blank_Example","ARTWORK")
-	VodkaHoldem_Options_CardArtwork:SetHeight(128);VodkaHoldem_options_panel:SetWidth(128)
-	
-	VodkaHoldem_Options_Chips_slider:SetPoint("TOPLEFT",50, -100)
-	VodkaHoldem_Options_Blind_slider:SetPoint("TOPLEFT",50, -175)
-	VodkaHoldem_Options_Increment_slider:SetPoint("TOPLEFT",50, -250)
-	VodkaHoldem_Options_Artwork_Drop:SetPoint("TOPLEFT",50, -325)
-	VodkaHoldem_Options_Minimap_toggle:SetPoint("TOPLEFT",250, -100)
-	VodkaHoldem_Options_CardArtwork:SetPoint("TOPLEFT",200,-300)
-	
+	VodkaHoldem_Options_Chips_slider:SetPoint("TOPLEFT", 50, -100)
+	VodkaHoldem_Options_Blind_slider:SetPoint("TOPLEFT", 50, -175)
+	VodkaHoldem_Options_Increment_slider:SetPoint("TOPLEFT", 50, -250)
+	VodkaHoldem_Options_Minimap_toggle:SetPoint("TOPLEFT", 250, -100)	
 end
 
 
@@ -3301,7 +3246,7 @@ function FHS_SetupTableFrame()
 	tableFrame:SetPoint("CENTER",UIParent,"CENTER",0,0);
 	
 	local circleTexture = tableFrame:CreateTexture("FHS_CCirc", "OVERLAY");
-	circleTexture:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\table");
+	circleTexture:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\mesa");
 	circleTexture:SetTexCoord(0, 1, 0, 1);
 	circleTexture:SetWidth(1024);
 	circleTexture:SetHeight(1024);
@@ -3693,37 +3638,43 @@ function FHS_SetupCardFrames()
 	cardFrame:SetPoint("CENTER",nil,nil,-330,220);
 
 	for card=0,12 do
-		-- clubs
-		thiscard = cardFrame:CreateTexture("FHS_Card_C"..card,"ARTWORK");
-		thiscard:SetHeight(128);cardFrame:SetWidth(128);
-		thiscard:SetPoint("CENTER",nil,nil);
-		thiscard:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\c"..card);
+		-- Picas
+		thiscard = cardFrame:CreateTexture("FHS_Card_C"..card, "ARTWORK");
+		thiscard:SetHeight(128);
+		thiscard:SetWidth(128);
+		thiscard:SetPoint("CENTER", nil, nil);
+		thiscard:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\cartas\\picas\\"..card);
 		
-		-- diamonds
-		thiscard = cardFrame:CreateTexture("FHS_Card_D"..card,"ARTWORK");
-		thiscard:SetHeight(128);cardFrame:SetWidth(128);
-		thiscard:SetPoint("CENTER",nil,nil);
-		thiscard:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\d"..card);
+		-- Diamantes
+		thiscard = cardFrame:CreateTexture("FHS_Card_D"..card, "ARTWORK");
+		thiscard:SetHeight(128);
+		thiscard:SetWidth(128);
+		thiscard:SetPoint("CENTER", nil, nil);
+		thiscard:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\cartas\\diamantes\\"..card);
 		
-		-- hearts
-		thiscard = cardFrame:CreateTexture("FHS_Card_H"..card,"ARTWORK");
-		thiscard:SetHeight(128);cardFrame:SetWidth(128);
-		thiscard:SetPoint("CENTER",nil,nil);
-		thiscard:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\h"..card);
+		-- Corazones
+		thiscard = cardFrame:CreateTexture("FHS_Card_H"..card, "ARTWORK");
+		thiscard:SetHeight(128);
+		thiscard:SetWidth(128);
+		thiscard:SetPoint("CENTER", nil, nil);
+		thiscard:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\cartas\\corazones\\"..card);
 		
-		-- spades
-		thiscard = cardFrame:CreateTexture("FHS_Card_S"..card,"ARTWORK");
-		thiscard:SetHeight(128);cardFrame:SetWidth(128);
-		thiscard:SetPoint("CENTER",nil,nil);
-		thiscard:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\s"..card);
+		-- Trevoles
+		thiscard = cardFrame:CreateTexture("FHS_Card_S"..card, "ARTWORK");
+		thiscard:SetHeight(128);
+		thiscard:SetWidth(128);
+		thiscard:SetPoint("CENTER", nil, nil);
+		thiscard:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\cartas\\trevoles\\"..card);
 		
 	end
 	
-	-- card backs
+	-- Reverso de cartas
 	for card=1,23 do
-		thiscard = cardFrame:CreateTexture("FHS_Blank_"..card,"ARTWORK");
-		thiscard:SetHeight(128);cardFrame:SetWidth(128);
-		thiscard:SetPoint("CENTER",nil,nil);
+		thiscard = cardFrame:CreateTexture("FHS_Blank_"..card, "ARTWORK");
+		thiscard:SetHeight(128);
+		thiscard:SetWidth(128);
+		thiscard:SetPoint("CENTER", nil, nil);
+		thiscard:SetTexture("interface\\addons\\WoWPokerLerduzz\\textures\\cartas\\reverso")
 	end
 	
 end
