@@ -3629,13 +3629,13 @@ end
 
 
 function FHS_SetupCardFrames()
-
 	local cardFrame
 	local thiscard
 	
-	cardFrame = CreateFrame("Frame","FHS_CardFrame",FHSPokerFrame);
-	cardFrame:SetHeight(560);cardFrame:SetWidth(860);
-	cardFrame:SetPoint("CENTER",nil,nil,-330,220);
+	cardFrame = CreateFrame("Frame", "FHS_CardFrame", FHSPokerFrame);
+	cardFrame:SetHeight(560);
+	cardFrame:SetWidth(860);
+	cardFrame:SetPoint("CENTER", nil, nil, -330, 220);
 
 	for card=0,12 do
 		-- Picas
@@ -3676,7 +3676,6 @@ function FHS_SetupCardFrames()
 		thiscard:SetPoint("CENTER", nil, nil);
 		thiscard:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\cartas\\reverso")
 	end
-	
 end
 
 -----------------------
