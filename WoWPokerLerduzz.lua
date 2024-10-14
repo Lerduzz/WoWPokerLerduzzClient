@@ -812,11 +812,11 @@ function FHS_SitOutInClick()
 			FHS_FoldClick();
 			FHS_SendMessage("inout_"..LocalSeat.."_OUT",DealerName);
 			Seats[LocalSeat].inout="OUT";
-			FHS_SitOutIn:SetText(L['I\'m Back']);
+			FHSPoker_SitInOutIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\sentarse");
 		else			
 			FHS_SendMessage("inout_"..LocalSeat.."_IN",DealerName);
 			Seats[LocalSeat].inout="IN";
-			FHS_SitOutIn:SetText(L['Sit Out']);
+			FHSPoker_SitInOutIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\pararse");
 		end;
 	else
 		-- don't let the dealer sit out -- put up a message box to that dealer must play	
@@ -2965,8 +2965,6 @@ end
 
 
 function FHS_SetupXMLButtons()
-	_G["FHS_Quit"]:SetText(L['Quit']);
-	_G["FHS_SitOutIn"]:SetText(L['Sit Out']);
 	_G["FHS_Fold"]:SetText(L['Fold']);
 	_G["FHS_Call"]:SetText(L['Call']);
 	_G["FHS_AllIn"]:SetText(L['All In']);
@@ -2998,7 +2996,6 @@ end
 function FHS_SetupFrames()
 	FHS_SetupTableFrame();
 	FHS_SetupTopButtons();
-	FHS_SetupButtonButtons();
 	FHS_SetupButtonsFrame();
 	FHS_SetupStatusFrame();
 	FHS_SetupPotFrame();
@@ -3048,21 +3045,6 @@ function FHS_SetupTableFrame()
 end
 
 
-function FHS_SetupButtonButtons()
-	local quitButton = CreateFrame("Button", "FHS_Quit", FHSPokerFrame, "UIPanelButtonTemplate");
-	quitButton:SetText(L['Quit']);
-	quitButton:SetHeight(20);quitButton:SetWidth(100);
-	quitButton:SetPoint("BOTTOM",FHSPokerFrame,"BOTTOM",370,10)
-	quitButton:SetScript("OnClick",function() FHS_QuitClick(); end);
-	
-	local sitInOutButton = CreateFrame("Button", "FHS_SitOutIn", FHSPokerFrame, "UIPanelButtonTemplate");
-	sitInOutButton:SetText(L['Sit Out']);
-	sitInOutButton:SetHeight(20);sitInOutButton:SetWidth(100);
-	sitInOutButton:SetPoint("BOTTOM",FHSPokerFrame,"BOTTOM",370,35)
-	sitInOutButton:SetScript("OnClick",function() FHS_SitOutInClick(); end);
-end
-
-
 function FHS_Toggle_MiniMap(toggle)
 	if ( toggle ) then
 		minimapIcon = true;
@@ -3108,46 +3090,62 @@ function FHS_SetupTopButtons()
 	local playButton = CreateFrame("Button", "FHSPoker_PlayButton", FHSPokerFrame);
 	playButton:SetHeight(32);
 	playButton:SetWidth(32);
-	playButton:SetPoint("CENTER", FHSPokerFrame, "CENTER", -34, 217);
-	
+	playButton:SetPoint("CENTER", FHSPokerFrame, "CENTER", -36, 217);	
 	local playIconButton = playButton:CreateTexture("FHSPoker_PlayIcon", "BACKGROUND")
-	playIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\jugar");
+	playIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\jugar");
 	playIconButton:SetHeight(32);
 	playIconButton:SetWidth(32);
-	playIconButton:SetPoint("CENTER", playButton, "CENTER", 0, 0);
-	
-	playButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD");
-	
-	playButton:SetScript("OnClick", function() FHS_PlayClick(); end);	
+	playIconButton:SetPoint("CENTER", playButton, "CENTER", 0, 0);	
+	playButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD");	
+	playButton:SetScript("OnClick", function() FHS_PlayClick(); end);
+
+	local minimizeButton = CreateFrame("Button", "FHSPoker_MinimizeButton", FHSPokerFrame);
+	minimizeButton:SetHeight(32);
+	minimizeButton:SetWidth(32);
+	minimizeButton:SetPoint("CENTER", FHSPokerFrame, "CENTER", -18, 217);	
+	local minimizeIconButton = minimizeButton:CreateTexture("FHSPoker_MinimizeIcon", "BACKGROUND")
+	minimizeIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\minimizar");
+	minimizeIconButton:SetHeight(32);
+	minimizeIconButton:SetWidth(32);
+	minimizeIconButton:SetPoint("CENTER", minimizeButton, "CENTER", 0, 0);	
+	minimizeButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight","ADD");	
+	minimizeButton:SetScript("OnClick", function() FHSPokerFrame:Hide(); end);
 
 	local setSizeButton = CreateFrame("Button", "FHSPoker_SetSizeButton", FHSPokerFrame);
 	setSizeButton:SetHeight(32);
 	setSizeButton:SetWidth(32);
-	setSizeButton:SetPoint("CENTER", FHSPokerFrame, "CENTER", -14, 217);
-	
-	local setSizeIconButton = setSizeButton:CreateTexture("FHSPoker_MinimizeMapIcon", "BACKGROUND")
-	setSizeIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\mapicon_g");
+	setSizeButton:SetPoint("CENTER", FHSPokerFrame, "CENTER", 0, 217);	
+	local setSizeIconButton = setSizeButton:CreateTexture("FHSPoker_SetSizeIcon", "BACKGROUND")
+	setSizeIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\maximizar");
 	setSizeIconButton:SetHeight(32);
 	setSizeIconButton:SetWidth(32);
-	setSizeIconButton:SetPoint("CENTER", setSizeButton, "CENTER", 0, 0);
+	setSizeIconButton:SetPoint("CENTER", setSizeButton, "CENTER", 0, 0);	
+	setSizeButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD");	
+	setSizeButton:SetScript("OnClick", function() FHS_SizeClick(); end);
 	
-	setSizeButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD");
-	
-	setSizeButton:SetScript("OnClick", function() FHS_SizeClick(); end);	
-	
-	local minimizeButton = CreateFrame("Button", "FHSPoker_Minimize", FHSPokerFrame);
-	minimizeButton:SetHeight(32);
-	minimizeButton:SetWidth(32);
-	minimizeButton:SetPoint("CENTER", FHSPokerFrame, "CENTER", 14, 217);
-	
-	local minimizeIconButton = minimizeButton:CreateTexture("FHSPoker_MinimizeMapIcon", "BACKGROUND")
-	minimizeIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\mapicon");
-	minimizeIconButton:SetHeight(32);minimizeIconButton:SetWidth(32);
-	minimizeIconButton:SetPoint("CENTER", minimizeButton, "CENTER", 0, 0);
-	
-	minimizeButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight","ADD");
-	
-	minimizeButton:SetScript("OnClick",function() FHSPokerFrame:Hide(); end);
+	local closeButton = CreateFrame("Button", "FHSPoker_CloseButton", FHSPokerFrame);
+	closeButton:SetHeight(32);
+	closeButton:SetWidth(32);
+	closeButton:SetPoint("CENTER", FHSPokerFrame, "CENTER", 18, 217);	
+	local closeIconButton = closeButton:CreateTexture("FHSPoker_CloseIcon", "BACKGROUND")
+	closeIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\cerrar");
+	closeIconButton:SetHeight(32);
+	closeIconButton:SetWidth(32);
+	closeIconButton:SetPoint("CENTER", closeButton, "CENTER", 0, 0);	
+	closeButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD");	
+	closeButton:SetScript("OnClick", function() FHS_QuitClick(); end);
+
+	local sitInOutButton = CreateFrame("Button", "FHSPoker_SitInOutButton", FHSPokerFrame);
+	sitInOutButton:SetHeight(32);
+	sitInOutButton:SetWidth(32);
+	sitInOutButton:SetPoint("CENTER", FHSPokerFrame, "CENTER", 36, 217);	
+	local sitInOutIconButton = sitInOutButton:CreateTexture("FHSPoker_SitInOutIcon", "BACKGROUND")
+	sitInOutIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\pararse");
+	sitInOutIconButton:SetHeight(32);
+	sitInOutIconButton:SetWidth(32);
+	sitInOutIconButton:SetPoint("CENTER", sitInOutButton, "CENTER", 0, 0);	
+	sitInOutButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD");	
+	sitInOutButton:SetScript("OnClick", function() FHS_SitOutInClick(); end);
 end
 
 
