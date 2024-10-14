@@ -558,16 +558,13 @@ function FHS_Hidden_frame_OnUpdate(self, elap)
 
 		if (IsDealer==1 ) then
 			if ( Seats[LocalSeat].chips==0 ) then
-			-- if dealer and out of chips
-				FHS_Play:SetText(L['AutoDealing'])
+				-- if dealer and out of chips
 				if ( GetTime() > DealerTimer and DealerTimer > 0 ) then
 					if ( FHS_GetSeatedPlayers() > 2 ) then
 						FHS_PlayClick()
 						DealerTimer = 0
 					end
 				end
-			else
-				FHS_Play:SetText(L['Play'])
 			end
 		end
 		
@@ -953,7 +950,7 @@ function FHS_StartClient()
 	
 	IsDealer=0;
 	FHS_ShowTable();
-	FHS_Play:Hide();
+	FHSPoker_PlayButton:Hide();
 end
 
 
@@ -1626,7 +1623,7 @@ function FHS_StartDealer()
 	
 	FHS_ShowTable()
 	
-	FHS_Play:Show()
+	FHSPoker_PlayButton:Show()
 
 	--Set the initial Blinds
 	FHS_Set_CurrentBlind(BigBlindStart / (1+BlindIncrease))
@@ -2970,7 +2967,6 @@ end
 function FHS_SetupXMLButtons()
 	_G["FHS_Quit"]:SetText(L['Quit']);
 	_G["FHS_SitOutIn"]:SetText(L['Sit Out']);
-	_G["FHS_Play"]:SetText(L['Play']);
 	_G["FHS_Fold"]:SetText(L['Fold']);
 	_G["FHS_Call"]:SetText(L['Call']);
 	_G["FHS_AllIn"]:SetText(L['All In']);
@@ -3064,12 +3060,6 @@ function FHS_SetupButtonButtons()
 	sitInOutButton:SetHeight(20);sitInOutButton:SetWidth(100);
 	sitInOutButton:SetPoint("BOTTOM",FHSPokerFrame,"BOTTOM",370,35)
 	sitInOutButton:SetScript("OnClick",function() FHS_SitOutInClick(); end);
-	
-	local playButton = CreateFrame("Button", "FHS_Play", FHSPokerFrame, "UIPanelButtonTemplate");
-	playButton:SetText(L['Play']);
-	playButton:SetHeight(20);playButton:SetWidth(90);
-	playButton:SetPoint("BOTTOM",FHSPokerFrame,"BOTTOM",270,10)
-	playButton:SetScript("OnClick",function() FHS_PlayClick(); end);
 end
 
 
@@ -3115,6 +3105,21 @@ end
 
 
 function FHS_SetupTopButtons()
+	local playButton = CreateFrame("Button", "FHSPoker_PlayButton", FHSPokerFrame);
+	playButton:SetHeight(32);
+	playButton:SetWidth(32);
+	playButton:SetPoint("CENTER", FHSPokerFrame, "CENTER", -34, 217);
+	
+	local playIconButton = playButton:CreateTexture("FHSPoker_PlayIcon", "BACKGROUND")
+	playIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\jugar");
+	playIconButton:SetHeight(32);
+	playIconButton:SetWidth(32);
+	playIconButton:SetPoint("CENTER", playButton, "CENTER", 0, 0);
+	
+	playButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD");
+	
+	playButton:SetScript("OnClick", function() FHS_PlayClick(); end);	
+
 	local setSizeButton = CreateFrame("Button", "FHSPoker_SetSizeButton", FHSPokerFrame);
 	setSizeButton:SetHeight(32);
 	setSizeButton:SetWidth(32);
