@@ -42,7 +42,7 @@ local SidePot = {};
 
 local RoundCount = 0;
 
-local VodkaHoldem_options_panel;
+local PokerLerduzz_options_panel;
 
 
 local CardRank=
@@ -221,7 +221,7 @@ function FHSPoker_OnLoad()
 			OnAccept = function()
 			FHS_DealerClick();
 			end,
-			OnAlt = function() InterfaceOptionsFrame_OpenToCategory(VodkaHoldem_options_panel) end,
+			OnAlt = function() InterfaceOptionsFrame_OpenToCategory(PokerLerduzz_options_panel) end,
 			timeout = 0,
 			whileDead = 1,
 			hideOnEscape = 1
@@ -279,7 +279,7 @@ function SeatSlashCommand(msg)
 			FHS_DealerClick()
 			
 		elseif ( args[1]=="options" or args[1]=="config") then
-			InterfaceOptionsFrame_OpenToCategory(VodkaHoldem_options_panel);
+			InterfaceOptionsFrame_OpenToCategory(PokerLerduzz_options_panel);
 
 		elseif ( args[1]=="dealer" and table.getn(args) == 2) then
 			FHS_SendMessage("!seat",args[2]);
@@ -421,7 +421,7 @@ function FHSPoker_OnEvent(self, event, ...)
 
 	if (event == "PLAYER_ENTERING_WORLD") then
 		FHS_Debug_Feedback("PLAYER_ENTERING_WORLD" );
-		-- C_ChatInfo.RegisterAddonMessagePrefix("VodkaHoldem") : No se como es en LK.
+		-- C_ChatInfo.RegisterAddonMessagePrefix("PokerLerduzz") : No se como es en LK.
 		
 	elseif (event == "ADDON_LOADED") then
 		arg1 = ...;
@@ -455,7 +455,7 @@ function FHSPoker_OnEvent(self, event, ...)
 	elseif (event == "CHAT_MSG_ADDON") then
 		arg1 , arg2, arg3, arg4 = ...;
 		FHS_Debug_Feedback("CHAT_MSG_ADDON "..arg1 );
-		if ( arg1 == "VodkaHoldem") then
+		if ( arg1 == "PokerLerduzz") then
 			FHS_HandleAddonComms(arg2, arg3, arg4)
 		end
 	end
@@ -586,7 +586,7 @@ end
 
 function FHS_LauncherClicked(button)
 	if ( button == "RightButton" ) then
-		InterfaceOptionsFrame_OpenToCategory(VodkaHoldem_options_panel)
+		InterfaceOptionsFrame_OpenToCategory(PokerLerduzz_options_panel)
 	elseif ( button == "LeftButton" ) then
 		if ( IsDealer==0 and LocalSeat==0) then
 			StaticPopup_Show("FHS_DEALER")
@@ -1527,14 +1527,14 @@ end
 
 function FHS_SendMessage(msg,username)
 	FHS_Debug_Feedback("addon whisper "..msg.." to "..username);
-	SendAddonMessage("VodkaHoldem", "FHS_".. FHS_COMMS_version.."_"..msg, "WHISPER", username);
+	SendAddonMessage("PokerLerduzz", "FHS_".. FHS_COMMS_version.."_"..msg, "WHISPER", username);
 end;
 
 
 function FHS_BroadcastMessage(msg, channel)
 --"PARTY", "RAID", "GUILD", "BATTLEGROUND".
 	FHS_Debug_Feedback("broadcast "..msg.." on "..channel);
-	SendAddonMessage("VodkaHoldem", "FHS_".. FHS_COMMS_version.."_broadcast_"..msg, channel);
+	SendAddonMessage("PokerLerduzz", "FHS_".. FHS_COMMS_version.."_broadcast_"..msg, channel);
 end;
 
 
@@ -2895,9 +2895,9 @@ end
 
 function FHS_SetupOptionsPanel()
 	FHS_Debug_Feedback("Do options panel");
-	VodkaHoldem_options_panel = LibStub("LibSimpleOptions-1.0").AddOptionsPanel(L['WoW Poker Lerduzz'],function()  end)
+	PokerLerduzz_options_panel = LibStub("LibSimpleOptions-1.0").AddOptionsPanel(L['WoW Poker Lerduzz'],function()  end)
 
-	local VodkaHoldem_Options_Minimap_toggle = VodkaHoldem_options_panel:MakeToggle(
+	local PokerLerduzz_Options_Minimap_toggle = PokerLerduzz_options_panel:MakeToggle(
 	    'name', L['Minimap Icon'],
 	    'description', L['Turn minimap icon on/off'],
 	    'default', false,
@@ -2905,7 +2905,7 @@ function FHS_SetupOptionsPanel()
 	    'setFunc', function(value) FHS_Toggle_MiniMap(value) end
 	)
 
-	local VodkaHoldem_Options_Blind_slider = VodkaHoldem_options_panel:MakeSlider(
+	local PokerLerduzz_Options_Blind_slider = PokerLerduzz_options_panel:MakeSlider(
 	    'name', L['Starting Blind'],
 	    'description', L['Set the starting Blind'],
 	    'minText', '10',
@@ -2919,7 +2919,7 @@ function FHS_SetupOptionsPanel()
 	    'currentTextFunc', function(value) return ("%.0f"):format(value) end
 	)
 
-	local VodkaHoldem_Options_Increment_slider = VodkaHoldem_options_panel:MakeSlider(
+	local PokerLerduzz_Options_Increment_slider = PokerLerduzz_options_panel:MakeSlider(
 	    'name', L['Blind increase percent per round'],
 	    'description', L['Set the by what percent the Blind increases each round'],
 	    'minText', '0%',
@@ -2933,7 +2933,7 @@ function FHS_SetupOptionsPanel()
 	    'currentTextFunc', function(value) return ("%.0f%%"):format(value*100) end
 	)
 
-	local VodkaHoldem_Options_Chips_slider = VodkaHoldem_options_panel:MakeSlider(
+	local PokerLerduzz_Options_Chips_slider = PokerLerduzz_options_panel:MakeSlider(
 	    'name', L['Starting Chips'],
 	    'description', L['Set the starting Chips'],
 	    'minText', '500',
@@ -2945,22 +2945,22 @@ function FHS_SetupOptionsPanel()
 	    'current', StartChips,
 	    'setFunc', function(value)
 				FHS_Set_StartChips(value);
-				VodkaHoldem_Options_Blind_slider:SetMinMaxValues(10, StartChips);
-				_G[VodkaHoldem_Options_Blind_slider:GetName() .. "High"]:SetText(('%.0f'):format(StartChips))
-				VodkaHoldem_options_panel:Refresh();
+				PokerLerduzz_Options_Blind_slider:SetMinMaxValues(10, StartChips);
+				_G[PokerLerduzz_Options_Blind_slider:GetName() .. "High"]:SetText(('%.0f'):format(StartChips))
+				PokerLerduzz_options_panel:Refresh();
 			end,
 	    'currentTextFunc', function(value) return ("%.0f"):format(value) end
 	)
 
-	local title, subText = VodkaHoldem_options_panel:MakeTitleTextAndSubText(
+	local title, subText = PokerLerduzz_options_panel:MakeTitleTextAndSubText(
 		L['WoW Poker Lerduzz Options'], 
 		L['These options are saved between sessions']
 	)
 
-	VodkaHoldem_Options_Chips_slider:SetPoint("TOPLEFT", 50, -100)
-	VodkaHoldem_Options_Blind_slider:SetPoint("TOPLEFT", 50, -175)
-	VodkaHoldem_Options_Increment_slider:SetPoint("TOPLEFT", 50, -250)
-	VodkaHoldem_Options_Minimap_toggle:SetPoint("TOPLEFT", 250, -100)	
+	PokerLerduzz_Options_Chips_slider:SetPoint("TOPLEFT", 50, -100)
+	PokerLerduzz_Options_Blind_slider:SetPoint("TOPLEFT", 50, -175)
+	PokerLerduzz_Options_Increment_slider:SetPoint("TOPLEFT", 50, -250)
+	PokerLerduzz_Options_Minimap_toggle:SetPoint("TOPLEFT", 250, -100)	
 end
 
 
