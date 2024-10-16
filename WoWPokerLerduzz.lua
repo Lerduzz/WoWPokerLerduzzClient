@@ -737,8 +737,14 @@ function FHS_UpdateSeat(j)
 		end
 		
 		-- Translate status to local language. Cannot be done at source as source my not be playing in the same language!
-		_G[seat.."_Status"]:SetText(L[Seats[j].status])
-		_G[seat.."_PortWho"]:Hide()
+		local tempStatus = Seats[j].status;
+		if (tempStatus ~= "" and tempStatus ~= "Default" and tempStatus ~= "Playing") then
+			tempStatus = L[Seats[j].status]..": "..Seats[j].bet;
+		else
+			tempStatus = L[Seats[j].status];
+		end
+		_G[seat.."_Status"]:SetText(tempStatus);
+		_G[seat.."_PortWho"]:Hide();
 		
 		--Portrait
 		local portraitObj = _G[seat.."_Port"]
@@ -1362,14 +1368,14 @@ end
 
 
 function FHS_Client_Status_Update(j, chips, bet, status, alpha)
-	--Update about a player
-	Seats[j].chips=tonumber(chips)
-	Seats[j].bet=tonumber(bet)
-	Seats[j].status=status
-	Seats[j].alpha=alpha
+	-- Update about a player
+	Seats[j].chips = tonumber(chips);
+	Seats[j].bet = tonumber(bet);
+	Seats[j].status = status;
+	Seats[j].alpha = alpha;
 
-	FHS_UpdateSeat(j)
-	FHS_TotalPot()
+	FHS_UpdateSeat(j);
+	FHS_TotalPot();
 end
 
 
