@@ -453,7 +453,7 @@ function FHSPoker_OnEvent(self, event, ...)
 		end
 
 	elseif (event == "CHAT_MSG_ADDON") then
-		arg1 , arg2, arg3, arg4 = ...;
+		arg1, arg2, arg3, arg4 = ...;
 		FHS_Debug_Feedback("CHAT_MSG_ADDON "..arg1 );
 		if ( arg1 == "PokerLerduzz") then
 			FHS_HandleAddonComms(arg2, arg3, arg4)
@@ -1419,11 +1419,11 @@ end
 
 
 function FHS_Client_Deal(j)
-	FHS_SetCard(BlankCard,DealerX,DealerY, Seats[j].x-12 , Seats[j].y+12,1,CC*DealerDelay,500,0)
+	FHS_SetCard(BlankCard,DealerX,DealerY, Seats[j].x-12 , Seats[j].y+12,1,CC*DealerDelay,0,0)
 	BlankCard=BlankCard+1
 	CC=CC-1
 	
-	FHS_SetCard(BlankCard,DealerX,DealerY, Seats[j].x , Seats[j].y,1,CC*DealerDelay,500,1)
+	FHS_SetCard(BlankCard,DealerX,DealerY, Seats[j].x , Seats[j].y,1,CC*DealerDelay,0,1)
 	BlankCard=BlankCard+1
 	CC=CC-1
 
