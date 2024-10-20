@@ -55,9 +55,8 @@ local CardRank=
     L['Queen'],
     L['King'],
     L['Ace'],
-}
+};
 
---Plural
 local CardRanks=
 {
     "--",
@@ -74,7 +73,7 @@ local CardRanks=
     L['Queens'],
     L['Kings'],
     L['Aces'],
-}
+};
 
 
 local Cards = 
@@ -158,12 +157,11 @@ local Cards =
     {object="FHS_Blank_21" },
     {object="FHS_Blank_22" },
     {object="FHS_Blank_23" },
-}
+};
 
 
--- Asientos de los jugadores.
 local Seats	= {
-    { object="FHS_Seat_1", name="", x=219,	y=120,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 }, -- { object="FHS_Seat_1", name="", x=180,  y=190,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="" },
+    { object="FHS_Seat_1", name="", x=219,	y=120,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 },
     { object="FHS_Seat_2", name="", x=360,  y=65,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 },
     { object="FHS_Seat_3", name="", x=360,  y=-95,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 },
     { object="FHS_Seat_4", name="", x=220,  y=-130,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 },
@@ -172,91 +170,65 @@ local Seats	= {
     { object="FHS_Seat_7", name="", x=-360, y=-95,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 },
     { object="FHS_Seat_8", name="", x=-355,	y=50,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 },
     { object="FHS_Seat_9", name="", x=-220, y=120,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 },
-}
+};
 
---Flop as known at any point
 local Flop = {};
-
 local FlopBlank = {};
 
-local CardWidth=80;
+local CardWidth = 80;
 
-local DealerX=0;
-local DealerY=250;
+local DealerX = 0;
+local DealerY = 250;
 
-local DealerDelay=0.5;
-local CardSpeed=3;
-local CC=0;
+local DealerDelay = 0.5;
+local CardSpeed = 3;
+local CC = 0;
 local BlinkOn = 1;
 
-------------------
--- Functions --
-------------------
 function FHSPoker_OnLoad()
     StaticPopupDialogs["FHS_DEALER"] = 
     {
         text = L["Do you want to start the game?"],
-            button1 = L['Start Dealing'],
-            button2 = L['Cancel'],
-            button3 = L['Options'],
-            OnAccept = function()
-                FHS_SendMessage("!seat", UnitName("player"));
-            end,
-            OnAlt = function() InterfaceOptionsFrame_OpenToCategory(PokerLerduzz_options_panel) end,
-            timeout = 0,
-            whileDead = 1,
-            hideOnEscape = 1
+        button1 = L['Start Dealing'],
+        button2 = L['Cancel'],
+        button3 = L['Options'],
+        OnAccept = function() FHS_SendMessage("!seat", UnitName("player")); end,
+        OnAlt = function() InterfaceOptionsFrame_OpenToCategory(PokerLerduzz_options_panel) end,
+        timeout = 0,
+        whileDead = 1,
+        hideOnEscape = 1
     };
-    
-    -- Link LDB
     FHS_Setup_LDB();
-    
-    --Setup frames
     FHS_SetupFrames();
-    
-    -- Events
     FHSPoker_registerEvents();
-        
     FHS_Console_Feedback("::  "..L['WoW Poker Lerduzz'] .." ".. FHS_HOLDEM_version);
-    -- Assign all Cards their objects
     for key, object in pairs(Cards) do 
-        Cards[key].Artwork=_G[Cards[key].object];
-        Cards[key].fraction=0;
-        Cards[key].fadeout=0;
-        Cards[key].fadetime=0;
-        Cards[key].x=0;
-        Cards[key].y=0;
-        Cards[key].startx=0;
-        Cards[key].starty=0;
-        Cards[key].visible=0;
-        Cards[key].high=0;	
-    end
-
-    --Turn off all the cards etc
+        Cards[key].Artwork = _G[Cards[key].object];
+        Cards[key].fraction = 0;
+        Cards[key].fadeout = 0;
+        Cards[key].fadetime = 0;
+        Cards[key].x = 0;
+        Cards[key].y = 0;
+        Cards[key].startx = 0;
+        Cards[key].starty = 0;
+        Cards[key].visible = 0;
+        Cards[key].high = 0;	
+    end;
     FHS_ClearTable();
-
-    StuffLoaded=1;
+    StuffLoaded = 1;
 end;
 
 
 function FHS_SizeClick()
-    FHS_SetSize=FHS_SetSize+1;
-    
-    if (FHS_SetSize>2) then
-        FHS_SetSize=0;
-    end;
-
-    if (FHS_SetSize==0) then
+    FHS_SetSize = FHS_SetSize + 1;
+    if (FHS_SetSize > 2) then FHS_SetSize = 0; end;
+    if (FHS_SetSize == 0) then
         FHSPokerFrame:SetScale(1);
-        
-    elseif (FHS_SetSize==1) then
+    elseif (FHS_SetSize == 1) then
         FHSPokerFrame:SetScale(0.75);
-    
-    elseif (FHS_SetSize==2) then
-        FHSPokerFrame:SetScale(0.5);
-            
+    elseif (FHS_SetSize == 2) then
+        FHSPokerFrame:SetScale(0.5);            
     end;
-
     FHSPokerFrame:ClearAllPoints();
     FHSPokerFrame:SetPoint("CENTER", "UIParent", "CENTER", 0, 0);
 end
