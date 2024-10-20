@@ -21,7 +21,6 @@ local minimapIcon = true;
 local lasttime = 0;
 local timedelta = 0;
 local PlayerTurnEndTime = 0;
-local RandomSeed = 0;
 local AFKTimeLimit = 60;
 
 local BigBlindStart = 20; -- Starting Big Blind
@@ -181,7 +180,6 @@ local Seats	= {
 }
 
 local LocalSeat = 0;
-local IsDealer = 0;
 local DealerName = "";
 
 --Shuffle array
@@ -219,7 +217,7 @@ function FHSPoker_OnLoad()
 			button2 = L['Cancel'],
 			button3 = L['Options'],
 			OnAccept = function()
-			FHS_DealerClick();
+			-- FHS_DealerClick();
 			end,
 			OnAlt = function() InterfaceOptionsFrame_OpenToCategory(PokerLerduzz_options_panel) end,
 			timeout = 0,
@@ -268,7 +266,7 @@ function SeatSlashCommand(msg)
 	FHSPokerFrame:SetPoint("CENTER", "UIParent", "CENTER", 0, 0);
 
 	if (msg=="") then 
-		FHS_DealerClick()
+		-- FHS_DealerClick()
 		
 	else
 		-- Split arguments into a table and make all arguments lowercase
@@ -276,7 +274,7 @@ function SeatSlashCommand(msg)
 		
 		-- only a valid message if we have atleast 1 argument
 		if (table.getn(args)<1) then
-			FHS_DealerClick()
+			-- FHS_DealerClick()
 			
 		elseif ( args[1]=="options" or args[1]=="config") then
 			InterfaceOptionsFrame_OpenToCategory(PokerLerduzz_options_panel);
@@ -342,14 +340,6 @@ function FHS_SizeClick()
 	FHSPokerFrame:ClearAllPoints();
 	FHSPokerFrame:SetPoint("CENTER", "UIParent", "CENTER", 0, 0);
 end
-
-
-function FHS_DealerClick()
-	if (IsDealer==1) then
-		FHS_StopServer();
-	end
-	FHS_StartDealer();	
-end;
 
 
 --clear all the cards off the table
@@ -554,25 +544,11 @@ end
 
 
 function FHS_Hidden_frame_OnUpdate(self, elap)
-	if (StuffLoaded==1) then
-
-		if (IsDealer==1 ) then
-			if ( Seats[LocalSeat].chips==0 ) then
-				-- if dealer and out of chips
-				if ( GetTime() > DealerTimer and DealerTimer > 0 ) then
-					if ( FHS_GetSeatedPlayers() > 2 ) then
-						FHS_PlayClick()
-						DealerTimer = 0
-					end
-				end
-			end
-		end
-		
-		if ( minimapIcon ) then
+	if (StuffLoaded == 1) then
+		if (minimapIcon) then
 			FHSPoker_MapIconUpdate()
-		end
-		
-		if ( FHS_ldbIcon ) then
+		end		
+		if (FHS_ldbIcon) then
 			FHS_LDB_OnUpdate()
 		end
 	end
@@ -585,14 +561,13 @@ end
 
 
 function FHS_LauncherClicked(button)
-	if ( button == "RightButton" ) then
+	if (button == "RightButton") then
 		InterfaceOptionsFrame_OpenToCategory(PokerLerduzz_options_panel)
-	elseif ( button == "LeftButton" ) then
-		if ( IsDealer==0 and LocalSeat==0) then
+	elseif (button == "LeftButton") then
+		if (LocalSeat == 0) then
 			StaticPopup_Show("FHS_DEALER")
 			return
-		end
-		
+		end		
 		FHS_ShowTable()
 	end
 end
@@ -787,7 +762,6 @@ end
 
 
 function FHS_StopClient()
-	IsDealer = 0;
 	LocalSeat = 0;
 	WhosTurn = 0;
 	DealerName = "";
@@ -796,38 +770,26 @@ end
 
 
 function FHS_QuitClick()
-	if (IsDealer == 0) then
-		if (DealerName ~= "" ) then
-			FHS_SendMessage("q_"..LocalSeat,DealerName)
-		end;
-		
-		FHS_StopClient()
-	else
-		FHS_StopServer()
-	end
-
+	if (DealerName ~= "" ) then
+		FHS_SendMessage("q_"..LocalSeat, DealerName)
+	end;	
+	FHS_StopClient()
 	FHS_HideAllButtons(true)
-
 	FHSPokerFrame:Hide()
 end;
 
 
 function FHS_SitOutInClick()
-	if (IsDealer==0) then
-		if(Seats[LocalSeat].inout=="IN") then
-			FHS_FoldClick();
-			FHS_SendMessage("inout_"..LocalSeat.."_OUT",DealerName);
-			Seats[LocalSeat].inout="OUT";
-			FHSPoker_SitInOutIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\sentarse");
-		else			
-			FHS_SendMessage("inout_"..LocalSeat.."_IN",DealerName);
-			Seats[LocalSeat].inout="IN";
-			FHSPoker_SitInOutIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\pararse");
-		end;
-	else
-		-- don't let the dealer sit out -- put up a message box to that dealer must play	
-		message(L['Sorry the dealer can not sit out.  Set your chips to Zero to enable auto deal.']);	
-	end
+	if(Seats[LocalSeat].inout=="IN") then
+		FHS_FoldClick();
+		FHS_SendMessage("inout_"..LocalSeat.."_OUT",DealerName);
+		Seats[LocalSeat].inout="OUT";
+		FHSPoker_SitInOutIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\sentarse");
+	else			
+		FHS_SendMessage("inout_"..LocalSeat.."_IN",DealerName);
+		Seats[LocalSeat].inout="IN";
+		FHSPoker_SitInOutIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\pararse");
+	end;
 end
 
 
@@ -844,34 +806,17 @@ end;
 
 
 function FHS_FoldClick()
-	if (IsDealer==0) then		
-		if (Seats[LocalSeat].dealt==1) then
-			FHS_SendMessage("fold_"..LocalSeat,DealerName)
-		
-			--Server wont tell us we've folded, so we do it ourselves
-			Seats[LocalSeat].dealt=0
-						
-			FHS_ShowCard(LocalSeat,"Folded")
-			FHS_Fold:SetText(L['Show Cards'])
-			FHS_Fold:Hide()
-		else
-			FHS_SendMessage("showcards_"..LocalSeat.."_"..RoundCount,DealerName)
-			FHS_Fold:Hide()
-		end
+	if (Seats[LocalSeat].dealt==1) then
+		FHS_SendMessage("fold_"..LocalSeat,DealerName)	
+		Seats[LocalSeat].dealt = 0					
+		FHS_ShowCard(LocalSeat, "Folded")
+		FHS_Fold:SetText(L['Show Cards'])
+		FHS_Fold:Hide()
 	else
-		if (Seats[LocalSeat].dealt==1) then		
-			Seats[LocalSeat].status="Folded"
-			FHS_FoldPlayer(LocalSeat)
-			FHS_Fold:SetText(L['Show Cards'])
-			FHS_Fold:Hide()
-		else
-			FHS_ShowCard(LocalSeat,"Showing")
-			FHS_Fold:Hide()
-		end
+		FHS_SendMessage("showcards_"..LocalSeat.."_"..RoundCount,DealerName)
+		FHS_Fold:Hide()
 	end
 	FHS_UpdateSeat(LocalSeat);	
-
-	--its no longer our turn, obviously
 	FHS_HideAllButtons(false)
 end
 
@@ -891,11 +836,7 @@ function FHS_RaiseClick()
 		delta=Seats[LocalSeat].chips;	
 	end;
 	
-	if (IsDealer==0) then
-		FHS_SendMessage("call_"..LocalSeat.."_"..delta,DealerName);
-	else
-		FHS_PlayerAction(LocalSeat,delta);
-	end;
+	FHS_SendMessage("call_"..LocalSeat.."_"..delta,DealerName);
 end;
 
 
@@ -908,11 +849,7 @@ function FHS_AllInClick()
 	delta=Seats[LocalSeat].chips;	
 	if (delta==0) then return; end;
 
-	if (IsDealer==0) then
-		FHS_SendMessage("call_"..LocalSeat.."_"..delta,DealerName);
-	else
-		FHS_PlayerAction(LocalSeat,delta);
-	end;
+	FHS_SendMessage("call_"..LocalSeat.."_"..delta,DealerName);
 end;
 
 
@@ -937,24 +874,14 @@ function FHS_CallClick()
 	end;
 
 	if (delta>-1) then
-		if (IsDealer==0) then
-			FHS_SendMessage("call_"..LocalSeat.."_"..delta,DealerName);
-		else
-			FHS_PlayerAction(LocalSeat,delta);
-		end;
+		FHS_SendMessage("call_"..LocalSeat.."_"..delta,DealerName);
 	end;
 end;
 
 
 function FHS_StartClient()
-	FHS_Console_Feedback(string.format(L['%s has seated you in Seat %d'],DealerName, LocalSeat));
+	FHS_Console_Feedback(string.format(L['%s has seated you in Seat %d'], DealerName, LocalSeat));
 	FHS_ClearTable();
-	
-	if (IsDealer==1) then
-		FHS_StopServer();
-	end
-	
-	IsDealer=0;
 	FHS_ShowTable();
 	FHSPoker_PlayButton:Hide();
 end
@@ -1120,140 +1047,87 @@ function FHS_HandleAddonComms(msg, channel, sender)
 	
 	-- tab 3 holds the nature of the message so we check this to find out what to do
 	
-	-- First check server only messages
-	if ( IsDealer == 1 ) then
-	-- server only messages
-		if (tab[3]=="pong!") then
-			FHS_Debug_Feedback("pong!")
-			FHS_SeatPlayer(sender)
+	if (tab[3]=="ping!") then
+		DealerName=sender
+		FHS_SendMessage("pong!",sender)
+		DealerName=""
 		
-		-- Player telling server he folded
-		elseif (tab[3]=="fold") then
-			FHS_Debug_Feedback("fold")
-			local j=tonumber(tab[4])
-			if (IsPlaying(sender)==1 and Seats[j].dealt==1) then
-				FHS_FoldPlayer(j)
-			end
-
-		-- Player telling server he actioned ( call, check, raise, all in)
-		elseif (tab[3]=="call") then
-			FHS_Debug_Feedback("call")
-			local j=tonumber(tab[4])
-			if (IsPlaying(sender)==1 and Seats[j].dealt==1) then
-				FHS_PlayerAction(j,tonumber(tab[5]))	
-			end
-
-		-- Player telling server he wants to flash his cards
-		elseif (tab[3]=="showcards" and GameLevel == 5) then
-			FHS_Debug_Feedback("showcards")
-			local j=tonumber(tab[4])
-			FHS_Debug_Feedback("4:"..j.." 5:"..tab[5].." sender:"..sender.." RoundCount:"..RoundCount)
-			if (IsPlaying(sender)==1 and tonumber(tab[5]) == RoundCount) then
-			--Temporal bug... showcards were hitting on the next round
-				FHS_ShowCard(j,"Showing")
-			end
-		end
+	elseif (tab[3]=="NoSeats") then
+	--Noseats	
+		FHS_Console_Feedback(string.format(L['%s has no seat available for you'], sender))
+		
+	-- Only process if the message came from the dealer!
+	elseif ( DealerName==sender ) then
 	
-	-- Then check client only messages
-	elseif ( IsDealer == 0) then
-	-- client only messages
-		if (tab[3]=="ping!") then
-			DealerName=sender
-			FHS_SendMessage("pong!",sender)
-			DealerName=""
+		--Player Sits
+		if (tab[3]=="s") then
+			FHS_Client_Sit(tonumber(tab[4]), tab[5], tonumber(tab[6]), tonumber(tab[7]))
 			
-		elseif (tab[3]=="NoSeats") then
-		--Noseats	
-			FHS_Console_Feedback(string.format(L['%s has no seat available for you'], sender))
+		--Player Status
+		elseif (tab[3]=="st") then
+			FHS_Client_Status_Update(tonumber(tab[4]), tab[5], tab[6], tab[7], tab[8])
 			
-		-- Only process if the message came from the dealer!
-		elseif ( DealerName==sender ) then
-		
-			--Player Sits
-			if (tab[3]=="s") then
-				FHS_Client_Sit(tonumber(tab[4]), tab[5], tonumber(tab[6]), tonumber(tab[7]))
-				
-			--Player Status
-			elseif (tab[3]=="st") then
-				FHS_Client_Status_Update(tonumber(tab[4]), tab[5], tab[6], tab[7], tab[8])
-				
-			--Dealer Button
-			elseif (tab[3]=="b") then
-				--tab[4] contains the player with the button
-				FHS_SelectPlayerButton(tonumber(tab[4]))
-				
-			-- Player is forced to sit out (timer)
-			elseif (tab[3]=="forceout") then
-				FHS_Console_Feedback(L['You did not act in time. Press I\'m Back to continue playing.'])
-				FHS_SitOutInClick()
-
-			--- Host has quit the game
-			elseif (tab[3]=="hostquit") then
-				FHS_Console_Feedback(DealerName.." "..L['has quit. GG.'])
-				FHS_StopClient()
-				
-			-- Hole Cards
-			elseif (tab[3]=="round0") then  --PRE FLOP
-				FHS_Client_Round0( tonumber(tab[4]) )
+		--Dealer Button
+		elseif (tab[3]=="b") then
+			--tab[4] contains the player with the button
+			FHS_SelectPlayerButton(tonumber(tab[4]))
 			
-			-- Your hole cards
-			elseif (tab[3]=="hole") then
-				FHS_Client_Hole( tonumber(tab[4]), tonumber(tab[5]) )
-		
-			--Other peoples hole cards
-			elseif (tab[3]=="deal") then
-				FHS_Client_Deal( tonumber(tab[4]))
-
-			-- The Tables Flop (blanks)
-			-- Note we record what blank cards we used, so we can clean them up when the flop is shown
-			elseif (tab[3]=="flop0") then
-				FHS_Client_Flop0()
-
-			-- The Tables Flop (Real Cards)
-			elseif (tab[3]=="flop1") then
-				FHS_Client_Flop1(tonumber(tab[4]), tonumber(tab[5]), tonumber(tab[6]))
-		
-			-- Turn card
-			elseif (tab[3]=="turn") then
-				
-				Flop[4]=tonumber(tab[4]);
-				FHS_SetCard(Flop[4],DealerX,DealerY, CardWidth*1,0,1,0,0,0)
-				FHS_StatusTextCards()
-
-			-- River card
-			elseif (tab[3]=="river") then
+		-- Player is forced to sit out (timer)
+		elseif (tab[3]=="forceout") then
+			FHS_Console_Feedback(L['You did not act in time. Press I\'m Back to continue playing.'])
+			FHS_SitOutInClick()
+		--- Host has quit the game
+		elseif (tab[3]=="hostquit") then
+			FHS_Console_Feedback(DealerName.." "..L['has quit. GG.'])
+			FHS_StopClient()
 			
-				Flop[5]=tonumber(tab[4]);
-				FHS_SetCard(Flop[5],DealerX,DealerY, CardWidth*2,0,1,0,0,0)
-				FHS_StatusTextCards()
-				
-			-- Show cards
-			elseif (tab[3]=="show") then
-				FHS_Client_Show(tonumber(tab[4]), tonumber(tab[5]), tonumber(tab[6]), tab[7])
-				
-			--Server saying whos turn it is
-			elseif (tab[3]=="go") then
-				local j=tonumber(tab[4])
-				HighestBet=tonumber(tab[5])
-				WhosTurn=j
-				FHS_UpdateWhosTurn()
+		-- Hole Cards
+		elseif (tab[3]=="round0") then  --PRE FLOP
+			FHS_Client_Round0( tonumber(tab[4]) )
 		
-			elseif (tab[3]=="betsize") then
-				Blinds=tonumber(tab[4])
-				BetSize=Blinds			
-			end
+		-- Your hole cards
+		elseif (tab[3]=="hole") then
+			FHS_Client_Hole( tonumber(tab[4]), tonumber(tab[5]) )
+	
+		--Other peoples hole cards
+		elseif (tab[3]=="deal") then
+			FHS_Client_Deal( tonumber(tab[4]))
+		-- The Tables Flop (blanks)
+		-- Note we record what blank cards we used, so we can clean them up when the flop is shown
+		elseif (tab[3]=="flop0") then
+			FHS_Client_Flop0()
+		-- The Tables Flop (Real Cards)
+		elseif (tab[3]=="flop1") then
+			FHS_Client_Flop1(tonumber(tab[4]), tonumber(tab[5]), tonumber(tab[6]))
+	
+		-- Turn card
+		elseif (tab[3]=="turn") then
+			
+			Flop[4]=tonumber(tab[4]);
+			FHS_SetCard(Flop[4],DealerX,DealerY, CardWidth*1,0,1,0,0,0)
+			FHS_StatusTextCards()
+		-- River card
+		elseif (tab[3]=="river") then
+		
+			Flop[5]=tonumber(tab[4]);
+			FHS_SetCard(Flop[5],DealerX,DealerY, CardWidth*2,0,1,0,0,0)
+			FHS_StatusTextCards()
+			
+		-- Show cards
+		elseif (tab[3]=="show") then
+			FHS_Client_Show(tonumber(tab[4]), tonumber(tab[5]), tonumber(tab[6]), tab[7])
+			
+		--Server saying whos turn it is
+		elseif (tab[3]=="go") then
+			local j=tonumber(tab[4])
+			HighestBet=tonumber(tab[5])
+			WhosTurn=j
+			FHS_UpdateWhosTurn()
+	
+		elseif (tab[3]=="betsize") then
+			Blinds=tonumber(tab[4])
+			BetSize=Blinds			
 		end
-	end
-
-	-- Finally check message for either server or client
-	if (tab[3]=="!seat") then
-		--player tried to seat themselves.. assume they want to be a dealer
-		if (sender==UnitName("player")) then
-			FHS_Console_Feedback(L['Use just /poker instead'])
-		elseif (IsDealer==1) then
-			FHS_SendMessage("ping!",sender)
-		end
-
 	elseif (tab[3]=="seat") then
 		--We've Been Seated.. Clear our stats and await further messages
 		LocalSeat=tonumber(tab[4])
@@ -1285,12 +1159,7 @@ end
 
 function FHS_Receive_InOut( j, inout, sender)
 	Seats[j].inout=inout
-
-	if (IsDealer==1) then
-		-- dealer tells everyone else about the change
-		FHS_BroadCastToTable("inout_"..j.."_"..inout,LocalSeat)
-
-	elseif ( IsDealer==0 and sender==DealerName and inout=="OUT") then
+	if (sender==DealerName and inout=="OUT") then
 		-- everyone who gets the message dims the player
 		Seats[j].alpha=0.5
 		Seats[j].status="Sitting Out"
@@ -1322,34 +1191,16 @@ end
 
 
 function FHS_Receive_Quit( sender, j)
-	--Update about a player
-
-	if (IsDealer==0 and sender==DealerName) then
-		Seats[j].seated=0;
-		Seats[j].HavePort=0;
-		if (IsPlaying(sender)==1) then								
+	if (sender == DealerName) then
+		Seats[j].seated = 0;
+		Seats[j].HavePort = 0;
+		if (IsPlaying(sender) == 1) then								
 			FHS_UpdateSeat(j);
 			FHS_Console_Feedback(Seats[j].name.." "..L['has left the table.']);
 		end;
-
-		if (j==LocalSeat) then
-			
+		if (j == LocalSeat) then			
 			FHS_Console_Feedback(L['The dealer booted you.']);
 			FHS_StopClient();
-		end
-
-	else
-		if (IsPlaying(sender)==1) then								
-										
-			--Tell the other seats about the change
-			FHS_BroadCastToTable("q_"..j,j);
-			FHS_Console_Feedback(Seats[j].name.." "..L['has left the table.']);
-			Seats[j].seated=0;
-			Seats[j].HavePort=0;
-			FHS_UpdateSeat(j);
-			if (WhosTurn==j) then
-				FHS_GoNextPlayersTurn();
-			end
 		end
 	end
 end
@@ -1509,10 +1360,7 @@ function FHS_HandleOutsideBroadcast(tab, sender, channel)
 		return
 	end
 
-	if ( tab[4] == "whodealer" and IsDealer == 1) then
-		FHS_SendMessage("outside_dealer_"..(9-FHS_GetSeatedPlayers()),sender)
-	
-	elseif( tab[4] == "whoclient") then
+	if( tab[4] == "whoclient") then
 		FHS_SendMessage("outside_client_"..FHS_HOLDEM_version,sender)
 	end
 end
@@ -1551,21 +1399,6 @@ function FHS_BroadcastMessage(msg, channel)
 end;
 
 
-function FHS_BroadCastToTable(message,skip)
-	if (IsDealer==0) then
-		return;
-	end
-
-	for j=1,9 do
-		if ((j==LocalSeat) or(j==skip) or (Seats[j].seated==0))  then 
-			--no good
-		else
-			FHS_SendMessage(message,Seats[j].name);
-		end
-	end
-end
-
-
 function FHS_Console_Feedback(msg)
 	DEFAULT_CHAT_FRAME:AddMessage(msg);
 end
@@ -1577,107 +1410,6 @@ function FHS_Debug_Feedback(msg)
 			DLAPI.DebugLog("WoWPokerLerduzz", msg)
 		else
 			DEFAULT_CHAT_FRAME:AddMessage(msg);
-		end
-	end
-end
-
-
-function FHS_PlayClick()
---	FHSPokerFrame:SetScale(0.75);
-	if (IsDealer==0) then
-		return
-	end
-
-	if (GameLevel==5) then
-		GameLevel=0
-	end
-	if (GameLevel==0) then
-		FHS_NextLevel()
-	end
-end;
-
-
-function FHS_NextLevel()
-	GameLevel=GameLevel+1
-	
-	if (GameLevel==1) then  --Pre Flop
-		FHS_DealHoleCards()
-		
-	elseif (GameLevel==2) then
-		FHS_ShowFlopCards()
-		
-	elseif (GameLevel==3) then
-		FHS_DealTurn()
-		
-	elseif (GameLevel==4) then
-		FHS_DealRiver()
-		
-	elseif (GameLevel==5) then
-		FHS_ShowDown()
-	end
-end
-
-
--------------   SERVER NETWORKING ---------------------------------
-function FHS_StartDealer()	
-	FHS_Console_Feedback(L['You are now a dealer.'])
-	LocalSeat = 1
-	IsDealer = 1
-	TheButton = LocalSeat
-	DealerName = ""
-
-	FHS_ClearTable()
-	
-	Seats[LocalSeat].name=UnitName("player")
-	Seats[LocalSeat].seated=1
-	Seats[LocalSeat].chips=StartChips
-	FHS_UpdateSeat(LocalSeat)
-	GameLevel=0
-	
-	FHS_ShowTable()
-	
-	FHSPoker_PlayButton:Show()
-
-	--Set the initial Blinds
-	FHS_Set_CurrentBlind(BigBlindStart / (1+BlindIncrease))
-	-- Dividing by BlindIncrease here saves worrying about checking on new round if it is the first round.
-end
-
-
-function FHS_StopServer()
-	--bump everyone off
-	FHS_BroadCastToTable("hostquit",-1)
-
-	IsDealer=0
-	LocalSeat=0
-	WhosTurn=0
-	
-	FHS_ClearTable()
-end
-
-
-function FHS_FoldPlayer(j)
-	if (IsDealer==0 or Seats[j].seated==0 or Seats[j].dealt==0) then
-		return
-	end
-
-	FHS_BroadCastToTable("st_"..j.."_"..Seats[j].chips.."_"..Seats[j].bet.."_Folded_0.5",0)
-	
-	Seats[j].dealt=0
-	Seats[j].forcedbet=0 --player has had their bet
-	Seats[j].alpha=0.5
-	Seats[j].status="Folded"
-	FHS_UpdateSeat(j)
-
-	--if it was their turn when they folded, next turn.
-	if (WhosTurn==j) then
-		FHS_GoNextPlayersTurn()
-	else
-		--It Wasn't their turn.. but them folding may have ended the game anyway
-		if (FHS_GetPlayingPlayers()==1) then
-			--Notify the player their turn go canceled
-			
-			FHS_GoNextPlayersTurn()
 		end
 	end
 end
@@ -1722,522 +1454,12 @@ function FHS_SidePot(bet)
 end
 
 
-function FHS_DealHoleCards()
-	if (IsDealer==0) then
-		return
-	end
-	
-	--Initialize the shuffle array
-	for j=1, 52 do
-		Shuffle[j]=j
-	end
-
-	seed=GetTime()*1000
-	seed=FHS_round(seed,0)
-	
-	FHS_Shuffle(seed, false) -- set truth value to fake shuffle
-
-	-- Set the dealers card to 1
-	DealerCard=1
-	BlankCard=53
-
-	-- Increament Blinds
-	FHS_Set_CurrentBlind(FHS_IncrementBlind(Blinds))
-	FHS_BroadCastToTable("betsize_"..Blinds)
-	
-	BetSize=Blinds
-	-- Transmit betsize to other players
-	SidePot={}
-	
-	-- Clear the dealers visuals
-	FHS_ClearCards()
-
-	--Tell everyone Round 0 is beginning
-	RoundCount=RoundCount+1
-	FHS_BroadCastToTable("round0_"..RoundCount,-1)
-
-	FHS_StatusText("")
-
-	--Deal out the hole cards
-	for index=1,9 do
-		local j=TheButton+index+1  -- Player after the button gets dealt first
-		if (j>9) then j=j-9; end
-		if (j>9) then j=j-9; end
-		
-		local ThisSeat = Seats[j]
-		
-		--Set up a blank hand
-		ThisSeat.bet=0
-		ThisSeat.hole1=0
-		ThisSeat.hole2=0
-		ThisSeat.forcedbet=0
-		if(ThisSeat.inout=="IN") then
-			ThisSeat.status=""
-		else
-			ThisSeat.status="Sitting Out" -- TODO: Lerduzz: Traducir esto en todas las instancias.
-		end;
-
-		--Deal them in
-		if ( ThisSeat.seated==1 and ThisSeat.chips>0 and ThisSeat.inout=="IN" ) then
-		
-			--If dealing to a player..
-			ThisSeat.hole1=Shuffle[DealerCard]
-			DealerCard=DealerCard+1
-			ThisSeat.hole2=Shuffle[DealerCard]
-			DealerCard=DealerCard+1
-			ThisSeat.dealt=1
-			ThisSeat.bet=0
-			ThisSeat.alpha=0.5
-			ThisSeat.forcedbet=1
-			ThisSeat.status="Playing" -- TODO: Lerduzz: Traducir esto en todas las instancias.
-
-			FHS_UpdateSeat(j) -- local view
-
-			if (j==LocalSeat) then
-
-				-- Local Graphics ------------------------------------------
-				FHS_SetCard(ThisSeat.hole2,DealerX,DealerY, ThisSeat.x-12, ThisSeat.y+12,1,CC*DealerDelay,0,0)
-				CC=CC-1
-				
-				FHS_SetCard(ThisSeat.hole1,DealerX,DealerY, ThisSeat.x, ThisSeat.y,1,CC*DealerDelay,0,1)
-				CC=CC-1
-
-				--enable the fold button
-				ThisSeat.alpha=1
-				FHS_Fold:SetText(L['Fold'])
-				FHS_Fold:Show()
-				FHS_StatusTextCards()
-				------------------------------------------------------------
-
-				FHS_BroadCastToTable("deal_"..j,j)
-
-			else
-				-- Local Graphics ------------------------------------------
-				FHS_SetCard(BlankCard,DealerX,DealerY, Seats[j].x-12 , Seats[j].y+12,1,CC*DealerDelay,500,0)
-				BlankCard=BlankCard+1
-				CC=CC-1
-
-				FHS_SetCard(BlankCard,DealerX,DealerY, Seats[j].x , Seats[j].y,1,CC*DealerDelay,500,1)
-				BlankCard=BlankCard+1
-				CC=CC-1
-				
-				Seats[j].alpha=1
-				------------------------------------------------------------
-				
-				FHS_SendMessage("hole_"..Seats[j].hole1 .."_"..Seats[j].hole2,Seats[j].name)
-				FHS_BroadCastToTable("deal_"..j,j)
-			end
-			
-			-- if ( Seats[j].chips < Blinds and GameLevel==1) then 
-				-- if player does not have enough for blind then go all in 
-				-- FHS_PlayerAction(j,Seats[j].chips)
-				-- FHS_UpdateSeat(j)
-			-- end
-			
-		else
-			if ( ThisSeat.chips < 1 ) then
-				--they're sitting out due to lack of chips
-				ThisSeat.hole1=0
-				ThisSeat.hole2=0
-				ThisSeat.dealt=0
-				ThisSeat.bet=0
-				ThisSeat.forcedbet=0
-				ThisSeat.status="Sitting Out"
-				FHS_UpdateSeat(j) -- local view
-			end
-			if ( ThisSeat.inout=="OUT" ) then
-				--they're sitting out because they want to 
-				ThisSeat.hole1=0
-				ThisSeat.hole2=0
-				ThisSeat.dealt=0
-				ThisSeat.bet=0
-				ThisSeat.forcedbet=0
-				ThisSeat.alpha=0.5
-				ThisSeat.status="Sitting Out"
-				FHS_UpdateSeat(j) -- local view
-			end
-		end
-	end
-
-	--Deal out the flop
-	DealerFlop={}
-	for i= 1,5 do
-		DealerFlop[i]=Shuffle[DealerCard]
-		DealerCard=DealerCard+1
-	end
-	
-	FHS_BroadCastToTable("flop0",-1)
-	Flop={}
-
-	-- Local Graphics ------------------------------------------
-	for i=1,3 do
-		FlopBlank[i]=BlankCard
-		FHS_SetCard(BlankCard,DealerX,DealerY, -CardWidth*(3-i),0,1,CC*DealerDelay,0,0)
-		BlankCard=BlankCard+1
-		CC=CC-1
-	end
-	
-	------------------------------------------------------------
-	-- set the button
-	TheButton=FHS_WhosButtonAfter(TheButton)
-	
-	FHS_BroadCastToTable("b_"..TheButton,-1)
-	FHS_SelectPlayerButton(TheButton)
-	
-	FHS_SetupBets()
-	FHS_PostBlinds()
-
-end
-
-
 --let everyone playing have at least 1 turn
 function FHS_SetupBets()
 	for j=1,9 do
 		if ((Seats[j].seated==1) and (Seats[j].dealt==1) and (Seats[j].inout=="IN")) then
 			Seats[j].forcedbet=1
 		end
-	end
-end
-
-
-function FHS_ShowFlopCards()
-	if (IsDealer==0) then
-		return
-	end
-
-	Flop={}
-
-	for i=1,3 do
-		Flop[i]=DealerFlop[i]
-		FHS_SetCard(FlopBlank[i],0,0,0,0,0,0,0,0)
-		FHS_SetCard(Flop[i],DealerX,DealerY, -CardWidth*(3-i),0,1,1,0,0)
-	end
-
-	FHS_BroadCastToTable("flop1_"..Flop[1].."_"..Flop[2].."_"..Flop[3],-1)
-
-	FHS_StatusTextCards()
-
-	FHS_SetupBets()
-	WhosTurn=TheButton
-	FHS_GoNextPlayersTurn()
-end
-
-
-function FHS_DealTurn()
-	if (IsDealer==0) then
-		return;
-	end;
-
-	Flop[4]=DealerFlop[4];
-
-	FHS_BroadCastToTable("turn_"..Flop[4],-1);
-
-	--Local View --------------
-	FHS_SetCard(Flop[4],DealerX,DealerY, CardWidth*1,0,1,0,0,0);
-	CC=CC-1;
-	FHS_StatusTextCards();							
-	---------------------------
-
-	FHS_SetupBets();
-	WhosTurn=TheButton;
-	FHS_GoNextPlayersTurn();
-end
-
-
-function FHS_DealRiver()
-	if (IsDealer==0) then
-		return;
-	end;
-
-	Flop[5]=DealerFlop[5];
-
-	FHS_BroadCastToTable("river_"..Flop[5],-1);
-
-	--Local View --------------
-	FHS_SetCard(Flop[5],DealerX,DealerY, CardWidth*2,0,1,0,0,0);
-	CC=CC-1;
-	FHS_StatusTextCards();							
-	---------------------------
-
-	FHS_SetupBets();
-	WhosTurn=TheButton;
-	FHS_GoNextPlayersTurn();
-end
-
-
-function FHS_ShowDown()
-	-- Only Dealer runs this function
-	if (IsDealer==0) then
-		return
-	end
-	
-	--Start Timer til next hand
-	DealerTimer=GetTime()+DealerTimerDelay
-
-	--local view
-	FHS_HideAllButtons()
-
-	--Determine everyones hand
-	pot=FHS_TotalPot()
-	Winners={};
-
-	--Ok, well, we work out our sidepots
-	--Correct our sidepots with the last info
-	if (getn(SidePot)==0) then
-		SidePot[1]={bet=FHS_HighestBet(),pot=FHS_TotalPot()}
-	end
-
-	local found=0
-	
-	for j=1,getn(SidePot) do
-		if (SidePot[j].bet==FHS_HighestBet()) then
-			found=1
-		end
-	end
-	
-	if (found==0) then
-		SidePot[getn(SidePot)+1]={bet=FHS_HighestBet(),pot=FHS_TotalPot()}
-	end
-	
-    sort(SidePot, function (a,b) return (a.pot < b.pot)  end)
-
-	--fix the pots
-	local temp={}
-	temp[1]=SidePot[1].pot
-	
-	for j=2,getn(SidePot) do
-		temp[j]=SidePot[j].pot - SidePot[j-1].pot
-	end
-	for j=1,getn(SidePot) do
-		SidePot[j].pot = temp[j]
-	end    
-
-	if (FHS_GetPlayingPlayers()==1) then
-		--Hand fizzled, everyone but one person folded..
-		--so we don't tell anyone what he had and do the winner stuff that way.
-		
-		for j=1,9 do
-			--give the winner the chips
-			if ((Seats[j].seated==1)and(Seats[j].dealt==1)) then
-				Winners[1]=j
-			end
-		end
-			
-		--------------------------------------------------------------
-		for r=1,getn(SidePot) do
-			
-			winnercount=0
-			for j=1,getn(Winners) do
-				if (Seats[Winners[j]].bet>=SidePot[r].bet) then
-					winnercount=winnercount+1
-				end;
-			end;
-								
-			if (winnercount>0) then
-				pot=FHS_round((SidePot[r].pot) / winnercount,0)
-				
-			for j=1,getn(Winners) do
-					if (Seats[Winners[j]].bet>=SidePot[r].bet) then
-						Seats[Winners[j]].chips=Seats[Winners[j]].chips+pot
-						Seats[Winners[j]].dealt=0
-					end
-				end						
-			else
-				-- There were no winners of this pot, split it and give it back
-				winnercount=0
-				for j=1,9 do
-					if ((Seats[j].bet>=SidePot[r].bet)and(Seats[j].seated==1)) then
-						winnercount=winnercount+1
-					end
-				end
-
-				for j=1,9 do
-					
-					pot=FHS_round((SidePot[r].pot) / winnercount,0)
-					--Player bet into that 
-					if ((Seats[j].seated==1)and(Seats[j].bet>=SidePot[r].bet)) then
-						
-						Seats[j].chips=Seats[j].chips+pot
-						FHS_BroadCastToTable("st_"..j.."_"..Seats[j].chips.."_"..Seats[j].bet.."_"..Seats[j].status.."_0.5")
-					
-						FHS_ShowCard(j,pot.." returned")
-						Seats[j].dealt=0
-
-						--Local View
-						FHS_UpdateSeat(j)
-					end
-				end
-			end
-			
-		end
-		--------------------------------------------------------------
-
-		local j=Winners[1]
-		local ThisSeat=Seats[j]
-		ThisSeat.status = L["Default"]
-		FHS_BroadCastToTable("st_"..j.."_"..ThisSeat.chips.."_"..ThisSeat.bet.."_"..ThisSeat.status.."_1")
-		text = ThisSeat.name.." "..L['wins'].."."
-		FHS_BroadCastToTable("showdown_"..j.."_"..text)
-
-		if (j==LocalSeat) then  --dealer won
-			ThisSeat.dealt=0
-			ThisSeat.alpha=1
-			
-			FHS_Fold:SetText(L['Show Cards'])
-			FHS_Fold:Show()
-		end;
-
-		FHS_StatusText(text)
-		
-	else
-		-- Otherwise more than one player left in hand
-		for j=1,9 do
-			local ThisSeat=Seats[j]
-			ThisSeat.OutText=""
-			ThisSeat.HandRank=""
-
-			if (ThisSeat.seated==0) then
-				ThisSeat.dealt=0
-			end;
-
-			if ((ThisSeat.dealt==1)and(ThisSeat.seated==1)) then
-				ThisSeat.HandRank=FHS_FindHandForPlayer(j)
-				ThisSeat.OutText=FHS_handDescription(ThisSeat.HandRank)
-			end
-		end
-
-		--Work out the "winners"
-
-		-- Best hand is?
-		local Best="0"
-		local index=0
-		
-		for j=1,9 do
-			if (Seats[j].dealt==1) then
-				if (Seats[j].HandRank>Best) then 
-					Best=Seats[j].HandRank
-					index=j
-				end
-			end
-		end
-
-		--Winners, index who is a contender.  Look at their hand again and determine the winner.
-
-		for j=1,9 do
-			if (Seats[j].dealt==1) then
-				if (Seats[j].HandRank==Best) then
-					Winners[getn(Winners)+1]=j
-				end
-			end
-		end
-
-		if (getn(Winners)>0) then
-			--DEFAULT_CHAT_FRAME:AddMessage("newcode");
-			--Go through the side pots.
-				-- Find out who won a piece of it.
-					-- Hand it out
-
-			--Go to next side pot.. subtract the what? exactly?
-
-			if (getn(Winners)==1) then
-				text=Seats[ Winners[1] ].name.." "..L['wins']..". "..Seats[Winners[1]].OutText
-			else
-				text=L['Split']..". "..Seats[Winners[1]].OutText
-			end
-
-			for r=1,getn(SidePot) do
-				
-				winnercount=0
-				
-				for j=1,getn(Winners) do
-					if (Seats[Winners[j]].bet>=SidePot[r].bet) then
-						winnercount=winnercount+1
-					end
-				end
-								
-				if (winnercount>0) then
-					pot=FHS_round((SidePot[r].pot) / winnercount,0)
-
-					for j=1,getn(Winners) do
-						local ThisSeat = Seats[Winners[j]]
-						
-						if (ThisSeat.bet>=SidePot[r].bet) then
-
-							ThisSeat.chips=ThisSeat.chips+pot
-							FHS_BroadCastToTable("st_"..Winners[j].."_"..ThisSeat.chips.."_"..ThisSeat.bet.."_"..ThisSeat.status.."_1")
-							FHS_ShowCard(Winners[j],"Winner!")
-							ThisSeat.dealt=0
-
-							--Local View
-							FHS_UpdateSeat(Winners[j])
-						end
-					end						
-					
-				else
-					-- There were no winners of this pot, split it and give it back
-					--DEFAULT_CHAT_FRAME:AddMessage("No winners of: "..SidePot[r].pot);
-				
-					winnercount=0
-					for j=1,9 do
-						if ((Seats[j].bet>=SidePot[r].bet)and(Seats[j].seated==1)) then
-							winnercount=winnercount+1
-						end
-					end
-
-		
-					--DEFAULT_CHAT_FRAME:AddMessage("people who bet that much:"..winnercount);
-					
-					for j=1,9 do
-						local ThisSeat = Seats[j]
-						
-						pot=FHS_round((SidePot[r].pot) / winnercount,0)
-						--Player bet into that 
-						if ((ThisSeat.seated==1)and(ThisSeat.bet>=SidePot[r].bet)) then
-							
-							ThisSeat.chips=ThisSeat.chips+pot
-							--DEFAULT_CHAT_FRAME:AddMessage(j..":"..pot)
-							FHS_BroadCastToTable("st_"..j.."_"..ThisSeat.chips.."_"..ThisSeat.bet.."_"..ThisSeat.status.."_0.5")
-						
-							FHS_ShowCard(j,pot.." returned")
-							ThisSeat.dealt=0
-
-							--Local View
-							FHS_UpdateSeat(j)
-						end
-					end
-
-				end
-			end
-
-		else
-			text=L['No Winners. Game Seed = ']..RandomSeed
-
-			--Return their cash
-			for j=1,9 do
-				if ((Seats[j].seated==1)and(Seats[j].bet>0)) then
-					Seats[j].chips=Seats[j].chips+Seats[j].bet
-					FHS_UpdateSeat(j)
-					Seats[j].status=""
-					FHS_BroadCastToTable("st_"..j.."_"..Seats[j].chips.."_"..Seats[j].bet.."_"..Seats[j].status.."_1")
-				end
-			end
-		end
-
-		FHS_BroadCastToTable("showdown_0_"..text)
-		FHS_StatusText(text)
-		
-		for j=1,9 do
-			-- If you're still in at this point, you have to show your hand
-			if (Seats[j].dealt==1) then
-				FHS_ShowCard(j,"Showdown") -- TODO: Lerduzz: Traducir esto en todas las instancias.
-			end
-		end
-
-		--We may still want to flash our cards, even if we've folded
-		FHS_Fold:SetText(L["Show Cards"])
-		FHS_Fold:Show()
-		Seats[LocalSeat].dealt = 0;
-		-------------------------------------------------
 	end
 end
 
@@ -2258,10 +1480,6 @@ function FHS_ShowCard(j, status)
 		end;
 		
 		
-		if (IsDealer==1) then
-			FHS_BroadCastToTable("show_"..Seats[j].hole1 .."_"..Seats[j].hole2.."_"..j.."_"..status,j);
-		end;
-
 		--- Local Graphics
 		FHS_SetCard(Seats[j].hole2,DealerX,DealerY, Seats[j].x-12, Seats[j].y+12,1,1,0,0);
 		FHS_SetCard(Seats[j].hole1,DealerX,DealerY, Seats[j].x, Seats[j].y,1,1,0,1);
@@ -2269,428 +1487,6 @@ function FHS_ShowCard(j, status)
 		FHS_UpdateSeat(j);
 	end
 end
-
-
-function FHS_Shuffle(seed, fake)
-	RandomSeed=seed
-	--randomseed(seed);
-
-	--Initialize the shuffle array
-	for j=1, 52 do
-		Shuffle[j]=j
-	end;
-
-	--Shuffle each card once
-	for j=1, 52 do
-		newspot=random(52)
-
-		temp=Shuffle[j]
-		Shuffle[j]=Shuffle[newspot]
-		Shuffle[newspot]=temp
-	end;
-
-	--debug shuffle
-	if (0==1) then
-		for j=1, 52 do
-			FHS_Console_Feedback(Shuffle[j])
-		end
-	end
-	
-	if ( fake ) then
-		RandomSeed=1
-		local Clubs=0
-		local Diamonds=13
-		local Hearts=13+13
-		local Spades=13+13+13
-		
-		Shuffle[1]=1+Diamonds  --p1
-		Shuffle[2]=2+Diamonds 
-		Shuffle[3]=9+Hearts -- p2/flop
-		Shuffle[4]=8+Hearts
-		Shuffle[5]=3+Clubs -- p3/flop
-		Shuffle[6]=4+Spades
-		Shuffle[7]=5+Diamonds
-		Shuffle[8]=9+Spades
-		Shuffle[9]=11+Clubs
-	
-	end
-end
-
-
-function FHS_SeatPlayer(name)
-	found=-1;
-	foldplayer=0;
-	
-	--Try and find the player
-	for j=1,9 do
-		if (Seats[j].seated==1) and (Seats[j].name==name) then
-			found=-2; --player is already seated
-			break;
-		end
-		if (Seats[j].seated==0) then
-			found=j;
-		end
-	end
-
-	if (found==-1) then
-		FHS_SendMessage("NoSeats",name);
-		return;
-	elseif (found==-2) then
-	
-		for j=1,9 do
-			if (Seats[j].seated==1) and (Seats[j].name==name) then
-				found=j; --player is already seated
-				break;
-			end
-		end
-	
-		if (Seats[found].dealt==1) then 	
-			foldplayer=found;
-		end;
-	else
-		Seats[found].seated=1;
-		Seats[found].name=name;
-		Seats[found].dealt=0;
-		Seats[found].chips=StartChips; --Sit with 500 chips  - eventually will be a dealer option - Is now :D
-	end;
-	
-	FHS_UpdateSeat(found);
-
-	--seat them
-	FHS_SendMessage("seat_"..found,name);
-
-	--Tell them about Everyone
-	for j=1,9 do
-		if (Seats[j].seated==1) then
-			FHS_SendMessage("s_"..j.."_"..Seats[j].name.."_"..Seats[j].chips.."_"..Seats[j].bet,name)
-		end
-	end
-
-	--Tell the other seats about the change
-	FHS_BroadCastToTable("s_"..found.."_"..Seats[found].name.."_"..Seats[found].chips.."_"..Seats[found].bet,found);
-
-
-	if (foldplayer>0) then 
-		FHS_FoldPlayer(foldplayer);
-	end;
-
-	--  Todo: if we're not on GameLevel==1, we have other things to tell them about
-	--		  like blank/flop cards, showdowns, etc
-end;
-
-
---Returns the next player to take a turn after j.
---It will return j if theres nobody 
-function FHS_WhosTurnAfter(j)
-	local index
-	for r=1,9 do
-		index=j+r;
-		if (index>9) then index=index-9; end;
-		if (index>9) then index=index-9; end;
-
-		if ((Seats[index].seated==1)and(Seats[index].dealt==1)and(Seats[index].chips>0)and(Seats[index].inout=="IN")) then
-			return index;
-		end;
-	end;
-
-	return j;		
-end;
-
-
---Returns the next player to take the button
---It will return j if theres nobody 
-function FHS_WhosButtonAfter(j)
-	local index
-	for r=1,9 do
-		index=j+r;
-		if (index>9) then index=index-9; end;
-		if (index>9) then index=index-9; end;
-
-		if ((Seats[index].seated==1)and(Seats[index].chips>0)and(Seats[index].inout=="IN")) then
-			return index;
-		end;
-	end;
-
-	return j;		
-end;
-
-
---Returns the next player who needs to bet after j. 
--- You need to bet if you were forced to post blinds, or if you are below the current highest
---It will return 0 if theres nobody 
-function FHS_WhosBetAfter(j)
-	local maxbet=FHS_HighestBet();
-	
-	for r=1,9 do
-		index=j+r;
-		if (index>9) then index=index-9; end;
-		if (index>9) then index=index-9; end;
-
-		if ((Seats[index].seated==1)and(Seats[index].dealt==1)and(Seats[index].chips>0)) then
-		
-			if ((Seats[index].bet<maxbet) or (Seats[index].forcedbet==1)) then
-				return index;
-			end;
-		end;
-	end;
-
-	return 0;		
-end;
-
-
-function FHS_HighestBet()
-	local maxbet=0;
-	--Find out what the highest bet on the table 
-	for r=1,9 do
-		if ((Seats[r].seated==1)and(Seats[r].dealt==1)) then
-			if (Seats[r].bet>maxbet) then
-				maxbet=Seats[r].bet;
-			end;
-		end
-	end;
-	return maxbet;
-end;
-
-
-function FHS_GetPlayingPlayers()
-	local j=0;
-	for r=1,9 do
-		if ((Seats[r].seated==1)and(Seats[r].dealt==1)) then
-			j=j+1;
-		end;
-	end;
-
-	return j;		
-end;
-
-
-function FHS_GetSeatedPlayers()
-	local j=0;
-	for r=1,9 do
-		if ((Seats[r].seated==1)) then
-			j=j+1;
-		end;
-	end;
-
-	return j;		
-end;
-
-
-function FHS_IncrementBlind(Blind)
-	-- Increase blind by BlindIncrease % to the nearest 5 chips (round up at 2.5).
-	local newBlind = Blind * (1 + BlindIncrease)
-	
-	if ( newBlind % 5 >= 2.5 ) then
-		newBlind = math.ceil(newBlind/5)*5
-	else
-		newBlind = math.floor(newBlind/5)*5
-	end
-	
-	return newBlind;
-end;
-
-
-function FHS_PostBlinds()
-	if (IsDealer==0) then 
-		return; 
-	end;
-	
-	local pc=FHS_GetPlayingPlayers();
-	
-	NextPlayer=TheButton;
-	
-	local SmallBlind = math.floor(Blinds/10)*5
-
-	if (pc == 1) then --If theres just one player, post a blind
-		FHS_PlayerBet(TheButton, Blinds, L["Blinds"]);
-		
-		NextPlayer = TheButton; --This person goes first
-		
-	elseif (pc==2) then
-
-		j = FHS_WhosTurnAfter(TheButton);
-		FHS_PlayerBet(j, Blinds, L["Blinds"]);
-
-		NextPlayer = TheButton; --person after this goes first
-		
-		FHS_PlayerBet(TheButton, SmallBlind, L["Blinds"]);
-		NextPlayer=FHS_WhosTurnAfter(TheButton);
-		
-	elseif (pc>1) then -- We have 3 players or more, so big and little blinds
-
-		j = FHS_WhosTurnAfter(TheButton);
-		
-		FHS_PlayerBet(j, SmallBlind, L["Small Blind"]);
-
-		j = FHS_WhosTurnAfter(j);
-		FHS_PlayerBet(j, Blinds, L["Big Blind"]);
-
-		NextPlayer=j; --person after this goes first
-	end;
-
-	WhosTurn=NextPlayer;
-	FHS_GoNextPlayersTurn();
-end;
-
-
-function FHS_PlayerBet(j, size, status)
-	if (IsDealer==0) then 
-		return; 
-	end;
-	
-	FHS_Debug_Feedback("FHS_PlayerBet: j:"..j.." size:"..size.." status:"..status)
-
-	--Todo: validity Checks... Gendi says perhaps we should check they have the chips to play with ;)
-	-- In theory this should never be reached....
-	--if ( Seats[j].chips < size ) then
-		-- Player doesn't have the money to play, if during the deal they need to fold and be sat out
-		-- FHS_FoldPlayer(j);
-		-- Seats[j].chips = 0;
-		-- FHS_SendMessage("forceoutmoney_"..j,Seats[j].name);
-		-- FHS_UpdateSeat(j);
-		-- return;
-	-- end
-	
-	if ( Seats[j].chips < size ) then
-	    -- reduce bet to remaining chips
-		size = Seats[j].chips
-		status = L["All In"]
-	end
-	
-	Seats[j].chips=Seats[j].chips-size;
-	Seats[j].bet=Seats[j].bet+size;
-	Seats[j].status=status..": "..Seats[j].bet;	
-
-	FHS_BroadCastToTable("st_"..j.."_"..Seats[j].chips.."_"..Seats[j].bet.."_"..Seats[j].status.."_1");
-
-	--local view
-	FHS_UpdateSeat(j);
-	FHS_TotalPot();
-	
-	--Pots
-	if (Seats[j].chips==0) then
-		--Mark the curent pot as a side pot.
-		found=0;
-		bets=FHS_SidePot(Seats[j].bet);
-		for r=1,getn(SidePot) do
-			if (SidePot[r].bet==Seats[j].bet) then found=1; end;
-		end;
-		if (found==0) then 
-			SidePot[getn(SidePot)+1]={bet=Seats[j].bet,pot=bets}; 
-		end;
-	end;
-
-	--Check the existing sidepots, if our bet is < a sidepot, that sidepot needs to be rebuilt
-	for j=1,getn(SidePot) do
-	--if (Seats[j].bet<=SidePot[j].bet) then
-			SidePot[j].pot=FHS_SidePot(SidePot[j].bet);
-	--	end;
-	end;
-end;
-
-
-function FHS_GoNextPlayersTurn()
-	if (IsDealer==0) then 
-		return; 
-	end;
-	
-	WhosTurn=FHS_WhosBetAfter(WhosTurn);
-
-	if (WhosTurn==0) then 
-		FHS_NextLevel(); --All betting is satisfied
-		return;
-	end;
-
-	--Check the number of dealt players left.
-	--If theres only one player, clearly he's the winner
-	--so end the round
-	if (FHS_GetPlayingPlayers()==1) then
-		
-		if (FHS_GetSeatedPlayers()>1) then  -- If its only the dealer, let him keep playing
-		
-			FHS_NextLevel();
-		
-			return;
-		end;
-	end;
-
-	HighestBet=FHS_HighestBet();
-	FHS_BroadCastToTable("go_"..WhosTurn.."_"..HighestBet);
-
-	FHS_UpdateWhosTurn(); --buttons and whatnot
-
-	
-	--Start Timer for whos turn it is
-	PlayerTurnEndTime=GetTime()+AFKTimeLimit;
-end
-
-
-function FHS_PlayerAction(j, delta)
-	if (IsDealer==0) then 
-		return; 
-	end;
-
-	--Todo: make sure its actually their turn
-	-- This could occur only when the last player folds right as they make their move
-	HighestBet=FHS_HighestBet();
-	
-	-- if this is the forced blind bet...
-	if ( Seats[j].forcedbet == 1) then
-		if ( delta > Seats[j].chips ) then
-			-- Change forced bet to all in bet
-			delta = Seats[j].chips
-			
-			
-			--Mark the curent pot as a side pot.
-			local found=0
-			local bets=FHS_SidePot(delta)
-			for r=1,getn(SidePot) do
-				if (SidePot[r].bet==delta) then found=1; end
-			end
-			if (found==0) then 
-				SidePot[getn(SidePot)+1]={bet=delta,pot=bets}
-			end
-
-			--Check the existing sidepots, if our bet is < a sidepot, that sidepot needs to be rebuilt
-			for j=1,getn(SidePot) do
-				SidePot[j].pot=FHS_SidePot(SidePot[j].bet)
-			end
-			
-		end
-	end
-	
-	-- Update the players bet, move the turn
-	if (delta==0) then
-		if (Seats[j].bet==HighestBet) then
-			FHS_PlayerBet(j, 0, L["Checked"]);
-		else
-			--Shouldnt ever occur, the player sent a "check" 
-			-- when they were not equal to the highest bet
-			FHS_Console_Feedback(L['Player Invalid Action'].." "..j..":"..delta);
-		end;
-	end
-
-	if (delta>0) then
-		if (Seats[j].bet+delta==HighestBet) then
-			FHS_PlayerBet(j, delta, L["Called"]);
-			
-		else
-			if (Seats[j].bet+delta>=Seats[j].chips) then
-				delta=Seats[j].chips;
-				FHS_PlayerBet(j, delta, L["All In"]);
-
-			else
-				FHS_PlayerBet(j, delta, L["Raised"]);
-			end;
-		end;
-	end;
-	
-	--Player has had their forced bet.
-	Seats[j].forcedbet=0;
-
-	--Next turn
-	FHS_GoNextPlayersTurn();
-end;
 
 
 ------------------------------------------------------------------------
