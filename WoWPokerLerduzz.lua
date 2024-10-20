@@ -21,7 +21,6 @@ local minimapIcon = true;
 local lasttime = 0;
 local timedelta = 0;
 local PlayerTurnEndTime = 0;
-local AFKTimeLimit = 60;
 
 local BigBlindStart = 20; -- Starting Big Blind
 local BlindIncrease = 0.25; -- % increase of Big Blind per round
@@ -29,15 +28,12 @@ local StartChips = 500;
 
 local NextRefresh = 0; --for player portraits
 
-local GameLevel = 0;
-local TheButton = 1;
 local WhosTurn = 0;
 local HighestBet = 0;
 
 local BetSize = BigBlindStart;
 
 local Blinds = 0;
-local SidePot = {};
 
 local RoundCount = 0;
 
@@ -182,20 +178,11 @@ local Seats	= {
 local LocalSeat = 0;
 local DealerName = "";
 
---Shuffle array
-local Shuffle={};
-
---Servers Flop
-local DealerFlop={};
-local DealerTimer=0;
-local DealerTimerDelay=10;
-
 --Flop as known at any point
 local Flop={};
 
 local FlopBlank={}; --Record of blank flop cards
 
-local DealerCard=0;
 local CardWidth=80;
 
 local DealerX=0;
@@ -258,65 +245,6 @@ function FHSPoker_OnLoad()
 
 	StuffLoaded=1;
 end;
-
-
-function SeatSlashCommand(msg)
-	--Recenter the frame
-	FHSPokerFrame:ClearAllPoints();
-	FHSPokerFrame:SetPoint("CENTER", "UIParent", "CENTER", 0, 0);
-
-	if (msg=="") then 
-		-- FHS_DealerClick()
-		
-	else
-		-- Split arguments into a table and make all arguments lowercase
-		args = { strsplit( " ", strlower(msg)) }
-		
-		-- only a valid message if we have atleast 1 argument
-		if (table.getn(args)<1) then
-			-- FHS_DealerClick()
-			
-		elseif ( args[1]=="options" or args[1]=="config") then
-			InterfaceOptionsFrame_OpenToCategory(PokerLerduzz_options_panel);
-
-		elseif ( args[1]=="dealer" and table.getn(args) == 2) then
-			FHS_SendMessage("!seat",args[2]);
-			
-		elseif ( args[1]=="clients") then
-			FHS_Console_Feedback(L['Looking for clients'])
-			if ( UnitInRaid("player")) then
-				FHS_BroadcastMessage("whoclient", "RAID")
-			else
-				FHS_BroadcastMessage("whoclient", "PARTY")
-			end
-			if ( IsInGuild() ) then
-				FHS_BroadcastMessage("whoclient", "GUILD")
-			end
-			
-		elseif ( args[1]=="dealers") then
-			FHS_Console_Feedback(L['Looking for dealers'])
-			if ( UnitInRaid("player")) then
-				FHS_BroadcastMessage("whodealer", "RAID")
-			else
-				FHS_BroadcastMessage("whodealer", "PARTY")
-			end
-			if ( IsInGuild() ) then
-				FHS_BroadcastMessage("whodealer", "GUILD")
-			end
-			
-		elseif ( args[1]=="help") then
-			-- Otherwise output usage text
-			FHS_Console_Feedback("::  "..L['Use \'/poker\' to start a table as the dealer.']);
-			FHS_Console_Feedback("::  "..L['Use \'/poker dealer <playername>\' to join someone elses table.']);
-			FHS_Console_Feedback("::  "..L['Use \'/poker dealers\' to find dealers in your guild/party/raid.']);
-			FHS_Console_Feedback("::  "..L['Use \'/poker clients\' to find clients in your guild/party/raid.']);
-			FHS_Console_Feedback("::  "..L['Use \'/poker options\' for options panel']);
-			
-		else
-			SeatSlashCommand("help")				
-		end
-	end
-end
 
 
 function FHS_SizeClick()
@@ -392,13 +320,6 @@ function FHSPoker_registerEvents()
     FHSPokerFrame:RegisterEvent("ADDON_LOADED");
     FHSPokerFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 	FHSPokerFrame:RegisterEvent("CHAT_MSG_ADDON");
-    
-	--Initialize Commands
-	SLASH_FHSPOKER1 = "/poker";
-	
-	SlashCmdList["FHSPOKER"] = function(msg)
-		SeatSlashCommand(msg);
-	end
 end
 
 
@@ -880,7 +801,6 @@ end;
 
 
 function FHS_StartClient()
-	FHS_Console_Feedback(string.format(L['%s has seated you in Seat %d'], DealerName, LocalSeat));
 	FHS_ClearTable();
 	FHS_ShowTable();
 	FHSPoker_PlayButton:Hide();
@@ -1238,11 +1158,11 @@ function FHS_Client_Show(hole1, hole2, j, status)
 	
 	Seats[j].dealt=0
 
-	FHS_SetCard(hole1,DealerX,DealerY, Seats[j].x, Seats[j].y,1,1,0,1)
-	FHS_SetCard(hole2,DealerX,DealerY, Seats[j].x-12, Seats[j].y+12,1,1,0,0)
-
 	FHS_SetCard(Seats[j].blank1, 0, 0, 0, 0, 0, 0, 0, 0)
 	FHS_SetCard(Seats[j].blank2, 0, 0, 0, 0, 0, 0, 0, 0)
+
+	FHS_SetCard(hole1,DealerX,DealerY, Seats[j].x, Seats[j].y,1,1,0,1)
+	FHS_SetCard(hole2,DealerX,DealerY, Seats[j].x-12, Seats[j].y+12,1,1,0,0)
 
 	FHS_UpdateSeat(j)
 
@@ -1431,41 +1351,6 @@ function FHS_TotalPot()
 	end
 
 	return total
-end
-
-
---Loop through all seats, add up everyone who has bet less then this
-function FHS_SidePot(bet)
-	local total=0
-	local r
-	
-	for j=1,9 do
-		if (Seats[j].seated==1) then
-		
-			r=Seats[j].bet
-			if ( r > bet ) then
-				r=bet
-			end
-			total=total+r
-		end
-	end
-
-	return total
-end
-
-
---let everyone playing have at least 1 turn
-function FHS_SetupBets()
-	for j=1,9 do
-		if ((Seats[j].seated==1) and (Seats[j].dealt==1) and (Seats[j].inout=="IN")) then
-			Seats[j].forcedbet=1
-		end
-	end
-end
-
-
-function FHS_round(num, idp)
-	return tonumber( string.format("%."..idp.."f", num ) )
 end
 
 
@@ -1677,15 +1562,6 @@ function FHS_Set_BigBlindStart(value)
 end
 
 
-function FHS_Set_CurrentBlind(value)
-	if ( value % 1 >= .9 ) then
-		Blinds = math.ceil(value)
-	elseif ( value % 1 <= .1 ) then
-		Blinds = math.floor(value)
-	end
-end
-
-
 function FHS_SetBlindIncr(value)	
 	value = tonumber(('%g'):format(value));
 	BlindIncrease = value;
@@ -1865,8 +1741,8 @@ function FHS_Toggle_MiniMap(toggle)
 		FHSPoker_MapIconFrame:Hide();
 	end
 end
-		
-		
+
+
 function FHS_SetupMiniMapButton()
 	local miniMapButton = CreateFrame("Button", "FHSPoker_MapIconFrame", Minimap)
 	
