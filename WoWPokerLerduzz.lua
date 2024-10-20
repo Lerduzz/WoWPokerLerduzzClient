@@ -439,7 +439,7 @@ end
 
 
 function FHS_LDB_OnUpdate()
-    if ((5 == WhosTurn) and (Seats[j].seated == 1)) then
+    if ((5 == WhosTurn) and (Seats[5].seated == 1)) then
         varR= (sin(GetTime()*400)*128);
         varG= (cos(GetTime()*400)*128);
         varB= (sin(GetTime()*400)*-128);
@@ -675,11 +675,11 @@ end;
 function FHS_SitOutInClick()
     if(Seats[5].inout == "IN") then
         FHS_FoldClick();
-        FHS_SendMessage("inout_"..5.."_OUT", UnitName("player"));
+        FHS_SendMessage("inout_5_OUT", UnitName("player"));
         Seats[5].inout = "OUT";
         FHSPoker_SitInOutIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\sentarse");
     else			
-        FHS_SendMessage("inout_"..5.."_IN", UnitName("player"));
+        FHS_SendMessage("inout_5_IN", UnitName("player"));
         Seats[5].inout = "IN";
         FHSPoker_SitInOutIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\pararse");
     end;
@@ -774,8 +774,8 @@ end;
 
 function FHS_StartClient()
     FHS_ClearTable();
+    Seats[5].seated = 1;
     FHS_ShowTable();
-    FHSPoker_PlayButton:Hide();
 end
 
 
@@ -1001,7 +1001,7 @@ function FHS_HandleAddonComms(msg, channel, sender)
         end
     elseif (tab[3]=="seat") then
         --We've Been Seated.. Clear our stats and await further messages
-        FHS_StartClient()
+        FHS_StartClient();
 
     --Player sits in or out
     elseif (tab[3]=="inout") then
@@ -1504,18 +1504,6 @@ end
 
 
 function FHS_SetupTopButtons()
-    local playButton = CreateFrame("Button", "FHSPoker_PlayButton", FHSPokerFrame);
-    playButton:SetHeight(32);
-    playButton:SetWidth(32);
-    playButton:SetPoint("CENTER", FHSPokerFrame, "CENTER", -36, 217);	
-    local playIconButton = playButton:CreateTexture("FHSPoker_PlayIcon", "BACKGROUND")
-    playIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\jugar");
-    playIconButton:SetHeight(32);
-    playIconButton:SetWidth(32);
-    playIconButton:SetPoint("CENTER", playButton, "CENTER", 0, 0);	
-    playButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD");	
-    playButton:SetScript("OnClick", function() FHS_PlayClick(); end);
-
     local minimizeButton = CreateFrame("Button", "FHSPoker_MinimizeButton", FHSPokerFrame);
     minimizeButton:SetHeight(32);
     minimizeButton:SetWidth(32);
