@@ -529,13 +529,6 @@ function FHS_StatusText(text)
 end
 
 
-function FHS_StatusTextCards()	
-	if (LocalSeat>0) then
-		FHS_StatusText(FHS_handDescription(FHS_FindHandForPlayer(LocalSeat)))
-	end
-end
-
-
 function FHS_SetCard(index,dealerx,dealery,x,y,visible,fraction,fadeout,highlayer)
 	Cards[index].x=x
 	Cards[index].y=y
@@ -1006,13 +999,13 @@ function FHS_HandleAddonComms(msg, channel, sender)
 			
 			Flop[4]=tonumber(tab[4]);
 			FHS_SetCard(Flop[4],DealerX,DealerY, CardWidth*1,0,1,0,0,0)
-			FHS_StatusTextCards()
+			-- FHS_StatusTextCards()
 		-- River card
 		elseif (tab[3]=="river") then
 		
 			Flop[5]=tonumber(tab[4]);
 			FHS_SetCard(Flop[5],DealerX,DealerY, CardWidth*2,0,1,0,0,0)
-			FHS_StatusTextCards()
+			-- FHS_StatusTextCards()
 			
 		-- Show cards
 		elseif (tab[3]=="show") then
@@ -1167,7 +1160,7 @@ function FHS_Client_Flop1(flop1, flop2, flop3)
 	end
 
 	FlopBlank={}
-	FHS_StatusTextCards()
+	-- FHS_StatusTextCards()
 end
 
 
@@ -1219,7 +1212,7 @@ function FHS_Client_Hole( hole1, hole2 )
 	FHS_Fold:SetText(L["Fold"])
 	FHS_Fold:Show()
 
-	FHS_StatusTextCards()
+	-- FHS_StatusTextCards()
 end
 
 
@@ -1355,185 +1348,6 @@ function FHS_ShowCard(j, status)
 end
 
 
-------------------------------------------------------------------------
---Takes cards[1..N]  (1 based array)
---Returns   rank string, description
-function FHS_FindHandForPlayer(j)
-	local rank="";
-	local desc="";
-
-	if (Seats[j].dealt==1) then
-
-		InCards={};	
-		InCards[1]=Seats[j].hole1;
-		InCards[2]=Seats[j].hole2;
-
-		for r=1,getn(Flop) do
-			InCards[r+2]=Flop[r];
-		end 
-	
-		rank=FHS_bestRank(InCards);
-		desc=FHS_handDescription(rank);
-	end
-	
-	return rank,desc;
-end;
-
-
--- iterator function over set of cards, returns next subset of 5
-function FHS_nextHand(cards, listCards)
-	if (listCards==nil) then
-		local initial={}
-		local hand={}
-		for i=1,math.min(5,#cards) do
-			initial[i]=i
-			hand[i]=cards[i]
-		end
-		return initial, hand
-	end
-
-	if (#cards<=5) then return nil end
-	for i=5,1,-1 do
-		if (listCards[i]+5-i<#cards) then
-			listCards[i]=listCards[i]+1
-			for j=i+1,5 do
-				listCards[j]=listCards[j-1]+1
-			end
-			local hand={};
-			for j=1,#listCards do hand[j]=cards[listCards[j]] end
-			return listCards, hand
-		end
-	end
-	return nil
-end
-
-
--- iterator wrapper for finding possible 5-card sets in cards
-function FHS_possibleHands(cards)
-	return FHS_nextHand,cards,initial
-end
-
-
--- return best ranked hand rank with cards
-function FHS_bestRank(cards)
-	local rank="000000"
-	local newRank
-	for i,hand in FHS_possibleHands(cards) do
-		newRank=FHS_rank(hand)
-		if (newRank>rank) then rank=newRank end
-	end
-	return rank
-end
-
-
--- return rank of a hand of 5 or fewer cards
--- return value is a string "raabbcc..."
--- where r=0 (high card) to 9 (five of a kind)
--- and aa, bb, cc,... are card values in order of ranking relevance 02 (deuce) - 14 (ace)
--- e.g. 807 (straight flush to the 7) 70611 (four sixes, jack kicker) 60208 (twos full of eights)
-function FHS_rank(cards)
-	-- create table of ranks by count of each
-	local rankCount={}
-
-	for i,card in pairs(cards) do
-		if (rankCount[Cards[card].rank]==nil) then
-			rankCount[Cards[card].rank]=1
-		else
-			rankCount[Cards[card].rank]=rankCount[Cards[card].rank]+1
-		end
-	end
-	
-	-- find best groups by number and rank
-	local sortedGroups={"","","","",""}
-	table.foreach(rankCount, function(k,v) sortedGroups[#sortedGroups+1]=v..string.sub(100+k,2) end)
-	table.sort(sortedGroups, function(a,b) return a>b end)
-	
-	-- find flush
-	local flush = #cards==5 
-		and Cards[cards[1]].suit==Cards[cards[2]].suit
-		and Cards[cards[1]].suit==Cards[cards[3]].suit
-		and Cards[cards[1]].suit==Cards[cards[4]].suit
-		and Cards[cards[1]].suit==Cards[cards[5]].suit
-
-	-- find ranks
-	local straight=false
-	local ranks={"","","","",""}
-	for i = 1,math.min(5,#cards) do
-		ranks[i] = string.sub(100+Cards[cards[i]].rank,2)
-	end
-	table.sort(ranks, function(a,b) return a>b end)
-	
-	if (sortedGroups[1]<"200" and #cards==5) then -- no pairs in a straight
-		if (ranks[1]=="14" and ranks[2]=="05" and ranks[5]=="02") then -- special case ace to five
-			ranks={"05","04","03","02","14"}
-			straight=true
-		else
-			straight=tonumber(ranks[1])==tonumber(ranks[5])+4
-		end
-	end
-
-	-- now find best hand
-	-- 5 of a kind
-	if (sortedGroups[1]>"500") then return "9"..string.sub(sortedGroups[1],2) end
-	-- straight flush
-	if (straight and flush) then return "8"..string.sub(sortedGroups[1],2) end
-	-- 4 of a kind
-	if (sortedGroups[1]>"400") then return "7"..string.sub(sortedGroups[1],2)..string.sub(sortedGroups[2],2) end
-	-- full house
-	if (sortedGroups[1]>"300" and sortedGroups[2]>"200") then return "6"..string.sub(sortedGroups[1],2)..string.sub(sortedGroups[2],2) end
-	-- flush
-	if (flush) then return "5"..table.concat(ranks) end
-	-- straight
-	if (straight) then return "4"..ranks[1] end --string.sub(sortedGroups[1],2) end
-	-- 3 of a kind
-	if (sortedGroups[1]>"300") then return "3"..string.sub(sortedGroups[1],2)..string.sub(sortedGroups[2],2)..string.sub(sortedGroups[3],2) end
-	-- full house
-	if (sortedGroups[1]>"200" and sortedGroups[2]>"200") then return "2"..string.sub(sortedGroups[1],2)..string.sub(sortedGroups[2],2)..string.sub(sortedGroups[3],2) end
-	-- 2 of a kind
-	if (sortedGroups[1]>"200") then return "1"..string.sub(sortedGroups[1],2)..string.sub(sortedGroups[2],2)..string.sub(sortedGroups[3],2)..string.sub(sortedGroups[4],2) end
-	return "0"..table.concat(ranks) 
-end
-	
-	
--- takes a rank string and returns a text descriptor of it
-function FHS_handDescription(rank)
-	if (rank==nil or rank=="") then
-		return ""
-	end
-	
-	local handType=tonumber(string.sub(rank,1,1))
-	local card1=tonumber(string.sub(rank,2,3))
-	local card2=tonumber(string.sub(rank,4,5))
-	
-	if ( card1 == nil ) then
-		card1 = 2
-	end
-	if ( card2 == nil ) then
-		card2 = 2
-	end
-
-	local descriptions = {}
-	descriptions[0] = L['High Card']..": "..CardRank[card1]
-	descriptions[1] = L['1 Pair']..": "..CardRanks[card1]
-	descriptions[2] = string.format(L['2 Pair: %s, %s'], CardRanks[card1], CardRanks[card2])
-	descriptions[3] = L['3 of a Kind']..": "..CardRanks[card1]
-	descriptions[4] = string.format(L['Straight: %s (high)'], CardRank[card1])
-	descriptions[5] = string.format(L['Flush: %s (high)'],CardRank[card1])
-	descriptions[6] = string.format(L['Full House: %s, %s'], CardRanks[card1], CardRanks[card2])
-	descriptions[7] = L['4 of a Kind']..": "..CardRanks[card1]
-	descriptions[8] = string.format(L['Straight Flush: %s (high)'], CardRank[card1])
-	descriptions[9] = L['Royal Flush']
-		
-	if (handType==8 and card1==14) then -- Royal Flush
-		handType = 9
-	end
-	
-	return descriptions[handType]	
-end
-
---------------
--- GUI
---------------
 function FHS_Set_BigBlindStart(value)
 	if ( StartChips < value ) then
 		value = StartChips
@@ -2106,7 +1920,4 @@ function FHS_SetupCardFrames()
 	end
 end
 
------------------------
--- Start OnLoad --
------------------------
 FHSPoker_OnLoad();
