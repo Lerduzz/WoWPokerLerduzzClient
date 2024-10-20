@@ -20,7 +20,6 @@ local minimapIcon = true;
 
 local lasttime = 0;
 local timedelta = 0;
-local PlayerTurnEndTime = 0;
 
 local BigBlindStart = 20; -- Starting Big Blind
 local BlindIncrease = 0.25; -- % increase of Big Blind per round
@@ -224,8 +223,6 @@ function FHSPoker_OnLoad()
 	FHS_Console_Feedback("::  "..L['WoW Poker Lerduzz'] .." ".. FHS_HOLDEM_version);
 	FHS_Console_Feedback("::  "..L['Use \'/poker help\' for slash command options'])
 	
-	PlayerTurnEndTime=GetTime()+(24*60*60*365);
-
 	-- Assign all Cards their objects
 	for key, object in pairs(Cards) do 
 		Cards[key].Artwork=_G[Cards[key].object];
@@ -415,7 +412,6 @@ function FHSPoker_Update(arg1)
 			if (WhosTurn>0) then
 				FHS_BlinkWhosTurn();
 			end;
-			FHS_CheckPlayerTime();
 		end;
 	end
 end;
@@ -509,16 +505,6 @@ function FHS_IconPos(angle)
 	local ypos=sin(angle)*81
 	FHSPoker_MapIconFrame:SetPoint("TOPLEFT","Minimap","TOPLEFT",53-xpos,-55+ypos)
 end
-
-
-function FHS_CheckPlayerTime()
-	if ((GetTime()>PlayerTurnEndTime)and(WhosTurn~=0)) then
-	
-		FHS_SendMessage("forceout_"..WhosTurn,Seats[WhosTurn].name)
-
-		PlayerTurnEndTime=GetTime()+(24*60*60*365) -- set the time to next year	
-	end;
-end;
 
 
 function FHS_BlinkWhosTurn()	
