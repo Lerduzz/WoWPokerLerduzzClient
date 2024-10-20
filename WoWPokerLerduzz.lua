@@ -199,7 +199,7 @@ local BlinkOn = 1;
 function FHSPoker_OnLoad()
 	StaticPopupDialogs["FHS_DEALER"] = 
 	{
-		text = L["Do you wish to start Dealing?"] .."\n".. L["To join a game use '/poker dealer <playername>'"],
+		text = L["Do you want to start the game?"],
 			button1 = L['Start Dealing'],
 			button2 = L['Cancel'],
 			button3 = L['Options'],
@@ -996,11 +996,6 @@ function FHS_HandleAddonComms(msg, channel, sender)
 		elseif (tab[3]=="forceout") then
 			FHS_Console_Feedback(L['You did not act in time. Press I\'m Back to continue playing.'])
 			FHS_SitOutInClick()
-		--- Host has quit the game
-		elseif (tab[3]=="hostquit") then
-			FHS_Console_Feedback(DealerName.." "..L['has quit. GG.'])
-			FHS_StopClient()
-			
 		-- Hole Cards
 		elseif (tab[3]=="round0") then  --PRE FLOP
 			FHS_Client_Round0( tonumber(tab[4]) )
