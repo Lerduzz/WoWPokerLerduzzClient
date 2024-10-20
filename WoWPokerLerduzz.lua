@@ -1045,8 +1045,6 @@ function FHS_Client_Show(hole1, hole2, j, status)
     FHS_SetCard(hole2,DealerX,DealerY, Seats[j].x-12, Seats[j].y+12,1,1,0,0)
 
     FHS_UpdateSeat(j)
-
-    FHS_Console_Feedback("Show Cards")
 end
 
                 
