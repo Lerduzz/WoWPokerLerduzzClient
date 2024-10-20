@@ -218,8 +218,6 @@ function FHSPoker_OnLoad()
     FHSPoker_registerEvents();
         
     FHS_Console_Feedback("::  "..L['WoW Poker Lerduzz'] .." ".. FHS_HOLDEM_version);
-    FHS_Console_Feedback("::  "..L['Use \'/poker help\' for slash command options'])
-    
     -- Assign all Cards their objects
     for key, object in pairs(Cards) do 
         Cards[key].Artwork=_G[Cards[key].object];
@@ -774,7 +772,6 @@ end;
 
 function FHS_StartClient()
     FHS_ClearTable();
-    Seats[5].seated = 1;
     FHS_ShowTable();
 end
 
@@ -905,113 +902,56 @@ end
 
 
 function FHS_HandleAddonComms(msg, channel, sender)
-    FHS_Debug_Feedback("FHS_HandleAddonComms");
-    FHS_Debug_Feedback(sender..":"..msg)
-    FHS_Debug_Feedback("RoundCount:"..RoundCount)
-
-    -- split arg1 into separate tabs separated by _
-    local tab = { strsplit( "_", msg) }
+    local tab = { strsplit( "_", msg) };
+    if (table.getn(tab) < 3) then return; end;
+    if (tab[1] ~= "FHS" or tab[2] ~= FHS_COMMS_version) then return; end;
+    if (UnitName("player") ~= sender) then return; end;
     
-    -- only a valid message if we have atleast 3 tabs
-    if (table.getn(tab)<3) then
-        return
-    end
-    
-    --check version
-    if ( tab[1]~="FHS" or tab[2]~=FHS_COMMS_version ) then
-        FHS_Debug_Feedback("Message format incorrect")
-        return
-    end
-    
-    -- tab 3 holds the nature of the message so we check this to find out what to do
-    
-    if (tab[3]=="ping!") then
-        FHS_SendMessage("pong!", UnitName("player"))
-        
+    if (tab[3] == "ping!") then
+        FHS_SendMessage("pong!", UnitName("player"));
     elseif (tab[3]=="NoSeats") then
-    --Noseats	
-        FHS_Console_Feedback(string.format(L['%s has no seat available for you'], sender))
-        
-    -- Only process if the message came from the dealer!
-    elseif (UnitName("player") == sender) then
-    
-        --Player Sits
-        if (tab[3]=="s") then
-            FHS_Client_Sit(tonumber(tab[4]), tab[5], tonumber(tab[6]), tonumber(tab[7]))
-            
-        --Player Status
-        elseif (tab[3]=="st") then
-            FHS_Client_Status_Update(tonumber(tab[4]), tab[5], tab[6], tab[7], tab[8])
-            
-        --Dealer Button
-        elseif (tab[3]=="b") then
-            --tab[4] contains the player with the button
-            FHS_SelectPlayerButton(tonumber(tab[4]))
-            
-        -- Player is forced to sit out (timer)
-        elseif (tab[3]=="forceout") then
-            FHS_Console_Feedback(L['You did not act in time. Press I\'m Back to continue playing.'])
-            FHS_SitOutInClick()
-        -- Hole Cards
-        elseif (tab[3]=="round0") then  --PRE FLOP
-            FHS_Client_Round0( tonumber(tab[4]) )
-        
-        -- Your hole cards
-        elseif (tab[3]=="hole") then
-            FHS_Client_Hole( tonumber(tab[4]), tonumber(tab[5]) )
-    
-        --Other peoples hole cards
-        elseif (tab[3]=="deal") then
-            FHS_Client_Deal( tonumber(tab[4]))
-        -- The Tables Flop (blanks)
-        -- Note we record what blank cards we used, so we can clean them up when the flop is shown
-        elseif (tab[3]=="flop0") then
-            FHS_Client_Flop0()
-        -- The Tables Flop (Real Cards)
-        elseif (tab[3]=="flop1") then
-            FHS_Client_Flop1(tonumber(tab[4]), tonumber(tab[5]), tonumber(tab[6]))
-    
-        -- Turn card
-        elseif (tab[3]=="turn") then
-            
-            Flop[4]=tonumber(tab[4]);
-            FHS_SetCard(Flop[4],DealerX,DealerY, CardWidth*1,0,1,0,0,0)
-            -- FHS_StatusTextCards()
-        -- River card
-        elseif (tab[3]=="river") then
-        
-            Flop[5]=tonumber(tab[4]);
-            FHS_SetCard(Flop[5],DealerX,DealerY, CardWidth*2,0,1,0,0,0)
-            -- FHS_StatusTextCards()
-            
-        -- Show cards
-        elseif (tab[3]=="show") then
-            FHS_Client_Show(tonumber(tab[4]), tonumber(tab[5]), tonumber(tab[6]), tab[7])
-            
-        --Server saying whos turn it is
-        elseif (tab[3]=="go") then
-            local j=tonumber(tab[4])
-            HighestBet=tonumber(tab[5])
-            WhosTurn=j
-            FHS_UpdateWhosTurn()
-    
-        elseif (tab[3]=="betsize") then
-            Blinds=tonumber(tab[4])
-            BetSize=Blinds			
-        end
+        FHS_Console_Feedback(string.format(L['%s has no seat available for you'], sender));
+    elseif (tab[3]=="s") then
+        FHS_Client_Sit(tonumber(tab[4]), tab[5], tonumber(tab[6]), tonumber(tab[7]))
+    elseif (tab[3]=="st") then
+        FHS_Client_Status_Update(tonumber(tab[4]), tab[5], tab[6], tab[7], tab[8])
+    elseif (tab[3]=="b") then
+        FHS_SelectPlayerButton(tonumber(tab[4]))
+    elseif (tab[3]=="forceout") then
+        FHS_Console_Feedback(L['You did not act in time. Press I\'m Back to continue playing.'])
+        FHS_SitOutInClick()
+    elseif (tab[3]=="round0") then  --PRE FLOP
+        FHS_Client_Round0( tonumber(tab[4]) )
+    elseif (tab[3]=="hole") then
+        FHS_Client_Hole( tonumber(tab[4]), tonumber(tab[5]) )
+    elseif (tab[3]=="deal") then
+        FHS_Client_Deal( tonumber(tab[4]))
+    elseif (tab[3]=="flop0") then
+        FHS_Client_Flop0()
+    elseif (tab[3]=="flop1") then
+        FHS_Client_Flop1(tonumber(tab[4]), tonumber(tab[5]), tonumber(tab[6]))
+    elseif (tab[3]=="turn") then
+        Flop[4]=tonumber(tab[4]);
+        FHS_SetCard(Flop[4],DealerX,DealerY, CardWidth*1,0,1,0,0,0)
+    elseif (tab[3]=="river") then
+        Flop[5]=tonumber(tab[4]);
+        FHS_SetCard(Flop[5],DealerX,DealerY, CardWidth*2,0,1,0,0,0)
+    elseif (tab[3]=="show") then
+        FHS_Client_Show(tonumber(tab[4]), tonumber(tab[5]), tonumber(tab[6]), tab[7])
+    elseif (tab[3]=="go") then
+        local j=tonumber(tab[4])
+        HighestBet=tonumber(tab[5])
+        WhosTurn=j
+        FHS_UpdateWhosTurn()
+    elseif (tab[3]=="betsize") then
+        Blinds=tonumber(tab[4])
+        BetSize=Blinds			
     elseif (tab[3]=="seat") then
-        --We've Been Seated.. Clear our stats and await further messages
         FHS_StartClient();
-
-    --Player sits in or out
     elseif (tab[3]=="inout") then
         FHS_Receive_InOut( tonumber(tab[4]), tab[5], sender)
-
-    -- Player has Quit the game
     elseif (tab[3]=="q") then
         FHS_Receive_Quit( sender, tonumber(tab[4]))
-        
-    --Normal Showdown.. 1 or more winners cards will be visible
     elseif (tab[3]=="showdown" and sender == UnitName("player")) then
         FHS_Receive_Showdown( tonumber(tab[4]), tab[5])
     end
