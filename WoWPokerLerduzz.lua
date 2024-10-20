@@ -185,6 +185,7 @@ local CardSpeed = 3;
 local CC = 0;
 local BlinkOn = 1;
 
+
 function FHSPoker_OnLoad()
     StaticPopupDialogs["FHS_DEALER"] = 
     {
@@ -231,52 +232,44 @@ function FHS_SizeClick()
     end;
     FHSPokerFrame:ClearAllPoints();
     FHSPokerFrame:SetPoint("CENTER", "UIParent", "CENTER", 0, 0);
-end
-
-
---clear all the cards off the table
-function FHS_ClearCards()
-    CC=0;
-    for key, object in pairs(Cards) do
-        FHS_SetCard(key,DealerX,DealerY,0,0,0,0,0,0);
-    end
-
-    Flop={};
-    FlopBlank={};
-    BlankCard=53;
-end
-
-
---Clear the table of everything
-function FHS_InitializeSeat(j)
-    Seats[j].name="";
-    Seats[j].HavePort=0;
-    Seats[j].seated=0;
-    Seats[j].dealt=0;
-    Seats[j].status="";
-    Seats[j].bet=0;
-    Seats[j].hole1=0;
-    Seats[j].hole2=0;
-    Seats[j].alpha=1;
-    Seats[j].inout="IN";
 end;
 
 
-function FHS_ClearTable()	
-    for j=1,9 do
-        FHS_InitializeSeat(j)
-    end;
+function FHS_ClearCards()
+    CC = 0;
+    for key, object in pairs(Cards) do FHS_SetCard(key, DealerX, DealerY, 0, 0, 0, 0, 0, 0); end;
+    Flop = {};
+    FlopBlank = {};
+    BlankCard = 53;
+end;
 
-    for j=1,9 do
-        FHS_UpdateSeat(j)
-    end;
 
-    FHS_ClearCards()
-    FHS_SelectPlayerRing(0)
-    FHS_StatusText("")
+function FHS_InitializeSeat(j)
+    Seats[j].name = "";
+    Seats[j].HavePort = 0;
+    Seats[j].seated = 0;
+    Seats[j].dealt = 0;
+    Seats[j].status = "";
+    Seats[j].bet = 0;
+    Seats[j].hole1 = 0;
+    Seats[j].hole2 = 0;
+    Seats[j].blank1 = 0;
+    Seats[j].blank2 = 0;
+    Seats[j].alpha = 1;
+    Seats[j].inout = "IN";
+end;
+
+
+function FHS_ClearTable()
+    for j=1,9 do
+        FHS_InitializeSeat(j);
+        FHS_UpdateSeat(j);
+    end;
+    FHS_ClearCards();
+    FHS_SelectPlayerRing(0);
+    FHS_StatusText("");
     FHS_Pot_Text:SetText(L['WoW Poker Lerduzz'])
-
-    FHS_HideAllButtons(true)
+    FHS_HideAllButtons(true);
 end;
 
 
@@ -284,56 +277,36 @@ function FHSPoker_registerEvents()
     FHSPokerFrame:RegisterEvent("ADDON_LOADED");
     FHSPokerFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
     FHSPokerFrame:RegisterEvent("CHAT_MSG_ADDON");
-end
+end;
 
 
 function FHSPoker_OnEvent(self, event, ...)
--- prefix = arg1;
--- msg = arg2;
--- distrib = arg3;
--- sender = arg4;
-    
-
+    -- prefix = arg1;
+    -- msg = arg2;
+    -- distrib = arg3;
+    -- sender = arg4;
     if (event == "PLAYER_ENTERING_WORLD") then
         FHS_Debug_Feedback("PLAYER_ENTERING_WORLD" );
-        -- C_ChatInfo.RegisterAddonMessagePrefix("PokerLerduzz") : No se como es en LK.
-        
     elseif (event == "ADDON_LOADED") then
         arg1 = ...;
         if (arg1 == "WoWPokerLerduzz") then
-        
-            FHS_Debug_Feedback("Addon loaded" .. arg1);
-            if ( FHS_Artwork == nil) then
-                FHS_Artwork = 1;
-            end
-            if ( FHS_StartChips) then
-                StartChips = FHS_StartChips
-            end
-            if ( FHS_BlindIncrease) then
-                FHS_SetBlindIncr(FHS_BlindIncrease);
-            end
-            if ( FHS_BigBlindStart) then
-                BigBlindStart = FHS_BigBlindStart;
-            end
-            
-            if ( FHS_minimapIcon) then
+            if (FHS_StartChips) then StartChips = FHS_StartChips; end;
+            if (FHS_BlindIncrease) then FHS_SetBlindIncr(FHS_BlindIncrease); end;
+            if (FHS_BigBlindStart) then BigBlindStart = FHS_BigBlindStart; end;
+            if (FHS_minimapIcon) then
                 minimapIcon = FHS_minimapIcon;
                 FHSPoker_MapIconFrame:Show();
             else
                 FHSPoker_MapIconFrame:Hide();
-            end
-            
+            end;
             FHS_SetupOptionsPanel();
             FHS_SetupXMLButtons();
         end
-
     elseif (event == "CHAT_MSG_ADDON") then
         arg1, arg2, arg3, arg4 = ...;
-        FHS_Debug_Feedback("CHAT_MSG_ADDON "..arg1 );
-        if ( arg1 == "PokerLerduzz") then
-            FHS_HandleAddonComms(arg2, arg3, arg4)
-        end
-    end
+        FHS_Debug_Feedback("CHAT_MSG_ADDON "..arg1);
+        if (arg1 == "PokerLerduzz") then FHS_HandleAddonComms(arg2, arg3, arg4); end;
+    end;
 end;
 
 
