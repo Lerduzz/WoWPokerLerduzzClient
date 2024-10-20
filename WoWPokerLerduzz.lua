@@ -204,7 +204,7 @@ function FHSPoker_OnLoad()
 			button2 = L['Cancel'],
 			button3 = L['Options'],
 			OnAccept = function()
-			-- FHS_DealerClick();
+				FHS_SendMessage("!seat", UnitName("player"));
 			end,
 			OnAlt = function() InterfaceOptionsFrame_OpenToCategory(PokerLerduzz_options_panel) end,
 			timeout = 0,
