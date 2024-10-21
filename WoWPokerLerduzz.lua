@@ -457,9 +457,6 @@ function WPL_UpdateSeat(j)
         _G[seat]:SetAlpha(Seats[j].alpha);
         _G[seat.."_Name"]:SetText(Seats[j].name);
         _G[seat.."_Chips"]:SetText(L['Chips']..": "..Seats[j].chips);
-        if (Seats[j].status == "Big Blind" or Seats[j].status == "Blinds") then
-            Blinds = Seats[j].bet;
-        end;
         local tempStatus = Seats[j].status;
         if (tempStatus ~= "" and tempStatus ~= "Default" and tempStatus ~= "Playing") then
             tempStatus = L[Seats[j].status]..": "..Seats[j].bet;
@@ -567,7 +564,7 @@ function WPL_CallClick()
     if (Seats[5].seated == 0) then return; end;
     delta = -1;
     if (Seats[5].bet < HighestBet) then
-        delta = HighestBet-Seats[5].bet;
+        delta = HighestBet - Seats[5].bet;
         if (delta > Seats[5].chips) then delta = -1; end;
     end;
     if (Seats[5].bet == HighestBet) then delta = 0; end;
@@ -602,6 +599,7 @@ end;
 
 function WPL_UpdateWhosTurn()
     if (Seats[5].seated == 0) then return; end;
+    if (HighestBet < Blinds) then HighestBet = Blinds; end;
     if (Seats[5].dealt == 1) then
         WPL_Fold:SetText(L['Fold']);
         WPL_Fold:Show();
@@ -707,7 +705,7 @@ function WPL_HandleAddonComms(msg, channel, sender)
     elseif (tab[3]=="forceout") then
         WPL_ConsoleFeedback(L['You did not act in time. Press I\'m Back to continue playing.'])
         WPL_SitOutInClick()
-    elseif (tab[3]=="round0") then  --PRE FLOP
+    elseif (tab[3]=="round0") then
         WPL_ClientRound0( tonumber(tab[4]) )
     elseif (tab[3]=="hole") then
         WPL_ClientHole( tonumber(tab[4]), tonumber(tab[5]) )
