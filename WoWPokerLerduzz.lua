@@ -565,14 +565,14 @@ end
 function FHS_StopClient()
     WhosTurn = 0;
     FHS_ClearTable();
-end
+end;
 
 
 function FHS_QuitClick()
-    FHS_SendMessage("q_5", UnitName("player"))
-    FHS_StopClient()
-    FHS_HideAllButtons(true)
-    FHSPokerFrame:Hide()
+    FHS_SendMessage("q_5", UnitName("player"));
+    FHS_StopClient();
+    FHS_HideAllButtons(true);
+    FHSPokerFrame:Hide();
 end;
 
 
@@ -587,92 +587,63 @@ function FHS_SitOutInClick()
         Seats[5].inout = "IN";
         FHSPoker_SitInOutIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\pararse");
     end;
-end
+end;
 
 
 function FHS_HideAllButtons(fold)
-    if ( fold ) then
-        FHS_Fold:Hide()
-    end
-    FHS_Call:Hide()
-    FHS_Raise:Hide()
-    FHS_Raise_Higher:Hide()
-    FHS_Raise_Lower:Hide()
-    FHS_AllIn:Hide()
+    if (fold) then FHS_Fold:Hide(); end;
+    FHS_Call:Hide();
+    FHS_Raise:Hide();
+    FHS_Raise_Higher:Hide();
+    FHS_Raise_Lower:Hide();
+    FHS_AllIn:Hide();
 end;
 
 
 function FHS_FoldClick()
     if (Seats[5].dealt == 1) then
-        FHS_SendMessage("fold_5", UnitName("player"))	
-        Seats[5].dealt = 0					
-        FHS_ShowCard(5, "Folded")
-        FHS_Fold:SetText(L['Show Cards'])
-        FHS_Fold:Hide()
+        FHS_SendMessage("fold_5", UnitName("player"));
+        Seats[5].dealt = 0;	
+        FHS_ShowCard(5, "Folded");
+        FHS_Fold:SetText(L['Show Cards']);
+        FHS_Fold:Hide();
     else
-        FHS_SendMessage("showcards_5_"..RoundCount, UnitName("player"))
+        FHS_SendMessage("showcards_5_"..RoundCount, UnitName("player"));
         FHS_Fold:Hide()
-    end
+    end;
     FHS_UpdateSeat(5);
-    FHS_HideAllButtons(false)
-end
+    FHS_HideAllButtons(false);
+end;
 
 
 function FHS_RaiseClick()
-    if (Seats[5].seated == 0) then return; end
-    
-    --Raised
-    delta=-1;
-
+    if (Seats[5].seated == 0) then return; end;
+    delta = -1;
     delta = HighestBet - Seats[5].bet;
-    -- Make sure we have enough chips
     delta = delta + BetSize;
-
-    --All in
-    if (HighestBet+BetSize>=Seats[5].chips) then
-        delta=Seats[5].chips;
-    end;
-    
+    if (HighestBet+BetSize >= Seats[5].chips) then delta=Seats[5].chips; end;
     FHS_SendMessage("call_5_"..delta, UnitName("player"));
 end;
 
 
 function FHS_AllInClick()
-    if (Seats[5].seated == 0) then return; end
-    
-    --Raised
-    delta=-1;
-
-    delta=Seats[5].chips;	
-    if (delta==0) then return; end;
-
+    if (Seats[5].seated == 0) then return; end;
+    delta = -1;
+    delta = Seats[5].chips;	
+    if (delta == 0) then return; end;
     FHS_SendMessage("call_5_"..delta, UnitName("player"));
 end;
 
 
 function FHS_CallClick()	
-    if (Seats[5].seated == 0) then return; end
-        
-    --Called/Checked	
-    delta=-1
-    
-    if (Seats[5].bet<HighestBet) then
-        --We need to make a bet here.
+    if (Seats[5].seated == 0) then return; end;
+    delta = -1;
+    if (Seats[5].bet < HighestBet) then
         delta = HighestBet-Seats[5].bet;
-            
-        -- Make sure we have enough chips
-        if (delta>Seats[5].chips) then
-            delta=-1;			
-        end;
+        if (delta > Seats[5].chips) then delta = -1; end;
     end;
-    if (Seats[5].bet==HighestBet) then
-        --Checked!
-        delta=0;
-    end;
-
-    if (delta>-1) then
-        FHS_SendMessage("call_5_"..delta, UnitName("player"));
-    end;
+    if (Seats[5].bet == HighestBet) then delta = 0; end;
+    if (delta > -1) then FHS_SendMessage("call_5_"..delta, UnitName("player")); end;
 end;
 
 
