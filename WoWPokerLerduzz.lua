@@ -1,9 +1,8 @@
 local L = MyLocalization;
-
 local ldb = LibStub:GetLibrary("LibDataBroker-1.1");
 local WPL_LDBObject;
 
-local UPDATEPERIOD, elapsed = 1, 0
+local UPDATEPERIOD, elapsed = 1, 0;
 local WPL_ldbIcon = true;
 
 local WPL_DEBUGING = false;
@@ -12,11 +11,9 @@ local WPL_SERVER_VERSION = "v1.0.0";
 local StuffLoaded = 0;
 local WPL_DraggingIcon = 0;
 
------------- Saved Variables ------------------
 local WPL_MapIconAngle = 0;
 local WPL_SetSize = 0;
 local WPL_MinimapIcon = true;
------------------------------------------------
 
 local minimapIcon = true;
 local lasttime = 0;
@@ -24,14 +21,11 @@ local timedelta = 0;
 
 local StartChips = 500;
 local NextRefresh = 0;
-
 local WhosTurn = 0;
 local HighestBet = 0;
 
 local BetSize = 20;
-
 local Blinds = 0;
-
 local RoundCount = 0;
 
 local PokerLerduzz_options_panel;
