@@ -739,43 +739,31 @@ end;
 
 function FHS_RaiseChange(dir)
     local CallAmount = 0;
-    
     CallAmount = HighestBet-Seats[5].bet;
-    
-    BetSize=BetSize+(dir*20);
-    if (BetSize<Blinds) then BetSize=Blinds; end
-    if (BetSize>(Seats[5].chips-CallAmount)) then
-        BetSize=Seats[5].chips - CallAmount;
-    end;
+    BetSize = BetSize + (dir * 20);
+    if (BetSize < Blinds) then BetSize = Blinds; end;
+    if (BetSize > (Seats[5].chips - CallAmount)) then BetSize=Seats[5].chips - CallAmount; end;
     FHS_UpdateWhosTurn();
 end;
 
 
 function FHS_SelectPlayerRing(j)
-    --Hide everyones selection
     for r=1,9 do
-        _G["FHS_Seat_"..r.."_RingSelect"]:Hide()
-        _G["FHS_Seat_"..r.."_Ring"]:Show()
-    end
-
-    if (j>0) then
-        _G["FHS_Seat_"..j.."_RingSelect"]:Show()
-        _G["FHS_Seat_"..j.."_RingSelect"]:SetAlpha(1)
-        _G["FHS_Seat_"..j.."_Ring"]:Hide()
-    end
-end
+        _G["FHS_Seat_"..r.."_RingSelect"]:Hide();
+        _G["FHS_Seat_"..r.."_Ring"]:Show();
+    end;
+    if (j > 0) then
+        _G["FHS_Seat_"..j.."_RingSelect"]:Show();
+        _G["FHS_Seat_"..j.."_RingSelect"]:SetAlpha(1);
+        _G["FHS_Seat_"..j.."_Ring"]:Hide();
+    end;
+end;
 
 
 function FHS_SelectPlayerButton(j)
-    --Hide everyones button
-    for r=1,9 do
-        _G["FHS_Seat_"..r.."_Button"]:Hide()
-    end
-
-    if (j>0) then
-        _G["FHS_Seat_"..j.."_Button"]:Show()
-    end
-end
+    for r=1,9 do _G["FHS_Seat_"..r.."_Button"]:Hide(); end;
+    if (j > 0) then _G["FHS_Seat_"..j.."_Button"]:Show(); end;
+end;
 
 
 function FHS_HandleAddonComms(msg, channel, sender)
@@ -835,40 +823,30 @@ function FHS_HandleAddonComms(msg, channel, sender)
 end
 
 
-function FHS_Receive_InOut( j, inout, sender)
-    Seats[j].inout=inout
+function FHS_Receive_InOut(j, inout, sender)
+    Seats[j].inout = inout;
     if (sender == UnitName("player") and inout=="OUT") then
-        -- everyone who gets the message dims the player
-        Seats[j].alpha=0.5
-        Seats[j].status="Sitting Out"
-        FHS_UpdateSeat(j)
-    end
-end
+        Seats[j].alpha = 0.5;
+        Seats[j].status = "Sitting Out";
+        FHS_UpdateSeat(j);
+    end;
+end;
 
 
 function FHS_Receive_Showdown(j, status)
-    --local view
-    FHS_HideAllButtons(false)
-
-    ----- Locally, we might have already folded and still want to flash our cards
-    ----- Logically, the FHS_Fold button will already be hidden if we've shown already
+    FHS_HideAllButtons(false);
     FHS_Fold:SetText(L["Show Cards"]);
     Seats[5].dealt = 0;
-    ---
-
     FHS_Status_Text:SetText(status);
-
     if (5 == j) then
-        -- you won by default, you are allowed to flash your cards
         Seats[5].dealt = 0;
-        
         FHS_Fold:SetText(L['Show Cards']);
         FHS_Fold:Show();
-    end
-end
+    end;
+end;
 
 
-function FHS_Receive_Quit( sender, j)
+function FHS_Receive_Quit(sender, j)
     if (sender == UnitName("player")) then
         Seats[j].seated = 0;
         Seats[j].HavePort = 0;
@@ -879,167 +857,136 @@ function FHS_Receive_Quit( sender, j)
         if (j == 5) then			
             FHS_Console_Feedback(L['The dealer booted you.']);
             FHS_StopClient();
-        end
-    end
-end
+        end;
+    end;
+end;
 
 
 function FHS_Client_Sit(j, name, chips, bet)
-    --Update about player
-    Seats[j].seated=1
-    Seats[j].name=name
-    Seats[j].chips=chips
-    Seats[j].bet=bet
-
-    FHS_UpdateSeat(j)
-end
+    Seats[j].seated = 1;
+    Seats[j].name = name;
+    Seats[j].chips = chips;
+    Seats[j].bet = bet;
+    FHS_UpdateSeat(j);
+end;
 
 
 function FHS_Client_Status_Update(j, chips, bet, status, alpha)
-    -- Update about a player
     Seats[j].chips = tonumber(chips);
     Seats[j].bet = tonumber(bet);
     Seats[j].status = status;
     Seats[j].alpha = alpha;
-
     FHS_UpdateSeat(j);
     FHS_TotalPot();
-end
+end;
 
 
 function FHS_Client_Show(hole1, hole2, j, status)
-    Seats[j].hole1=hole1
-    Seats[j].hole2=hole2
-    
-    Seats[j].status=status
-    
-    Seats[j].dealt=0
-
-    FHS_SetCard(Seats[j].blank1, 0, 0, 0, 0, 0, 0, 0, 0)
-    FHS_SetCard(Seats[j].blank2, 0, 0, 0, 0, 0, 0, 0, 0)
-
-    FHS_SetCard(hole1,DealerX,DealerY, Seats[j].x, Seats[j].y,1,1,0,1)
-    FHS_SetCard(hole2,DealerX,DealerY, Seats[j].x-12, Seats[j].y+12,1,1,0,0)
-
-    FHS_UpdateSeat(j)
-end
+    Seats[j].hole1 = hole1;
+    Seats[j].hole2 = hole2;
+    Seats[j].status = status;
+    Seats[j].dealt = 0;
+    FHS_SetCard(Seats[j].blank1, 0, 0, 0, 0, 0, 0, 0, 0);
+    FHS_SetCard(Seats[j].blank2, 0, 0, 0, 0, 0, 0, 0, 0);
+    FHS_SetCard(hole1, DealerX, DealerY, Seats[j].x, Seats[j].y, 1, 1, 0, 1);
+    FHS_SetCard(hole2, DealerX, DealerY, Seats[j].x - 12, Seats[j].y + 12, 1, 1, 0, 0);
+    FHS_UpdateSeat(j);
+end;
 
                 
 function FHS_Client_Flop1(flop1, flop2, flop3)				
-    Flop={}
-    Flop[1]=flop1
-    Flop[2]=flop2
-    Flop[3]=flop3
-    
+    Flop = {};
+    Flop[1] = flop1;
+    Flop[2] = flop2;
+    Flop[3] = flop3;
     for i=1,3 do
-        FHS_SetCard(Flop[i],DealerX,DealerY, -CardWidth*(3-i),0,1,1,0,0)
-        
-        --Its possible to get here if they come in late
-        if (getn(FlopBlank)>0) then
-            FHS_SetCard(FlopBlank[i],0,0,0,0,0,0,0,0)
-        end
-    end
-
-    FlopBlank={}
-    -- FHS_StatusTextCards()
-end
+        FHS_SetCard(Flop[i], DealerX, DealerY, -CardWidth * (3 - i), 0, 1, 1, 0, 0);
+        if (getn(FlopBlank) > 0) then FHS_SetCard(FlopBlank[i], 0, 0, 0, 0, 0, 0, 0, 0); end;
+    end;
+    FlopBlank = {};
+end;
 
 
 function FHS_Client_Flop0()	
     for i=1,3 do
-        FlopBlank[i]=BlankCard
-        FHS_SetCard(BlankCard,DealerX,DealerY, -CardWidth*(3-i),0,1,CC*DealerDelay,0,0)
-        BlankCard=BlankCard+1
-        CC=CC-1
-    end
-end
+        FlopBlank[i] = BlankCard;
+        FHS_SetCard(BlankCard, DealerX, DealerY, -CardWidth * (3 - i), 0, 1, CC * DealerDelay, 0, 0);
+        BlankCard = BlankCard + 1;
+        CC = CC - 1;
+    end;
+end;
 
 
 function FHS_Client_Deal(j)
-    Seats[j].blank1 = BlankCard
-    FHS_SetCard(BlankCard,DealerX,DealerY, Seats[j].x-12 , Seats[j].y+12,1,CC*DealerDelay,0,0)
-    BlankCard=BlankCard+1
-    CC=CC-1
-    
-    Seats[j].blank2 = BlankCard
-    FHS_SetCard(BlankCard,DealerX,DealerY, Seats[j].x , Seats[j].y,1,CC*DealerDelay,0,1)
-    BlankCard=BlankCard+1
-    CC=CC-1
-
-    Seats[j].dealt=1
-    Seats[j].status="Playing"
-    Seats[j].alpha=1
-    FHS_UpdateSeat(j)
-end
+    Seats[j].blank1 = BlankCard;
+    FHS_SetCard(BlankCard, DealerX, DealerY, Seats[j].x - 12, Seats[j].y + 12, 1, CC * DealerDelay, 0, 0);
+    BlankCard = BlankCard + 1;
+    CC = CC - 1;
+    Seats[j].blank2 = BlankCard;
+    FHS_SetCard(BlankCard, DealerX, DealerY, Seats[j].x, Seats[j].y, 1, CC * DealerDelay, 0, 1);
+    BlankCard = BlankCard + 1;
+    CC = CC - 1;
+    Seats[j].dealt = 1;
+    Seats[j].status = "Playing";
+    Seats[j].alpha = 1;
+    FHS_UpdateSeat(j);
+end;
 
 
-function FHS_Client_Hole( hole1, hole2 )
-    local ThisSeat = Seats[5]
-    ThisSeat.hole1=hole1
-    ThisSeat.hole2=hole2
-    
-    FHS_SetCard(hole2,DealerX,DealerY, ThisSeat.x-12, ThisSeat.y+12,1,CC*DealerDelay,0,0)
-    CC=CC-1
-
-    FHS_SetCard(hole1,DealerX,DealerY, ThisSeat.x, ThisSeat.y,1,CC*DealerDelay,0,1)
-    CC=CC-1
-
-    ThisSeat.status = L["Playing"]
-    ThisSeat.dealt = 1
-    ThisSeat.alpha = 1
-    FHS_UpdateSeat(5)
-    
-    --Fold Button
-    FHS_Fold:SetText(L["Fold"])
-    FHS_Fold:Show()
-
-    -- FHS_StatusTextCards()
-end
+function FHS_Client_Hole( hole1, hole2)
+    local ThisSeat = Seats[5];
+    ThisSeat.hole1 = hole1;
+    ThisSeat.hole2 = hole2;
+    FHS_SetCard(hole2, DealerX, DealerY, ThisSeat.x - 12, ThisSeat.y + 12, 1, CC * DealerDelay, 0, 0);
+    CC = CC - 1;
+    FHS_SetCard(hole1, DealerX, DealerY, ThisSeat.x, ThisSeat.y, 1, CC * DealerDelay, 0, 1);
+    CC = CC - 1;
+    ThisSeat.status = L["Playing"];
+    ThisSeat.dealt = 1;
+    ThisSeat.alpha = 1;
+    FHS_UpdateSeat(5);
+    FHS_Fold:SetText(L["Fold"]);
+    FHS_Fold:Show();
+end;
 
 
 function FHS_Client_Round0(thisRoundCount)
-    FHS_HideAllButtons(true)
-    FHS_ClearCards()
-    
-    RoundCount = thisRoundCount
-
-    --Clear status text
+    FHS_HideAllButtons(true);
+    FHS_ClearCards();
+    RoundCount = thisRoundCount;
     for j=1,9 do
-        Seats[j].bet=0
+        Seats[j].bet = 0;
         if(Seats[j].inout=="OUT") then
-            Seats[j].status="Sitting Out"
-            Seats[j].alpha=0.5
+            Seats[j].status = "Sitting Out";
+            Seats[j].alpha = 0.5;
         else
-            Seats[j].status=""
-            Seats[j].alpha=0
+            Seats[j].status = "";
+            Seats[j].alpha = 0;
         end;
-        FHS_UpdateSeat(j)
+        FHS_UpdateSeat(j);
     end;
-
-    BetSize=Blinds
-    FHS_TotalPot()
-    FHS_Status_Text:SetText("")
-end
+    BetSize = Blinds;
+    FHS_TotalPot();
+    FHS_Status_Text:SetText("");
+end;
 
 
 function IsPlaying(name)
     for j=1,9 do
-        if (Seats[j].seated==1 and Seats[j].name==name) then
-            return 1
-        end
-    end
-    return 0
-end
+        if (Seats[j].seated == 1 and Seats[j].name == name) then return 1; end;
+    end;
+    return 0;
+end;
 
 
-function FHS_SendMessage(msg,username)
+function FHS_SendMessage(msg, username)
     FHS_Debug_Feedback("addon whisper "..msg.." to "..username);
     SendAddonMessage("PokerLerduzz", "FHS_".. FHS_COMMS_version.."_"..msg, "WHISPER", username);
 end;
 
 
 function FHS_BroadcastMessage(msg, channel)
---"PARTY", "RAID", "GUILD", "BATTLEGROUND".
+    -- "PARTY", "RAID", "GUILD", "BATTLEGROUND".
     FHS_Debug_Feedback("broadcast "..msg.." on "..channel);
     SendAddonMessage("PokerLerduzz", "FHS_".. FHS_COMMS_version.."_broadcast_"..msg, channel);
 end;
@@ -1047,82 +994,64 @@ end;
 
 function FHS_Console_Feedback(msg)
     DEFAULT_CHAT_FRAME:AddMessage(msg);
-end
+end;
 
 
 function FHS_Debug_Feedback(msg)
-    if ( FHS_DEBUGING) then
+    if (FHS_DEBUGING) then
         if DLAPI then
-            DLAPI.DebugLog("WoWPokerLerduzz", msg)
+            DLAPI.DebugLog("WoWPokerLerduzz", msg);
         else
             DEFAULT_CHAT_FRAME:AddMessage(msg);
-        end
-    end
-end
+        end;
+    end;
+end;
 
 
 function FHS_TotalPot()
-    local total=0
-    
+    local total = 0;
     for j=1,9 do
-        if (Seats[j].seated==1) then
-            total=total+Seats[j].bet
-        end
-    end
-    
-    if (total==0) then
-        FHS_Pot_Text:SetText(L['WoW Poker Lerduzz'])
+        if (Seats[j].seated==1) then total = total + Seats[j].bet; end;
+    end;
+    if (total == 0) then
+        FHS_Pot_Text:SetText(L['WoW Poker Lerduzz']);
     else
-        FHS_Pot_Text:SetText(L['Total Pot']..": "..total)
-    end
-
-    return total
-end
+        FHS_Pot_Text:SetText(L['Total Pot']..": "..total);
+    end;
+    return total;
+end;
 
 
 function FHS_ShowCard(j, status)
     if ((Seats[j].seated==1)) then
         Seats[j].status=status;
-        
-        if ((Seats[j].hole1==0)or(Seats[j].hole2==0)) then 
-        
-            FHS_Console_Feedback(L['Error case']);
-            return;
-        end;
-        
-        
-        --- Local Graphics
-        FHS_SetCard(Seats[j].hole2,DealerX,DealerY, Seats[j].x-12, Seats[j].y+12,1,1,0,0);
-        FHS_SetCard(Seats[j].hole1,DealerX,DealerY, Seats[j].x, Seats[j].y,1,1,0,1);
-
+        if ((Seats[j].hole1 == 0) or (Seats[j].hole2 == 0)) then return; end;
+        FHS_SetCard(Seats[j].hole2, DealerX, DealerY, Seats[j].x - 12, Seats[j].y + 12, 1, 1, 0, 0);
+        FHS_SetCard(Seats[j].hole1, DealerX, DealerY, Seats[j].x, Seats[j].y, 1, 1, 0, 1);
         FHS_UpdateSeat(j);
-    end
-end
+    end;
+end;
 
 
 function FHS_Set_BigBlindStart(value)
-    if ( StartChips < value ) then
-        value = StartChips
-    end
+    if ( StartChips < value ) then value = StartChips; end;
     BigBlindStart = value;
-    FHS_BigBlindStart = value	
-end
+    FHS_BigBlindStart = value;
+end;
 
 
 function FHS_SetBlindIncr(value)	
     value = tonumber(('%g'):format(value));
     BlindIncrease = value;
     FHS_BlindIncrease = value;
-end
+end;
 
 
 function FHS_Set_StartChips(value)
     StartChips = value;
     FHS_StartChips = value;
-    if ( StartChips < BigBlindStart ) then
-        FHS_Set_BigBlindStart(value)
-    end	
-end
+    if ( StartChips < BigBlindStart ) then FHS_Set_BigBlindStart(value); end;
+end;
 
 
 function FHS_SetupOptionsPanel()
