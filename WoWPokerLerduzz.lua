@@ -806,8 +806,8 @@ function FHS_HandleAddonComms(msg, channel, sender)
         FHS_Receive_InOut( tonumber(tab[4]), tab[5], sender)
     elseif (tab[3]=="q") then
         FHS_Receive_Quit( sender, tonumber(tab[4]))
-    elseif (tab[3]=="showdown" and sender == UnitName("player")) then
-        FHS_Receive_Showdown( tonumber(tab[4]), tab[5])
+    elseif (tab[3]=="showdown") then
+        FHS_Receive_Showdown(tonumber(tab[4]), tab[5]);
     end
 end
 
