@@ -2,8 +2,8 @@
 ## Title : WoW Poker Lerduzz
 ## Author: Lerduzz
 ## Notes: Web: www.lerduzz.com
-## Version: v4.1.7
-## SavedVariables: FHS_StartChips, FHS_minimapIcon
+## Version: v1.0.0
+## SavedVariables: WPL_MapIconAngle, WPL_StartChips, WPL_MinimapIcon
 Libs\LibStub\LibStub.lua
 Libs\LibSimpleOptions-1.0\lib.xml
 ##Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml

@@ -15,9 +15,10 @@ local WPL_DraggingIcon = 0;
 ------------ Saved Variables ------------------
 local WPL_MapIconAngle = 0;
 local WPL_SetSize = 0;
-local minimapIcon = true;
+local WPL_MinimapIcon = true;
 -----------------------------------------------
 
+local minimapIcon = true;
 local lasttime = 0;
 local timedelta = 0;
 
@@ -280,8 +281,8 @@ function WPL_OnEvent(self, event, ...)
         arg1 = ...;
         if (arg1 == "WoWPokerLerduzz") then
             if (WPL_StartChips) then StartChips = WPL_StartChips; end;
-            if (WPL_minimapIcon) then
-                minimapIcon = WPL_minimapIcon;
+            if (WPL_MinimapIcon) then
+                minimapIcon = WPL_MinimapIcon;
                 WPL_MapIconFrame:Show();
             else
                 WPL_MapIconFrame:Hide();
@@ -1017,7 +1018,7 @@ function WPL_SetupOptionsPanel()
         'name', L['Minimap Icon'],
         'description', L['Turn minimap icon on/off'],
         'default', true,
-        'getFunc', function() return WPL_minimapIcon; end,
+        'getFunc', function() return WPL_MinimapIcon; end,
         'setFunc', function(value) WPL_ToggleMiniMap(value); end
     );
 
@@ -1131,11 +1132,11 @@ end
 function WPL_ToggleMiniMap(toggle)
     if (toggle) then
         minimapIcon = true;
-        WPL_minimapIcon = true;
+        WPL_MinimapIcon = true;
         WPL_MapIconFrame:Show();
     else
         minimapIcon = false;
-        WPL_minimapIcon = false;
+        WPL_MinimapIcon = false;
         WPL_MapIconFrame:Hide();
     end;
 end;
