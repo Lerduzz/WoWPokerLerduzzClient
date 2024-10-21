@@ -358,35 +358,28 @@ end;
 
 
 function FHSPoker_MapIconUpdate()
-    if (FHS_DraggingIcon==1) then
-
-        local xpos,ypos = GetCursorPosition();
-        local xmin,ymin = Minimap:GetLeft(), Minimap:GetBottom();
-
-        xpos = xmin-xpos/Minimap:GetEffectiveScale()+70;
-        ypos = ypos/Minimap:GetEffectiveScale()-ymin-70;
-
-        FHS_MapIconAngle = math.deg(math.atan2(ypos,xpos));
-        
+    if (FHS_DraggingIcon == 1) then
+        local xpos, ypos = GetCursorPosition();
+        local xmin, ymin = Minimap:GetLeft(), Minimap:GetBottom();
+        xpos = xmin - xpos / Minimap:GetEffectiveScale() + 70;
+        ypos = ypos / Minimap:GetEffectiveScale() - ymin - 70;
+        FHS_MapIconAngle = math.deg(math.atan2(ypos, xpos));
         FHS_IconPos(FHS_MapIconAngle);
-    end
-
-    -- Flash if its our go
+    end;
     FHSPoker_MapIcon:Show();
     FHSPoker_MapIcon:SetAlpha(1);
     if ((5 == WhosTurn) and (Seats[5].seated == 1)) then
-        var= (sin(GetTime() *400 )+1)/2;
+        var = (sin(GetTime() * 400 ) +1 ) / 2;
         FHSPoker_MapIcon:SetAlpha(var);
-    end
-end
+    end;
+end;
 
 
 function FHS_LDB_OnUpdate()
     if ((5 == WhosTurn) and (Seats[5].seated == 1)) then
-        varR= (sin(GetTime()*400)*128);
-        varG= (cos(GetTime()*400)*128);
-        varB= (sin(GetTime()*400)*-128);
-        
+        varR = (sin(GetTime() * 400) * 128);
+        varG = (cos(GetTime() * 400) * 128);
+        varB = (sin(GetTime() * 400) * -128);
         FHS_LDBObject.text = L['Your turn'];
         FHS_LDBObject.iconB = varB;
         FHS_LDBObject.iconG = varG;
@@ -396,55 +389,36 @@ function FHS_LDB_OnUpdate()
         FHS_LDBObject.iconB = 255;
         FHS_LDBObject.iconG = 255;
         FHS_LDBObject.iconR = 255;
-    end
-end
+    end;
+end;
 
 
 function FHS_Hidden_frame_OnUpdate(self, elap)
     if (StuffLoaded == 1) then
-        if (minimapIcon) then
-            FHSPoker_MapIconUpdate()
-        end		
-        if (FHS_ldbIcon) then
-            FHS_LDB_OnUpdate()
-        end
-    end
-end
-
-
-function FHS_MapIconClick(arg1)	
-    FHS_LauncherClicked(arg1)
-end
+        if (minimapIcon) then FHSPoker_MapIconUpdate(); end;
+        if (FHS_ldbIcon) then FHS_LDB_OnUpdate(); end;
+    end;
+end;
 
 
 function FHS_LauncherClicked(button)
     if (button == "RightButton") then
-        InterfaceOptionsFrame_OpenToCategory(PokerLerduzz_options_panel)
+        InterfaceOptionsFrame_OpenToCategory(PokerLerduzz_options_panel);
     elseif (button == "LeftButton") then
         if (Seats[5].seated == 0) then
-            StaticPopup_Show("FHS_DEALER")
-            return
-        end
-        FHS_ShowTable()
-    end
-end
-
-
-function FHS_ShowTable()
-    FHSPokerFrame:Show()
-end
-
-
-function FHS_Dragging(param)
-    FHS_DraggingIcon=param
-end
+            StaticPopup_Show("FHS_DEALER");
+            return;
+        end;
+        FHSPokerFrame:Show();
+    end;
+end;
 
 
 function FHS_IconPos(angle)
-    local xpos=cos(angle)*81
-    local ypos=sin(angle)*81
-    FHSPoker_MapIconFrame:SetPoint("TOPLEFT","Minimap","TOPLEFT",53-xpos,-55+ypos)
-end
+    local xpos = cos(angle) * 81;
+    local ypos = sin(angle) * 81;
+    FHSPoker_MapIconFrame:SetPoint("TOPLEFT", "Minimap", "TOPLEFT", 53 - xpos, -55 + ypos);
+end;
 
 
 function FHS_BlinkWhosTurn()	
@@ -717,8 +691,8 @@ end;
 
 function FHS_StartClient()
     FHS_ClearTable();
-    FHS_ShowTable();
-end
+    FHSPokerFrame:Show();
+end;
 
 
 -- Enable or disable the buttons based on whats going on
@@ -1376,9 +1350,9 @@ function FHS_SetupMiniMapButton()
     miniMapButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight","ADD");
     
     miniMapButton:SetScript("OnLoad",function() this:RegisterForClicks("LeftButtonUp","RightButtonUp"); this:RegisterForDrag("RightButton"); end);
-    miniMapButton:SetScript("OnMouseDown",function(self, button) if (button=="RightButton") then FHS_Dragging(1); self:StartMoving() end end);
-    miniMapButton:SetScript("OnMouseUp",function(self, button) if (button=="RightButton") then FHS_Dragging(0); self:StopMovingOrSizing() end end);
-    miniMapButton:SetScript("OnClick",function(self, button, down) FHS_MapIconClick(button); end);
+    miniMapButton:SetScript("OnMouseDown",function(self, button) if (button=="RightButton") then FHS_DraggingIcon = 1; self:StartMoving() end end);
+    miniMapButton:SetScript("OnMouseUp",function(self, button) if (button=="RightButton") then FHS_DraggingIcon = 0; self:StopMovingOrSizing() end end);
+    miniMapButton:SetScript("OnClick",function(self, button, down) FHS_LauncherClicked(button); end);
 
     if ( not minimapIcon ) then
         FHSPoker_MapIconFrame:Hide();
