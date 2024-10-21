@@ -96,8 +96,8 @@ MyLocalization = setmetatable(
 		['%s has no seat available for you'] = '%s has no seat available for you',
 		['%s is a dealer and has %s seats available'] = '%s is a dealer and has %s seats available',
 		['%s has client version %s'] = '%s has client version %s',
-		['Autoplay'] = 'Autoplay',
 		['Call any'] = 'Call any',
+		['Check/Fold'] = 'Check/Fold',
 		['Sticky'] = 'Sticky',
 		['Empty'] = 'Empty',
 	}
