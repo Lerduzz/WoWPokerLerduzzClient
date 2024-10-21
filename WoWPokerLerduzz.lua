@@ -5,7 +5,6 @@ local WPL_LDBObject;
 local UPDATEPERIOD, elapsed = 1, 0;
 local WPL_ldbIcon = true;
 
-local WPL_DEBUGING = false;
 local WPL_CLIENT_VERSION = "v1.0.0";
 local WPL_SERVER_VERSION = "v1.0.0";
 local StuffLoaded = 0;
@@ -263,15 +262,12 @@ end;
 
 function WPL_RegisterEvents()
     WPL_PokerFrame:RegisterEvent("ADDON_LOADED");
-    WPL_PokerFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
     WPL_PokerFrame:RegisterEvent("CHAT_MSG_ADDON");
 end;
 
 
 function WPL_OnEvent(self, event, ...)
-    if (event == "PLAYER_ENTERING_WORLD") then
-        WPL_DebugFeedback("PLAYER_ENTERING_WORLD" );
-    elseif (event == "ADDON_LOADED") then
+    if (event == "ADDON_LOADED") then
         arg1 = ...;
         if (arg1 == "WoWPokerLerduzz") then
             if (WPL_StartChips) then StartChips = WPL_StartChips; end;
@@ -286,7 +282,6 @@ function WPL_OnEvent(self, event, ...)
         end
     elseif (event == "CHAT_MSG_ADDON") then
         arg1, arg2, arg3, arg4 = ...;
-        WPL_DebugFeedback("CHAT_MSG_ADDON "..arg1);
         if (arg1 == "WoWPokerLerduzz") then WPL_HandleAddonComms(arg2, arg3, arg4); end;
     end;
 end;
@@ -427,7 +422,6 @@ function WPL_DrawCard(index)
         dx = (card.startx * mfrac) + (card.x * frac);
         dy = (card.starty * mfrac) + (card.y * frac);
     end;
-
     if (card.visible == 1) then
         card.Artwork:SetPoint("CENTER", "WPL_PokerFrame", "CENTER", dx + 29, dy);
         if (card.high == 1) then card.Artwork:SetDrawLayer("OVERLAY"); end;
@@ -450,30 +444,23 @@ end;
 
 
 function WPL_UpdateSeat(j)
-    local seat = "WPL_Seat_"..j
-    
-    -- If no player at position then hide/clear all data
-    if (Seats[j].seated==0) then
-        _G[seat.."_Name"]:SetText("")
-        _G[seat.."_Chips"]:SetText(L["Empty"])
-        _G[seat.."_Status"]:SetText("")
-        _G[seat.."_Port"]:Hide()
-        _G[seat.."_PortWho"]:Hide()
-        _G[seat]:Hide()
+    local seat = "WPL_Seat_"..j;
+    if (Seats[j].seated == 0) then
+        _G[seat.."_Name"]:SetText("");
+        _G[seat.."_Chips"]:SetText(L["Empty"]);
+        _G[seat.."_Status"]:SetText("");
+        _G[seat.."_Port"]:Hide();
+        _G[seat.."_PortWho"]:Hide();
+        _G[seat]:Hide();
     else
-        _G[seat]:Show()
-        _G[seat]:SetAlpha(Seats[j].alpha)
-        _G[seat.."_Name"]:SetText(Seats[j].name)
-        _G[seat.."_Chips"]:SetText(L['Chips']..": "..Seats[j].chips)
-        
-        -- Pull Blinds data if we aren't the dealer and we receive info on a bet
-        -- Setting Blinds for a client sets the Min Bet
-        if ( Dealer == 0 and (Seats[j].status == "Big Blind" or Seats[j].status == "Blinds")) then
+        _G[seat]:Show();
+        _G[seat]:SetAlpha(Seats[j].alpha);
+        _G[seat.."_Name"]:SetText(Seats[j].name);
+        _G[seat.."_Chips"]:SetText(L['Chips']..": "..Seats[j].chips);
+        if (Seats[j].status == "Big Blind" or Seats[j].status == "Blinds") then
             Blinds = Seats[j].bet;
-            Betsize = Seats[j].bet;
-        end
-        
-        -- Translate status to local language. Cannot be done at source as source my not be playing in the same language!
+            BetSize = Seats[j].bet;
+        end;
         local tempStatus = Seats[j].status;
         if (tempStatus ~= "" and tempStatus ~= "Default" and tempStatus ~= "Playing") then
             tempStatus = L[Seats[j].status]..": "..Seats[j].bet;
@@ -482,45 +469,38 @@ function WPL_UpdateSeat(j)
         end
         _G[seat.."_Status"]:SetText(tempStatus);
         _G[seat.."_PortWho"]:Hide();
-        
-        --Portrait
-        local portraitObj = _G[seat.."_Port"]
-        portraitObj:Show()
-        
-        if ( UnitName("player")==Seats[j].name) then --Visible
-            SetPortraitTexture(portraitObj,"player");
-            Seats[j].HavePort=1;
-            
-        elseif ( UnitName("target")==Seats[j].name) then --Visible
+        local portraitObj = _G[seat.."_Port"];
+        portraitObj:Show();
+        if (UnitName("player") == Seats[j].name) then
+            SetPortraitTexture(portraitObj, "player");
+            Seats[j].HavePort = 1;
+        elseif (UnitName("target") == Seats[j].name) then
             SetPortraitTexture(portraitObj,"target");
-            Seats[j].HavePort=1;
-            
+            Seats[j].HavePort = 1;
         else
             for n=1,5 do
-                if ( UnitName("party"..n)==Seats[j].name) then --Visible
+                if (UnitName("party"..n) == Seats[j].name) then
                     SetPortraitTexture(portraitObj, "party"..n);
-                    Seats[j].HavePort=1;
-                    break
+                    Seats[j].HavePort = 1;
+                    break;
                 end
             end;
-            
-            if ( UnitInRaid("player") )then
+            if (UnitInRaid("player") )then
                 for n=1,40 do
-                    if ( UnitName("raid"..n)==Seats[j].name) then --Visible
+                    if (UnitName("raid"..n) == Seats[j].name) then
                         SetPortraitTexture(portraitObj, "raid"..n);
-                        Seats[j].HavePort=1;
-                        break
-                    end
-                end
-            end
-        end
-    
-        if (Seats[j].HavePort==0) then
+                        Seats[j].HavePort = 1;
+                        break;
+                    end;
+                end;
+            end;
+        end;
+        if (Seats[j].HavePort == 0) then
             portraitObj:Hide();	
-            _G[seat.."_PortWho"]:Show()
-        end		
-    end
-end
+            _G[seat.."_PortWho"]:Show();
+        end;
+    end;
+end;
 
 
 function WPL_StopClient()
@@ -928,31 +908,12 @@ end;
 
 
 function WPL_SendMessage(msg, username)
-    WPL_DebugFeedback("addon whisper "..msg.." to "..username);
     SendAddonMessage("WoWPokerLerduzz", "WPL_".. WPL_SERVER_VERSION.."_"..msg, "WHISPER", username);
-end;
-
-
-function WPL_BroadcastMessage(msg, channel)
-    -- "PARTY", "RAID", "GUILD", "BATTLEGROUND".
-    WPL_DebugFeedback("broadcast "..msg.." on "..channel);
-    SendAddonMessage("WoWPokerLerduzz", "WPL_".. WPL_SERVER_VERSION.."_broadcast_"..msg, channel);
 end;
 
 
 function WPL_ConsoleFeedback(msg)
     DEFAULT_CHAT_FRAME:AddMessage(msg);
-end;
-
-
-function WPL_DebugFeedback(msg)
-    if (WPL_DEBUGING) then
-        if DLAPI then
-            DLAPI.DebugLog("WoWPokerLerduzz", msg);
-        else
-            DEFAULT_CHAT_FRAME:AddMessage(msg);
-        end;
-    end;
 end;
 
 
@@ -988,8 +949,7 @@ end;
 
 
 function WPL_SetupOptionsPanel()
-    PokerLerduzz_options_panel = LibStub("LibSimpleOptions-1.0").AddOptionsPanel(L['WoW Poker Lerduzz'],function()  end)
-
+    PokerLerduzz_options_panel = LibStub("LibSimpleOptions-1.0").AddOptionsPanel(L['WoW Poker Lerduzz'], function() end)
     local PokerLerduzz_Options_Minimap_toggle = PokerLerduzz_options_panel:MakeToggle(
         'name', L['Minimap Icon'],
         'description', L['Turn minimap icon on/off'],
@@ -997,7 +957,6 @@ function WPL_SetupOptionsPanel()
         'getFunc', function() return WPL_MinimapIcon; end,
         'setFunc', function(value) WPL_ToggleMiniMap(value); end
     );
-
     local PokerLerduzz_Options_Chips_slider = PokerLerduzz_options_panel:MakeSlider(
         'name', L['Starting Chips'],
         'description', L['Set the starting Chips'],
@@ -1009,17 +968,15 @@ function WPL_SetupOptionsPanel()
         'default', 500,
         'current', StartChips,
         'setFunc', function(value)
-                WPL_SetStartChips(value);
-                PokerLerduzz_options_panel:Refresh();
-            end,
+            WPL_SetStartChips(value);
+            PokerLerduzz_options_panel:Refresh();
+        end,
         'currentTextFunc', function(value) return ("%.0f"):format(value) end
-    )
-
+    );
     local title, subText = PokerLerduzz_options_panel:MakeTitleTextAndSubText(
         L['WoW Poker Lerduzz Options'], 
         L['These options are saved between sessions']
     );
-
     PokerLerduzz_Options_Chips_slider:SetPoint("TOPLEFT", 50, -100);
     PokerLerduzz_Options_Minimap_toggle:SetPoint("TOPLEFT", 50, -175);
 end;
