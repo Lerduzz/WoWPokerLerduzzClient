@@ -174,8 +174,7 @@ local BlinkOn = 1;
 
 
 function WPL_OnLoad()
-    StaticPopupDialogs["WPL_START_DIALOG"] =
-    {
+    StaticPopupDialogs["WPL_START_DIALOG"] = {
         text = L["Do you want to start the game?"],
         button1 = L['Start'],
         button2 = L['Cancel'],
@@ -189,7 +188,7 @@ function WPL_OnLoad()
     WPL_SetupLDB();
     WPL_SetupFrames();
     WPL_RegisterEvents();
-    WPL_ConsoleFeedback("::  "..L['WoW Poker Lerduzz'] .." ".. WPL_CLIENT_VERSION);
+    WPL_ConsoleFeedback(L['WoW Poker Lerduzz'] .." ("..WPL_CLIENT_VERSION..").");
     for key, object in pairs(Cards) do 
         Cards[key].Artwork = _G[Cards[key].object];
         Cards[key].fraction = 0;
@@ -555,7 +554,7 @@ function WPL_RaiseClick()
     if (Seats[5].seated == 0) then return; end;
     local delta = HighestBet - Seats[5].bet;
     if (BetSize < delta + Blinds) then BetSize = delta + Blinds; end;
-    if (Seats[5].bet + BetSize >= Seats[5].chips) then BetSize = Seats[5].chips; end;
+    if (BetSize >= Seats[5].chips) then BetSize = Seats[5].chips; end;
     WPL_SendMessage("call_5_"..BetSize, UnitName("player"));
 end;
 
@@ -584,7 +583,6 @@ end;
 
 
 function WPL_RaiseSlider_Setup(min, max)
-    WPL_ConsoleFeedback("WPL_DEBUG: WPL_RaiseSlider_Setup(min = "..min..", max = "..max..").");
     WPL_RaiseSlider:SetMinMaxValues(min, max);
     WPL_RaiseSlider:SetValue(min, false);
     WPL_Raise:SetText(L['Raise'].." "..min);
