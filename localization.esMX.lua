@@ -53,7 +53,7 @@ MyLocalization = setmetatable(
 		['Royal Flush'] = 'Escalera Real',
 		
 		["Do you want to start the game?"] = '¿Deseas comenzar la partida?',
-		['Start Dealing'] = 'Comenzar',
+		['Start'] = 'Comenzar',
 		['Cancel'] = 'Cancelar',
 		['Options'] = 'Opciones',
 		['I\'m Back'] = 'I\'m Back',

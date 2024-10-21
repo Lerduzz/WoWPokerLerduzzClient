@@ -53,7 +53,7 @@ MyLocalization = setmetatable(
 		['Royal Flush'] = 'Royal Flush',
 		
 		["Do you want to start the game?"] = 'Do you want to start the game?',
-		['Start Dealing'] = 'Start Dealing',
+		['Start'] = 'Start',
 		['Cancel'] = 'Cancel',
 		['Options'] = 'Options',
 		['I\'m Back'] = 'I\'m Back',

@@ -12,11 +12,11 @@ local FHS_COMMS_version = "v8.1.0";
 local StuffLoaded = 0;
 local FHS_DraggingIcon = 0;
 
-------------Saved Variables------------------
+------------ Saved Variables ------------------
 local FHS_MapIconAngle = 0;
 local FHS_SetSize = 0;
 local minimapIcon = true;
------------------
+-----------------------------------------------
 
 local lasttime = 0;
 local timedelta = 0;
@@ -187,7 +187,7 @@ function FHSPoker_OnLoad()
     StaticPopupDialogs["FHS_DEALER"] = 
     {
         text = L["Do you want to start the game?"],
-        button1 = L['Start Dealing'],
+        button1 = L['Start'],
         button2 = L['Cancel'],
         button3 = L['Options'],
         OnAccept = function() FHS_SendMessage("!seat", UnitName("player")); end,
