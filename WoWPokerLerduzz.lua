@@ -614,15 +614,20 @@ function WPL_UpdateWhosTurn()
             Call = 0;
         end;
         BetSize = delta + Blinds;
-        if (Seats[5].chips <= BetSize) then
+        if (Seats[5].chips <= delta) then
             delta = -1;
             WPL_Call:Hide();
             WPL_RaiseSlider:Hide();
             WPL_Raise:SetText(L['All In']);
         else
-            WPL_RaiseSlider:SetMinMaxValues(BetSize, Seats[5].chips);
-            WPL_RaiseSlider:SetValue(BetSize, false);
-            WPL_Raise:SetText(L['Raise'].." "..BetSize);
+            if (Seats[5].chips <= BetSize) then
+                WPL_RaiseSlider:Hide();
+                WPL_Raise:SetText(L['All In']);
+            else
+                WPL_RaiseSlider:SetMinMaxValues(BetSize, Seats[5].chips);
+                WPL_RaiseSlider:SetValue(BetSize, false);
+                WPL_Raise:SetText(L['Raise'].." "..BetSize);
+            end;
         end;
         if (WPL_AutoBetCheck:GetChecked()) then
             if (not WPL_AutoStickyCheck:GetChecked()) then
@@ -807,7 +812,7 @@ function WPL_ClientShow(hole1, hole2, j, status)
 end;
 
                 
-function WPL_ClientFlop1(flop1, flop2, flop3)				
+function WPL_ClientFlop1(flop1, flop2, flop3)
     Flop = {};
     Flop[1] = flop1;
     Flop[2] = flop2;
@@ -820,7 +825,7 @@ function WPL_ClientFlop1(flop1, flop2, flop3)
 end;
 
 
-function WPL_ClientFlop0()	
+function WPL_ClientFlop0()
     for i=1,3 do
         FlopBlank[i] = BlankCard;
         WPL_SetCard(BlankCard, DealerX, DealerY, -CardWidth * (3 - i), 0, 1, CC * DealerDelay, 0, 0);
