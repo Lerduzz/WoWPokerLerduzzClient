@@ -26,7 +26,7 @@ MyLocalization = setmetatable(
 		['Jack'] = 'Jota',
 		['Queen'] = 'Reina',
 		['King'] = 'Rey',
-		['Ace'] = 'Az',
+		['Ace'] = 'As',
 		['Twos'] = 'Dos',
 		['Threes'] = 'Tres',
 		['Fours'] = 'Cuatros',
@@ -39,7 +39,7 @@ MyLocalization = setmetatable(
 		['Jacks'] = 'Jotas',
 		['Queens'] = 'Reinas',
 		['Kings'] = 'Reyes',
-		['Aces'] = 'Aces',	
+		['Aces'] = 'Ases',
 		
 		['High Card'] = 'Carta Alta',
 		['1 Pair'] = 'Pareja',
