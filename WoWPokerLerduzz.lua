@@ -293,46 +293,26 @@ end;
 
 
 function WPL_OnUpdate(arg1)
-    --Animation is handled here
-    if (StuffLoaded==1) then
-        local time=GetTime();
-
-        timedelta=time-lasttime;
-        
-        if (lasttime==0) then
-            timedelta=0;
-        end -- initialization
-        
-        lasttime=time;
-    
-        for key, object in pairs(Cards) do 
-    
-            -- This is nice, just increase fraction until it hits 1			
-            if (Cards[key].fraction<1) then
-                Cards[key].fraction=Cards[key].fraction+(timedelta*CardSpeed);
+    if (StuffLoaded == 1) then
+        local time = GetTime();
+        timedelta = time - lasttime;
+        if (lasttime == 0) then timedelta = 0; end;
+        lasttime = time;
+        for key, object in pairs(Cards) do		
+            if (Cards[key].fraction < 1) then
+                Cards[key].fraction = Cards[key].fraction +(timedelta * CardSpeed);
             else
-                if (Cards[key].fadeout>0) then  --Track how many ms we've been faded
-                    Cards[key].fadetime=Cards[key].fadetime+(timedelta*1000);
+                if (Cards[key].fadeout > 0) then
+                    Cards[key].fadetime = Cards[key].fadetime + (timedelta * 1000);
                 end;
-            end
-        
-            if (Cards[key].fraction>1) then
-                Cards[key].fraction=1;
-            end
-
-            -- And update it
-            WPL_DrawCard(key);
-        end
-
-        if ( time>NextRefresh ) then
-            NextRefresh=time+1;
-            for j=1,9 do
-                WPL_UpdateSeat(j);
-            end
-            
-            if (WhosTurn>0) then
-                WPL_BlinkWhosTurn();
             end;
+            if (Cards[key].fraction > 1) then Cards[key].fraction = 1; end;
+            WPL_DrawCard(key);
+        end;
+        if (time > NextRefresh) then
+            NextRefresh = time + 1;
+            for j=1,9 do WPL_UpdateSeat(j); end;
+            if (WhosTurn > 0) then WPL_BlinkWhosTurn(); end;
         end;
     end
 end;
