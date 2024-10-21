@@ -408,7 +408,7 @@ function WPL_IconPos(angle)
 end;
 
 
-function WPL_BlinkWhosTurn()	
+function WPL_BlinkWhosTurn()
     if (BlinkOn == 0) then
         BlinkOn = 1;
         if (WhosTurn > 0) then
@@ -475,7 +475,7 @@ function WPL_DrawCard(index)
 end;
 
 
-function WPL_UpdateSeat(j)	
+function WPL_UpdateSeat(j)
     local seat = "WPL_Seat_"..j
     
     -- If no player at position then hide/clear all data
@@ -670,14 +670,16 @@ function WPL_UpdateWhosTurn()
         end;
         if (Seats[5].chips <= delta) then
             delta = -1;
-            WPL_Raise:SetText(L['All In']);
-            if (Call == 1) then WPL_Call:Hide(); end;		
+            WPL_Call:Hide();
+            WPL_Raise:Hide();
+            WPL_Raise_Higher:Hide();
+            WPL_Raise_Lower:Hide();        
         end;
         if (WPL_AutoBetCheck:GetChecked()) then
             if (not WPL_AutoStickyCheck:GetChecked()) then
                 WPL_AutoBetCheck:SetChecked(false);
             end;
-            if (Seats[5].chips <= delta) then
+            if (delta == -1) then
                 WPL_AllInClick();
             else
                 WPL_CallClick();
