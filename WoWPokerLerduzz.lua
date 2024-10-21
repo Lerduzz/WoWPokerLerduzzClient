@@ -1055,16 +1055,15 @@ end;
 
 
 function FHS_SetupOptionsPanel()
-    FHS_Debug_Feedback("Do options panel");
     PokerLerduzz_options_panel = LibStub("LibSimpleOptions-1.0").AddOptionsPanel(L['WoW Poker Lerduzz'],function()  end)
 
     local PokerLerduzz_Options_Minimap_toggle = PokerLerduzz_options_panel:MakeToggle(
         'name', L['Minimap Icon'],
         'description', L['Turn minimap icon on/off'],
-        'default', false,
-        'getFunc', function() return FHS_minimapIcon end,
-        'setFunc', function(value) FHS_Toggle_MiniMap(value) end
-    )
+        'default', true,
+        'getFunc', function() return FHS_minimapIcon; end,
+        'setFunc', function(value) FHS_Toggle_MiniMap(value); end
+    );
 
     local PokerLerduzz_Options_Blind_slider = PokerLerduzz_options_panel:MakeSlider(
         'name', L['Starting Blind'],
@@ -1131,7 +1130,7 @@ function FHS_SetupXMLButtons()
     _G["FHS_AllIn"]:SetText(L['All In']);
     _G["FHS_Raise"]:SetText(L['Raise']);
     _G["FHS_Pot_Text"]:SetText(L['WoW Poker Lerduzz']);
-end
+end;
         
 
 function FHS_Setup_LDB()
@@ -1143,15 +1142,14 @@ function FHS_Setup_LDB()
                 text = L['WoW Poker Lerduzz'],
                 label = "WoWPokerLerduzz",
                 icon = "interface\\addons\\wowpokerlerduzz\\textures\\mapicon",
-                OnClick  = function(clickedframe, button) FHS_LauncherClicked(button) end,
-                iconCoords = {0.25,.75,0.25,.75},
-            })
-    end
-    
+                OnClick  = function(clickedframe, button) FHS_LauncherClicked(button); end,
+                iconCoords = {0.25, .75, 0.25, .75},
+            }
+        );
+    end;
     local f = CreateFrame("frame");
-    
-    f:SetScript("OnUpdate", function(self, elap) FHS_Hidden_frame_OnUpdate(self, elap) end)
-end
+    f:SetScript("OnUpdate", function(self, elap) FHS_Hidden_frame_OnUpdate(self, elap); end);
+end;
 
             
 function FHS_SetupFrames()
@@ -1164,7 +1162,7 @@ function FHS_SetupFrames()
     FHS_SetupCardFrames();
     FHS_SetupMiniMapButton();
     FHS_SetupAutoButtonsFrame();
-end
+end;
 
 
 function FHS_SetupTableFrame()
