@@ -1157,35 +1157,42 @@ end
 function WPL_SetupButtonsFrame()
     local buttonsFrame = CreateFrame("Frame", "WPL_Buttons", WPL_PokerFrame, BackdropTemplateMixin and "BackdropTemplate");
     buttonsFrame:SetHeight(30);
-    buttonsFrame:SetWidth(540);
+    buttonsFrame:SetWidth(560);
     buttonsFrame:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 0, -183);
-    buttonsFrame:SetBackdrop( { 
-        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
-        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-        tile = false, tileSize = 16, edgeSize = 16, 
-        insets = { left = 5, right = 5, top = 5, bottom = 5 }
-    });
-    buttonsFrame:SetBackdropColor(0, 0, 0, .5);
-    
+
+    CreateFont("WPL_ButtonFont");
+    WPL_ButtonFont:SetFont("Fonts\\MORPHEUS.ttf", 16, "");
+    CreateFont("WPL_ButtonRaiseFont");
+    WPL_ButtonRaiseFont:SetFont("Fonts\\ARIALN.ttf", 16, "");
+
     local foldButton = CreateFrame("Button", "WPL_Fold", buttonsFrame, "UIPanelButtonTemplate");
     foldButton:Hide();
-    foldButton:SetHeight(20);
-    foldButton:SetWidth(120);
-    foldButton:SetPoint("CENTER", buttonsFrame, "CENTER", -205, 0)
+    foldButton:SetHeight(30);
+    foldButton:SetWidth(140);
+    foldButton:SetNormalFontObject(WPL_ButtonFont);
+    foldButton:SetHighlightFontObject(WPL_ButtonFont);
+    foldButton:SetDisabledFontObject(WPL_ButtonFont);
+    foldButton:SetPoint("CENTER", buttonsFrame, "CENTER", -210, 0)
     foldButton:SetScript("OnClick", function() WPL_FoldClick(); end);
     
     local callButton = CreateFrame("Button", "WPL_Call", buttonsFrame, "UIPanelButtonTemplate");
     callButton:Hide();
-    callButton:SetHeight(20);
-    callButton:SetWidth(120);
-    callButton:SetPoint("CENTER", buttonsFrame, "CENTER", -80, 0)
+    callButton:SetHeight(30);
+    callButton:SetWidth(130);
+    callButton:SetNormalFontObject(WPL_ButtonFont);
+    callButton:SetHighlightFontObject(WPL_ButtonFont);
+    callButton:SetDisabledFontObject(WPL_ButtonFont);
+    callButton:SetPoint("CENTER", buttonsFrame, "CENTER", -75, 0)
     callButton:SetScript("OnClick", function() WPL_CallClick(); end);
     
     local raiseButton = CreateFrame("Button", "WPL_Raise", buttonsFrame, "UIPanelButtonTemplate");
     raiseButton:Hide();
-    raiseButton:SetHeight(20);
-    raiseButton:SetWidth(120);
-    raiseButton:SetPoint("CENTER", buttonsFrame, "CENTER", 45, 0)
+    raiseButton:SetHeight(30);
+    raiseButton:SetWidth(145);
+    raiseButton:SetNormalFontObject(WPL_ButtonFont);
+    raiseButton:SetHighlightFontObject(WPL_ButtonFont);
+    raiseButton:SetDisabledFontObject(WPL_ButtonFont);
+    raiseButton:SetPoint("CENTER", buttonsFrame, "CENTER", 85, 0)
     raiseButton:SetScript("OnClick", function() WPL_RaiseClick(); end);
     
     local lowerButton = CreateFrame("Button", "WPL_Raise_Lower", buttonsFrame, "UIPanelButtonTemplate");
@@ -1193,7 +1200,10 @@ function WPL_SetupButtonsFrame()
     lowerButton:SetText("-");
     lowerButton:SetHeight(20);
     lowerButton:SetWidth(20);
-    lowerButton:SetPoint("CENTER", buttonsFrame, "CENTER", 115, 0)
+    lowerButton:SetNormalFontObject(WPL_ButtonRaiseFont);
+    lowerButton:SetHighlightFontObject(WPL_ButtonRaiseFont);
+    lowerButton:SetDisabledFontObject(WPL_ButtonRaiseFont);
+    lowerButton:SetPoint("TOPRIGHT", raiseButton, "TOPLEFT", 2, -5)
     lowerButton:SetScript("OnClick", function() WPL_RaiseChange(-1); end);
     
     local higherButton = CreateFrame("Button", "WPL_Raise_Higher", buttonsFrame, "UIPanelButtonTemplate");
@@ -1201,15 +1211,21 @@ function WPL_SetupButtonsFrame()
     higherButton:SetText("+");
     higherButton:SetHeight(20);
     higherButton:SetWidth(20);
-    higherButton:SetPoint("CENTER", buttonsFrame, "CENTER", 135, 0)
+    higherButton:SetNormalFontObject(WPL_ButtonRaiseFont);
+    higherButton:SetHighlightFontObject(WPL_ButtonRaiseFont);
+    higherButton:SetDisabledFontObject(WPL_ButtonRaiseFont);
+    higherButton:SetPoint("TOPLEFT", raiseButton, "TOPRIGHT", -2, -5)
     higherButton:SetScript("OnClick", function() WPL_RaiseChange(1); end);
 
     local allInButton = CreateFrame("Button", "WPL_AllIn", buttonsFrame, "UIPanelButtonTemplate");
     allInButton:Hide();
     allInButton:SetText(L['All In']);
-    allInButton:SetHeight(20);
-    allInButton:SetWidth(120);
-    allInButton:SetPoint("CENTER", buttonsFrame, "CENTER", 205, 0)
+    allInButton:SetHeight(30);
+    allInButton:SetWidth(100);
+    allInButton:SetNormalFontObject(WPL_ButtonFont);
+    allInButton:SetHighlightFontObject(WPL_ButtonFont);
+    allInButton:SetDisabledFontObject(WPL_ButtonFont);
+    allInButton:SetPoint("CENTER", buttonsFrame, "CENTER", 230, 0)
     allInButton:SetScript("OnClick", function() WPL_AllInClick(); end);
 
     WPL_Buttons:Hide();
@@ -1219,15 +1235,15 @@ end
 function WPL_SetupAutoButtonsFrame()
     local autoButtonsFrame = CreateFrame("Frame", "WPL_AutoButtons", WPL_PokerFrame, BackdropTemplateMixin and "BackdropTemplate");
     autoButtonsFrame:SetHeight(30);
-    autoButtonsFrame:SetWidth(540);
+    autoButtonsFrame:SetWidth(560);
     autoButtonsFrame:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 0, -183);
     autoButtonsFrame:SetBackdrop( { 
         bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
         edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
         tile = false, tileSize = 16, edgeSize = 16, 
-        insets = { left = 5, right = 5, top = 5, bottom = 5 }
+        insets = { left = 3, right = 3, top = 3, bottom = 3 }
     });
-    autoButtonsFrame:SetBackdropColor(0, 0, 0, 0.5);
+    autoButtonsFrame:SetBackdropColor(0, 0, 0, .5);
     
     local AutoFoldCheck = CreateFrame("CheckButton", "WPL_AutoFoldCheck", autoButtonsFrame, "UICheckButtonTemplate");
     AutoFoldCheck:SetHeight(27);
