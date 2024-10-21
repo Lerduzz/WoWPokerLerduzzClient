@@ -807,15 +807,19 @@ end;
 
 
 function FHS_Receive_Showdown(j, status)
-    -- TODO: Si eres el ganador por defecto, permitir mostrar cartas, de lo contrario mostrar los botones de juego automatico.
-    FHS_HideAllButtons(false);
-    FHS_Fold:SetText(L["Show Cards"]);
     Seats[5].dealt = 0;
     FHS_Status_Text:SetText(status);
     if (5 == j) then
         Seats[5].dealt = 0;
+        FHS_HideAllButtons(false);
+        FHS_Buttons:Show();
+        FHS_AutoButtons:Hide();
         FHS_Fold:SetText(L['Show Cards']);
         FHS_Fold:Show();
+    else
+        FHS_HideAllButtons(true);
+        FHS_Buttons:Hide();
+        FHS_AutoButtons:Show();
     end;
 end;
 
