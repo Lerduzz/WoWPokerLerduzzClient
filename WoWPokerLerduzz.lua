@@ -854,10 +854,7 @@ function FHS_Receive_Quit(sender, j)
             FHS_UpdateSeat(j);
             FHS_Console_Feedback(Seats[j].name.." "..L['has left the table.']);
         end;
-        if (j == 5) then			
-            FHS_Console_Feedback(L['The dealer booted you.']);
-            FHS_StopClient();
-        end;
+        if (j == 5) then FHS_StopClient(); end;
     end;
 end;
 
