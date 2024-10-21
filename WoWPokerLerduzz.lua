@@ -386,8 +386,8 @@ function WPL_BlinkWhosTurn()
     if (BlinkOn == 0) then
         BlinkOn = 1;
         if (WhosTurn > 0) then
-            _G["WPL_Seat_"..WhosTurn.."_RingSelect"]:Show()
-            _G["WPL_Seat_"..WhosTurn.."_Ring"]:Hide()
+            _G["WPL_Seat_"..WhosTurn.."_RingSelect"]:Show();
+            _G["WPL_Seat_"..WhosTurn.."_Ring"]:Hide();
         end;
     else
         BlinkOn = 0;
@@ -399,7 +399,7 @@ function WPL_BlinkWhosTurn()
 end;
 
 
-function WPL_SetCard(index,dealerx,dealery,x,y,visible,fraction,fadeout,highlayer)
+function WPL_SetCard(index, dealerx, dealery, x, y, visible, fraction, fadeout, highlayer)
     Cards[index].x = x;
     Cards[index].y = y;
     Cards[index].startx = dealerx;
