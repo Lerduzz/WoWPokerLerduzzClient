@@ -179,7 +179,7 @@ local CC = 0;
 local BlinkOn = 1;
 
 
-function WPLPoker_OnLoad()
+function WPL_OnLoad()
     StaticPopupDialogs["WPL_START_DIALOG"] =
     {
         text = L["Do you want to start the game?"],
@@ -192,10 +192,10 @@ function WPLPoker_OnLoad()
         whileDead = 1,
         hideOnEscape = 1
     };
-    WPL_Setup_LDB();
+    WPL_SetupLDB();
     WPL_SetupFrames();
-    WPLPoker_registerEvents();
-    WPL_Console_Feedback("::  "..L['WoW Poker Lerduzz'] .." ".. WPL_CLIENT_VERSION);
+    WPL_RegisterEvents();
+    WPL_ConsoleFeedback("::  "..L['WoW Poker Lerduzz'] .." ".. WPL_CLIENT_VERSION);
     for key, object in pairs(Cards) do 
         Cards[key].Artwork = _G[Cards[key].object];
         Cards[key].fraction = 0;
@@ -217,14 +217,14 @@ function WPL_SizeClick()
     WPL_SetSize = WPL_SetSize + 1;
     if (WPL_SetSize > 2) then WPL_SetSize = 0; end;
     if (WPL_SetSize == 0) then
-        WPLPokerFrame:SetScale(1);
+        WPL_PokerFrame:SetScale(1);
     elseif (WPL_SetSize == 1) then
-        WPLPokerFrame:SetScale(0.75);
+        WPL_PokerFrame:SetScale(0.75);
     elseif (WPL_SetSize == 2) then
-        WPLPokerFrame:SetScale(0.5);            
+        WPL_PokerFrame:SetScale(0.5);            
     end;
-    WPLPokerFrame:ClearAllPoints();
-    WPLPokerFrame:SetPoint("CENTER", "UIParent", "CENTER", 0, 0);
+    WPL_PokerFrame:ClearAllPoints();
+    WPL_PokerFrame:SetPoint("CENTER", "UIParent", "CENTER", 0, 0);
 end;
 
 
@@ -266,42 +266,38 @@ function WPL_ClearTable()
 end;
 
 
-function WPLPoker_registerEvents()
-    WPLPokerFrame:RegisterEvent("ADDON_LOADED");
-    WPLPokerFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
-    WPLPokerFrame:RegisterEvent("CHAT_MSG_ADDON");
+function WPL_RegisterEvents()
+    WPL_PokerFrame:RegisterEvent("ADDON_LOADED");
+    WPL_PokerFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+    WPL_PokerFrame:RegisterEvent("CHAT_MSG_ADDON");
 end;
 
 
-function WPLPoker_OnEvent(self, event, ...)
-    -- prefix = arg1;
-    -- msg = arg2;
-    -- distrib = arg3;
-    -- sender = arg4;
+function WPL_OnEvent(self, event, ...)
     if (event == "PLAYER_ENTERING_WORLD") then
-        WPL_Debug_Feedback("PLAYER_ENTERING_WORLD" );
+        WPL_DebugFeedback("PLAYER_ENTERING_WORLD" );
     elseif (event == "ADDON_LOADED") then
         arg1 = ...;
         if (arg1 == "WoWPokerLerduzz") then
             if (WPL_StartChips) then StartChips = WPL_StartChips; end;
             if (WPL_minimapIcon) then
                 minimapIcon = WPL_minimapIcon;
-                WPLPoker_MapIconFrame:Show();
+                WPL_MapIconFrame:Show();
             else
-                WPLPoker_MapIconFrame:Hide();
+                WPL_MapIconFrame:Hide();
             end;
             WPL_SetupOptionsPanel();
             WPL_SetupXMLButtons();
         end
     elseif (event == "CHAT_MSG_ADDON") then
         arg1, arg2, arg3, arg4 = ...;
-        WPL_Debug_Feedback("CHAT_MSG_ADDON "..arg1);
+        WPL_DebugFeedback("CHAT_MSG_ADDON "..arg1);
         if (arg1 == "WoWPokerLerduzz") then WPL_HandleAddonComms(arg2, arg3, arg4); end;
     end;
 end;
 
 
-function WPLPoker_Update(arg1)
+function WPL_OnUpdate(arg1)
     --Animation is handled here
     if (StuffLoaded==1) then
         local time=GetTime();
@@ -347,7 +343,7 @@ function WPLPoker_Update(arg1)
 end;
 
 
-function WPLPoker_MapIconUpdate()
+function WPL_MapIconUpdate()
     if (WPL_DraggingIcon == 1) then
         local xpos, ypos = GetCursorPosition();
         local xmin, ymin = Minimap:GetLeft(), Minimap:GetBottom();
@@ -356,11 +352,11 @@ function WPLPoker_MapIconUpdate()
         WPL_MapIconAngle = math.deg(math.atan2(ypos, xpos));
         WPL_IconPos(WPL_MapIconAngle);
     end;
-    WPLPoker_MapIcon:Show();
-    WPLPoker_MapIcon:SetAlpha(1);
+    WPL_MapIcon:Show();
+    WPL_MapIcon:SetAlpha(1);
     if ((5 == WhosTurn) and (Seats[5].seated == 1)) then
         var = (sin(GetTime() * 400 ) +1 ) / 2;
-        WPLPoker_MapIcon:SetAlpha(var);
+        WPL_MapIcon:SetAlpha(var);
     end;
 end;
 
@@ -383,9 +379,9 @@ function WPL_LDB_OnUpdate()
 end;
 
 
-function WPL_Hidden_frame_OnUpdate(self, elap)
+function WPL_HiddenFrame_OnUpdate(self, elap)
     if (StuffLoaded == 1) then
-        if (minimapIcon) then WPLPoker_MapIconUpdate(); end;
+        if (minimapIcon) then WPL_MapIconUpdate(); end;
         if (WPL_ldbIcon) then WPL_LDB_OnUpdate(); end;
     end;
 end;
@@ -399,7 +395,7 @@ function WPL_LauncherClicked(button)
             StaticPopup_Show("WPL_START_DIALOG");
             return;
         end;
-        WPLPokerFrame:Show();
+        WPL_PokerFrame:Show();
     end;
 end;
 
@@ -407,7 +403,7 @@ end;
 function WPL_IconPos(angle)
     local xpos = cos(angle) * 81;
     local ypos = sin(angle) * 81;
-    WPLPoker_MapIconFrame:SetPoint("TOPLEFT", "Minimap", "TOPLEFT", 53 - xpos, -55 + ypos);
+    WPL_MapIconFrame:SetPoint("TOPLEFT", "Minimap", "TOPLEFT", 53 - xpos, -55 + ypos);
 end;
 
 
@@ -458,7 +454,7 @@ function WPL_DrawCard(index)
     end;
 
     if (card.visible == 1) then
-        card.Artwork:SetPoint("CENTER", "WPLPokerFrame", "CENTER", dx + 29, dy);
+        card.Artwork:SetPoint("CENTER", "WPL_PokerFrame", "CENTER", dx + 29, dy);
         if (card.high == 1) then card.Artwork:SetDrawLayer("OVERLAY"); end;
         card.Artwork:Show();
         if (card.fadeout > 0) and (card.fadetime > 0) then
@@ -472,7 +468,7 @@ function WPL_DrawCard(index)
         end;
     else
         card.Artwork:SetDrawLayer("ARTWORK");
-        card.Artwork:SetPoint("CENTER", "WPLPokerFrame", "CENTER", 0, 0);
+        card.Artwork:SetPoint("CENTER", "WPL_PokerFrame", "CENTER", 0, 0);
         card.Artwork:Hide();
     end;
 end;
@@ -562,7 +558,7 @@ function WPL_QuitClick()
     WPL_SendMessage("q_5", UnitName("player"));
     WPL_StopClient();
     WPL_HideAllButtons(true);
-    WPLPokerFrame:Hide();
+    WPL_PokerFrame:Hide();
 end;
 
 
@@ -571,11 +567,11 @@ function WPL_SitOutInClick()
         WPL_FoldClick();
         WPL_SendMessage("inout_5_OUT", UnitName("player"));
         Seats[5].inout = "OUT";
-        WPLPoker_SitInOutIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\sentarse");
+        WPL_SitInOutIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\sentarse");
     else			
         WPL_SendMessage("inout_5_IN", UnitName("player"));
         Seats[5].inout = "IN";
-        WPLPoker_SitInOutIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\pararse");
+        WPL_SitInOutIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\pararse");
     end;
 end;
 
@@ -639,7 +635,7 @@ end;
 
 function WPL_StartClient()
     WPL_ClearTable();
-    WPLPokerFrame:Show();
+    WPL_PokerFrame:Show();
 end;
 
 
@@ -748,26 +744,26 @@ function WPL_HandleAddonComms(msg, channel, sender)
     if (tab[3] == "ping!") then
         WPL_SendMessage("pong!", UnitName("player"));
     elseif (tab[3]=="noseats!") then
-        WPL_Console_Feedback(string.format(L['%s has no seat available for you'], sender));
+        WPL_ConsoleFeedback(string.format(L['%s has no seat available for you'], sender));
     elseif (tab[3]=="s") then
-        WPL_Client_Sit(tonumber(tab[4]), tab[5], tonumber(tab[6]), tonumber(tab[7]))
+        WPL_ClientSit(tonumber(tab[4]), tab[5], tonumber(tab[6]), tonumber(tab[7]))
     elseif (tab[3]=="st") then
-        WPL_Client_Status_Update(tonumber(tab[4]), tab[5], tab[6], tab[7], tab[8])
+        WPL_ClientStatusUpdate(tonumber(tab[4]), tab[5], tab[6], tab[7], tab[8])
     elseif (tab[3]=="b") then
         WPL_SelectPlayerButton(tonumber(tab[4]))
     elseif (tab[3]=="forceout") then
-        WPL_Console_Feedback(L['You did not act in time. Press I\'m Back to continue playing.'])
+        WPL_ConsoleFeedback(L['You did not act in time. Press I\'m Back to continue playing.'])
         WPL_SitOutInClick()
     elseif (tab[3]=="round0") then  --PRE FLOP
-        WPL_Client_Round0( tonumber(tab[4]) )
+        WPL_ClientRound0( tonumber(tab[4]) )
     elseif (tab[3]=="hole") then
-        WPL_Client_Hole( tonumber(tab[4]), tonumber(tab[5]) )
+        WPL_ClientHole( tonumber(tab[4]), tonumber(tab[5]) )
     elseif (tab[3]=="deal") then
-        WPL_Client_Deal( tonumber(tab[4]))
+        WPL_ClientDeal( tonumber(tab[4]))
     elseif (tab[3]=="flop0") then
-        WPL_Client_Flop0()
+        WPL_ClientFlop0()
     elseif (tab[3]=="flop1") then
-        WPL_Client_Flop1(tonumber(tab[4]), tonumber(tab[5]), tonumber(tab[6]))
+        WPL_ClientFlop1(tonumber(tab[4]), tonumber(tab[5]), tonumber(tab[6]))
     elseif (tab[3]=="turn") then
         Flop[4]=tonumber(tab[4]);
         WPL_SetCard(Flop[4],DealerX,DealerY, CardWidth*1,0,1,0,0,0)
@@ -775,7 +771,7 @@ function WPL_HandleAddonComms(msg, channel, sender)
         Flop[5]=tonumber(tab[4]);
         WPL_SetCard(Flop[5],DealerX,DealerY, CardWidth*2,0,1,0,0,0)
     elseif (tab[3]=="show") then
-        WPL_Client_Show(tonumber(tab[4]), tonumber(tab[5]), tonumber(tab[6]), tab[7])
+        WPL_ClientShow(tonumber(tab[4]), tonumber(tab[5]), tonumber(tab[6]), tab[7])
     elseif (tab[3]=="go") then
         local j = tonumber(tab[4]);
         HighestBet = tonumber(tab[5]);
@@ -787,16 +783,16 @@ function WPL_HandleAddonComms(msg, channel, sender)
     elseif (tab[3]=="seat") then
         WPL_StartClient();
     elseif (tab[3]=="inout") then
-        WPL_Receive_InOut( tonumber(tab[4]), tab[5], sender)
+        WPL_ReceiveInOut( tonumber(tab[4]), tab[5], sender)
     elseif (tab[3]=="q") then
-        WPL_Receive_Quit( sender, tonumber(tab[4]))
+        WPL_ReceiveQuit( sender, tonumber(tab[4]))
     elseif (tab[3]=="showdown") then
-        WPL_Receive_Showdown(tonumber(tab[4]), tab[5]);
+        WPL_ReceiveShowdown(tonumber(tab[4]), tab[5]);
     end
 end
 
 
-function WPL_Receive_InOut(j, inout, sender)
+function WPL_ReceiveInOut(j, inout, sender)
     Seats[j].inout = inout;
     if (sender == UnitName("player") and inout=="OUT") then
         Seats[j].alpha = 0.5;
@@ -806,7 +802,7 @@ function WPL_Receive_InOut(j, inout, sender)
 end;
 
 
-function WPL_Receive_Showdown(j, status)
+function WPL_ReceiveShowdown(j, status)
     Seats[5].dealt = 0;
     WPL_Status_Text:SetText(status);
     if (5 == j) then
@@ -824,20 +820,20 @@ function WPL_Receive_Showdown(j, status)
 end;
 
 
-function WPL_Receive_Quit(sender, j)
+function WPL_ReceiveQuit(sender, j)
     if (sender == UnitName("player")) then
         Seats[j].seated = 0;
         Seats[j].HavePort = 0;
-        if (IsPlaying(sender) == 1) then								
+        if (WPL_IsPlaying(sender) == 1) then								
             WPL_UpdateSeat(j);
-            WPL_Console_Feedback(Seats[j].name.." "..L['has left the table.']);
+            WPL_ConsoleFeedback(Seats[j].name.." "..L['has left the table.']);
         end;
         if (j == 5) then WPL_StopClient(); end;
     end;
 end;
 
 
-function WPL_Client_Sit(j, name, chips, bet)
+function WPL_ClientSit(j, name, chips, bet)
     Seats[j].seated = 1;
     Seats[j].name = name;
     Seats[j].chips = chips;
@@ -846,7 +842,7 @@ function WPL_Client_Sit(j, name, chips, bet)
 end;
 
 
-function WPL_Client_Status_Update(j, chips, bet, status, alpha)
+function WPL_ClientStatusUpdate(j, chips, bet, status, alpha)
     Seats[j].chips = tonumber(chips);
     Seats[j].bet = tonumber(bet);
     Seats[j].status = status;
@@ -856,7 +852,7 @@ function WPL_Client_Status_Update(j, chips, bet, status, alpha)
 end;
 
 
-function WPL_Client_Show(hole1, hole2, j, status)
+function WPL_ClientShow(hole1, hole2, j, status)
     Seats[j].hole1 = hole1;
     Seats[j].hole2 = hole2;
     Seats[j].status = status;
@@ -869,7 +865,7 @@ function WPL_Client_Show(hole1, hole2, j, status)
 end;
 
                 
-function WPL_Client_Flop1(flop1, flop2, flop3)				
+function WPL_ClientFlop1(flop1, flop2, flop3)				
     Flop = {};
     Flop[1] = flop1;
     Flop[2] = flop2;
@@ -882,7 +878,7 @@ function WPL_Client_Flop1(flop1, flop2, flop3)
 end;
 
 
-function WPL_Client_Flop0()	
+function WPL_ClientFlop0()	
     for i=1,3 do
         FlopBlank[i] = BlankCard;
         WPL_SetCard(BlankCard, DealerX, DealerY, -CardWidth * (3 - i), 0, 1, CC * DealerDelay, 0, 0);
@@ -892,7 +888,7 @@ function WPL_Client_Flop0()
 end;
 
 
-function WPL_Client_Deal(j)
+function WPL_ClientDeal(j)
     Seats[j].blank1 = BlankCard;
     WPL_SetCard(BlankCard, DealerX, DealerY, Seats[j].x - 12, Seats[j].y + 12, 1, CC * DealerDelay, 0, 0);
     BlankCard = BlankCard + 1;
@@ -908,7 +904,7 @@ function WPL_Client_Deal(j)
 end;
 
 
-function WPL_Client_Hole( hole1, hole2)
+function WPL_ClientHole( hole1, hole2)
     local ThisSeat = Seats[5];
     ThisSeat.hole1 = hole1;
     ThisSeat.hole2 = hole2;
@@ -925,7 +921,7 @@ function WPL_Client_Hole( hole1, hole2)
 end;
 
 
-function WPL_Client_Round0(thisRoundCount)
+function WPL_ClientRound0(thisRoundCount)
     WPL_HideAllButtons(true);
     WPL_ClearCards();
     RoundCount = thisRoundCount;
@@ -946,7 +942,7 @@ function WPL_Client_Round0(thisRoundCount)
 end;
 
 
-function IsPlaying(name)
+function WPL_IsPlaying(name)
     for j=1,9 do
         if (Seats[j].seated == 1 and Seats[j].name == name) then return 1; end;
     end;
@@ -955,24 +951,24 @@ end;
 
 
 function WPL_SendMessage(msg, username)
-    WPL_Debug_Feedback("addon whisper "..msg.." to "..username);
+    WPL_DebugFeedback("addon whisper "..msg.." to "..username);
     SendAddonMessage("WoWPokerLerduzz", "WPL_".. WPL_SERVER_VERSION.."_"..msg, "WHISPER", username);
 end;
 
 
 function WPL_BroadcastMessage(msg, channel)
     -- "PARTY", "RAID", "GUILD", "BATTLEGROUND".
-    WPL_Debug_Feedback("broadcast "..msg.." on "..channel);
+    WPL_DebugFeedback("broadcast "..msg.." on "..channel);
     SendAddonMessage("WoWPokerLerduzz", "WPL_".. WPL_SERVER_VERSION.."_broadcast_"..msg, channel);
 end;
 
 
-function WPL_Console_Feedback(msg)
+function WPL_ConsoleFeedback(msg)
     DEFAULT_CHAT_FRAME:AddMessage(msg);
 end;
 
 
-function WPL_Debug_Feedback(msg)
+function WPL_DebugFeedback(msg)
     if (WPL_DEBUGING) then
         if DLAPI then
             DLAPI.DebugLog("WoWPokerLerduzz", msg);
@@ -1008,7 +1004,7 @@ function WPL_ShowCard(j, status)
 end;
 
 
-function WPL_Set_StartChips(value)
+function WPL_SetStartChips(value)
     StartChips = value;
     WPL_StartChips = value;
 end;
@@ -1022,7 +1018,7 @@ function WPL_SetupOptionsPanel()
         'description', L['Turn minimap icon on/off'],
         'default', true,
         'getFunc', function() return WPL_minimapIcon; end,
-        'setFunc', function(value) WPL_Toggle_MiniMap(value); end
+        'setFunc', function(value) WPL_ToggleMiniMap(value); end
     );
 
     local PokerLerduzz_Options_Chips_slider = PokerLerduzz_options_panel:MakeSlider(
@@ -1036,7 +1032,7 @@ function WPL_SetupOptionsPanel()
         'default', 500,
         'current', StartChips,
         'setFunc', function(value)
-                WPL_Set_StartChips(value);
+                WPL_SetStartChips(value);
                 PokerLerduzz_options_panel:Refresh();
             end,
         'currentTextFunc', function(value) return ("%.0f"):format(value) end
@@ -1061,7 +1057,7 @@ function WPL_SetupXMLButtons()
 end;
         
 
-function WPL_Setup_LDB()
+function WPL_SetupLDB()
     if ( WPL_ldbIcon ) then
         WPL_LDBObject = ldb:NewDataObject(
             "WoWPokerLerduzz",
@@ -1076,7 +1072,7 @@ function WPL_Setup_LDB()
         );
     end;
     local f = CreateFrame("frame");
-    f:SetScript("OnUpdate", function(self, elap) WPL_Hidden_frame_OnUpdate(self, elap); end);
+    f:SetScript("OnUpdate", function(self, elap) WPL_HiddenFrame_OnUpdate(self, elap); end);
 end;
 
             
@@ -1094,7 +1090,7 @@ end;
 
 
 function WPL_SetupTableFrame()
-    local tableFrame = CreateFrame("Frame", "WPLPokerFrame", UIParent, BackdropTemplateMixin and "BackdropTemplate");
+    local tableFrame = CreateFrame("Frame", "WPL_PokerFrame", UIParent, BackdropTemplateMixin and "BackdropTemplate");
     tableFrame:Hide();
     tableFrame:SetMovable(true);
     tableFrame:EnableMouse();
@@ -1103,9 +1099,9 @@ function WPL_SetupTableFrame()
     tableFrame:SetScript("OnDragStop", tableFrame.StopMovingOrSizing);
     tableFrame:SetFrameStrata("TOOLTIP");
     
-    tableFrame:SetScript("OnEvent",WPLPoker_OnEvent);
+    tableFrame:SetScript("OnEvent",WPL_OnEvent);
 
-    tableFrame:SetScript("OnUpdate",function() WPLPoker_Update(arg1); end);
+    tableFrame:SetScript("OnUpdate",function() WPL_OnUpdate(arg1); end);
     tableFrame:SetScript("OnMouseDown",
         function()
             if ( arg1 == "LeftButton" ) then
@@ -1132,21 +1128,21 @@ function WPL_SetupTableFrame()
 end
 
 
-function WPL_Toggle_MiniMap(toggle)
+function WPL_ToggleMiniMap(toggle)
     if (toggle) then
         minimapIcon = true;
         WPL_minimapIcon = true;
-        WPLPoker_MapIconFrame:Show();
+        WPL_MapIconFrame:Show();
     else
         minimapIcon = false;
         WPL_minimapIcon = false;
-        WPLPoker_MapIconFrame:Hide();
+        WPL_MapIconFrame:Hide();
     end;
 end;
 
 
 function WPL_SetupMiniMapButton()
-    local miniMapButton = CreateFrame("Button", "WPLPoker_MapIconFrame", Minimap)
+    local miniMapButton = CreateFrame("Button", "WPL_MapIconFrame", Minimap)
     
     miniMapButton:SetFrameStrata("MEDIUM");
     miniMapButton:SetMovable(true);
@@ -1154,7 +1150,7 @@ function WPL_SetupMiniMapButton()
     miniMapButton:SetWidth(32);miniMapButton:SetHeight(32);
     miniMapButton:SetPoint("TOPLEFT",Minimap,"TOPLEFT",-25,-80);
     
-    local miniMapButtonTexture = miniMapButton:CreateTexture("WPLPoker_MapIcon", "BACKGROUND")
+    local miniMapButtonTexture = miniMapButton:CreateTexture("WPL_MapIcon", "BACKGROUND")
     
     miniMapButtonTexture:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\mapicon");
     miniMapButtonTexture:SetWidth(32);miniMapButtonTexture:SetHeight(32);
@@ -1168,29 +1164,29 @@ function WPL_SetupMiniMapButton()
     miniMapButton:SetScript("OnClick",function(self, button, down) WPL_LauncherClicked(button); end);
 
     if ( not minimapIcon ) then
-        WPLPoker_MapIconFrame:Hide();
+        WPL_MapIconFrame:Hide();
     end
 end
 
 
 function WPL_SetupTopButtons()
-    local minimizeButton = CreateFrame("Button", "WPLPoker_MinimizeButton", WPLPokerFrame);
+    local minimizeButton = CreateFrame("Button", "WPL_MinimizeButton", WPL_PokerFrame);
     minimizeButton:SetHeight(32);
     minimizeButton:SetWidth(32);
-    minimizeButton:SetPoint("CENTER", WPLPokerFrame, "CENTER", -18, 217);	
-    local minimizeIconButton = minimizeButton:CreateTexture("WPLPoker_MinimizeIcon", "BACKGROUND")
+    minimizeButton:SetPoint("CENTER", WPL_PokerFrame, "CENTER", -18, 217);	
+    local minimizeIconButton = minimizeButton:CreateTexture("WPL_MinimizeIcon", "BACKGROUND")
     minimizeIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\minimizar");
     minimizeIconButton:SetHeight(32);
     minimizeIconButton:SetWidth(32);
     minimizeIconButton:SetPoint("CENTER", minimizeButton, "CENTER", 0, 0);	
     minimizeButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight","ADD");	
-    minimizeButton:SetScript("OnClick", function() WPLPokerFrame:Hide(); end);
+    minimizeButton:SetScript("OnClick", function() WPL_PokerFrame:Hide(); end);
 
-    local setSizeButton = CreateFrame("Button", "WPLPoker_SetSizeButton", WPLPokerFrame);
+    local setSizeButton = CreateFrame("Button", "WPL_SetSizeButton", WPL_PokerFrame);
     setSizeButton:SetHeight(32);
     setSizeButton:SetWidth(32);
-    setSizeButton:SetPoint("CENTER", WPLPokerFrame, "CENTER", 0, 217);	
-    local setSizeIconButton = setSizeButton:CreateTexture("WPLPoker_SetSizeIcon", "BACKGROUND")
+    setSizeButton:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 0, 217);	
+    local setSizeIconButton = setSizeButton:CreateTexture("WPL_SetSizeIcon", "BACKGROUND")
     setSizeIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\maximizar");
     setSizeIconButton:SetHeight(32);
     setSizeIconButton:SetWidth(32);
@@ -1198,11 +1194,11 @@ function WPL_SetupTopButtons()
     setSizeButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD");	
     setSizeButton:SetScript("OnClick", function() WPL_SizeClick(); end);
     
-    local closeButton = CreateFrame("Button", "WPLPoker_CloseButton", WPLPokerFrame);
+    local closeButton = CreateFrame("Button", "WPL_CloseButton", WPL_PokerFrame);
     closeButton:SetHeight(32);
     closeButton:SetWidth(32);
-    closeButton:SetPoint("CENTER", WPLPokerFrame, "CENTER", 18, 217);	
-    local closeIconButton = closeButton:CreateTexture("WPLPoker_CloseIcon", "BACKGROUND")
+    closeButton:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 18, 217);	
+    local closeIconButton = closeButton:CreateTexture("WPL_CloseIcon", "BACKGROUND")
     closeIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\cerrar");
     closeIconButton:SetHeight(32);
     closeIconButton:SetWidth(32);
@@ -1210,11 +1206,11 @@ function WPL_SetupTopButtons()
     closeButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD");	
     closeButton:SetScript("OnClick", function() WPL_QuitClick(); end);
 
-    local sitInOutButton = CreateFrame("Button", "WPLPoker_SitInOutButton", WPLPokerFrame);
+    local sitInOutButton = CreateFrame("Button", "WPL_SitInOutButton", WPL_PokerFrame);
     sitInOutButton:SetHeight(32);
     sitInOutButton:SetWidth(32);
-    sitInOutButton:SetPoint("CENTER", WPLPokerFrame, "CENTER", 36, 217);	
-    local sitInOutIconButton = sitInOutButton:CreateTexture("WPLPoker_SitInOutIcon", "BACKGROUND")
+    sitInOutButton:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 36, 217);	
+    local sitInOutIconButton = sitInOutButton:CreateTexture("WPL_SitInOutIcon", "BACKGROUND")
     sitInOutIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\pararse");
     sitInOutIconButton:SetHeight(32);
     sitInOutIconButton:SetWidth(32);
@@ -1225,10 +1221,10 @@ end
 
 
 function WPL_SetupButtonsFrame()
-    local buttonsFrame = CreateFrame("Frame", "WPL_Buttons", WPLPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
+    local buttonsFrame = CreateFrame("Frame", "WPL_Buttons", WPL_PokerFrame, BackdropTemplateMixin and "BackdropTemplate");
     buttonsFrame:SetHeight(30);
     buttonsFrame:SetWidth(540);
-    buttonsFrame:SetPoint("CENTER", WPLPokerFrame, "CENTER", 0, -183);
+    buttonsFrame:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 0, -183);
     buttonsFrame:SetBackdrop( { 
         bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
         edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -1287,10 +1283,10 @@ end
 
 
 function WPL_SetupAutoButtonsFrame()
-    local autoButtonsFrame = CreateFrame("Frame", "WPL_AutoButtons", WPLPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
+    local autoButtonsFrame = CreateFrame("Frame", "WPL_AutoButtons", WPL_PokerFrame, BackdropTemplateMixin and "BackdropTemplate");
     autoButtonsFrame:SetHeight(30);
     autoButtonsFrame:SetWidth(540);
-    autoButtonsFrame:SetPoint("CENTER", WPLPokerFrame, "CENTER", 0, -183);
+    autoButtonsFrame:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 0, -183);
     autoButtonsFrame:SetBackdrop( { 
         bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
         edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -1336,10 +1332,10 @@ end
 
 
 function WPL_SetupPotFrame()
-    local potFrame = CreateFrame("Frame", "WPL_Pot", WPLPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
+    local potFrame = CreateFrame("Frame", "WPL_Pot", WPL_PokerFrame, BackdropTemplateMixin and "BackdropTemplate");
     potFrame:SetHeight(30);
     potFrame:SetWidth(180);
-    potFrame:SetPoint("CENTER", WPLPokerFrame, "CENTER", 0, 135);
+    potFrame:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 0, 135);
     potFrame:SetBackdrop( { 
         bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
         edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -1354,10 +1350,10 @@ end
 
 
 function WPL_SetupStatusFrame()
-    local statusFrame = CreateFrame("Frame", "WPL_Status", WPLPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
+    local statusFrame = CreateFrame("Frame", "WPL_Status", WPL_PokerFrame, BackdropTemplateMixin and "BackdropTemplate");
     statusFrame:SetHeight(30);
     statusFrame:SetWidth(340);
-    statusFrame:SetPoint("CENTER", WPLPokerFrame, "CENTER", 0, 85);
+    statusFrame:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 0, 85);
     statusFrame:SetBackdrop( { 
         bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
         edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -1387,10 +1383,10 @@ function WPL_SetupSeatFrames()
     }	
     
     for seat=1,9 do
-        seatFrame = CreateFrame("Frame", "WPL_Seat_"..seat, WPLPokerFrame, BackdropTemplateMixin and "BackdropTemplate");
+        seatFrame = CreateFrame("Frame", "WPL_Seat_"..seat, WPL_PokerFrame, BackdropTemplateMixin and "BackdropTemplate");
         seatFrame:SetHeight(35);
         seatFrame:SetWidth(175);
-        seatFrame:SetPoint("CENTER", WPLPokerFrame, "CENTER", seatlocations[seat].x, seatlocations[seat].y);
+        seatFrame:SetPoint("CENTER", WPL_PokerFrame, "CENTER", seatlocations[seat].x, seatlocations[seat].y);
         seatFrame:SetBackdrop({ 
             bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
             edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -1466,7 +1462,7 @@ end
 function WPL_SetupCardFrames()
     local cardFrame;
     local thiscard;
-    cardFrame = CreateFrame("Frame", "WPL_CardFrame", WPLPokerFrame);
+    cardFrame = CreateFrame("Frame", "WPL_CardFrame", WPL_PokerFrame);
     cardFrame:SetHeight(560);
     cardFrame:SetWidth(860);
     cardFrame:SetPoint("CENTER", nil, nil, -330, 220);
@@ -1504,4 +1500,4 @@ function WPL_SetupCardFrames()
     end;
 end;
 
-WPLPoker_OnLoad();
+WPL_OnLoad();
