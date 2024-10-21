@@ -68,7 +68,6 @@ MyLocalization = setmetatable(
 		['Total Pot'] = 'Total Pot',
 		['wins'] = 'wins',
 		['Split'] = 'Split',
-		['Error case'] = 'Error case',
 		['Folded'] = 'Folded',
 		['Showing'] = 'Showing',
 		['No such player'] = 'No such player',

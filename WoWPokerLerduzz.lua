@@ -268,12 +268,12 @@ function FHS_ClearTable()
     FHS_ClearCards();
     FHS_SelectPlayerRing(0);
     FHS_Status_Text:SetText("");
-    FHS_Pot_Text:SetText(L['WoW Poker Lerduzz'])
+    FHS_Pot_Text:SetText(L['WoW Poker Lerduzz']);
     FHS_HideAllButtons(true);
 end;
 
 
-function FHSPoker_registerEvents()    
+function FHSPoker_registerEvents()
     FHSPokerFrame:RegisterEvent("ADDON_LOADED");
     FHSPokerFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
     FHSPokerFrame:RegisterEvent("CHAT_MSG_ADDON");

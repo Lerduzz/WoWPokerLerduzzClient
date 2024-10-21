@@ -68,7 +68,6 @@ MyLocalization = setmetatable(
 		['Total Pot'] = 'Apuesta Total',
 		['wins'] = 'ha ganado',
 		['Split'] = 'Split',
-		['Error case'] = 'Caso de error!',
 		['Folded'] = 'Retirado',
 		['Showing'] = 'Mostrando',
 		['No such player'] = 'No se encuentra el jugador',
