@@ -24,7 +24,7 @@ local WhosTurn = 0;
 local HighestBet = 0;
 
 local BetSize = 20;
-local Blinds = 0;
+local Blinds = 20;
 local RoundCount = 0;
 
 local PokerLerduzz_options_panel;
@@ -459,7 +459,6 @@ function WPL_UpdateSeat(j)
         _G[seat.."_Chips"]:SetText(L['Chips']..": "..Seats[j].chips);
         if (Seats[j].status == "Big Blind" or Seats[j].status == "Blinds") then
             Blinds = Seats[j].bet;
-            BetSize = Seats[j].bet;
         end;
         local tempStatus = Seats[j].status;
         if (tempStatus ~= "" and tempStatus ~= "Default" and tempStatus ~= "Playing") then
@@ -535,9 +534,7 @@ function WPL_HideAllButtons(fold)
     if (fold) then WPL_Fold:Hide(); end;
     WPL_Call:Hide();
     WPL_Raise:Hide();
-    WPL_Raise_Higher:Hide();
-    WPL_Raise_Lower:Hide();
-    WPL_AllIn:Hide();
+    WPL_RaiseSlider:Hide();
 end;
 
 
@@ -559,24 +556,14 @@ end;
 
 function WPL_RaiseClick()
     if (Seats[5].seated == 0) then return; end;
-    delta = -1;
-    delta = HighestBet - Seats[5].bet;
-    delta = delta + BetSize;
-    if (HighestBet+BetSize >= Seats[5].chips) then delta=Seats[5].chips; end;
-    WPL_SendMessage("call_5_"..delta, UnitName("player"));
+    local delta = HighestBet - Seats[5].bet;
+    if (BetSize < delta + Blinds) then BetSize = delta + Blinds; end;
+    if (Seats[5].bet + BetSize >= Seats[5].chips) then BetSize = Seats[5].chips; end;
+    WPL_SendMessage("call_5_"..BetSize, UnitName("player"));
 end;
 
 
-function WPL_AllInClick()
-    if (Seats[5].seated == 0) then return; end;
-    delta = -1;
-    delta = Seats[5].chips;	
-    if (delta == 0) then return; end;
-    WPL_SendMessage("call_5_"..delta, UnitName("player"));
-end;
-
-
-function WPL_CallClick()	
+function WPL_CallClick()
     if (Seats[5].seated == 0) then return; end;
     delta = -1;
     if (Seats[5].bet < HighestBet) then
@@ -585,6 +572,17 @@ function WPL_CallClick()
     end;
     if (Seats[5].bet == HighestBet) then delta = 0; end;
     if (delta > -1) then WPL_SendMessage("call_5_"..delta, UnitName("player")); end;
+end;
+
+function WPL_RaiseSlider_OnValueChange()
+    local minValue, maxValue = WPL_RaiseSlider:GetMinMaxValues();
+    local value = WPL_RaiseSlider:GetValue();
+    if (value == maxValue) then
+        WPL_Raise:SetText(L["All In"]);
+    else
+        WPL_Raise:SetText(L["Raise"].." "..WPL_RaiseSlider:GetValue());
+    end;
+    BetSize = value;
 end;
 
 
@@ -603,38 +601,35 @@ function WPL_UpdateWhosTurn()
     WPL_SelectPlayerRing(WhosTurn);
     if (WhosTurn == 5) then
         WPL_Call:Show();
-        WPL_AllIn:Show();
+        WPL_RaiseSlider:Show();
         WPL_Raise:Show();
-        WPL_Raise_Higher:Show();
-        WPL_Raise_Lower:Show();
         WPL_Buttons:Show();
         WPL_AutoButtons:Hide();
         Call = 1;
-        delta = HighestBet - Seats[5].bet;
+        local delta = HighestBet - Seats[5].bet;
         WPL_Call:SetText(L["Call"].." "..delta)
         if (Seats[5].bet == HighestBet) then
             WPL_Call:SetText(L['Check']);
             delta = 0;
             Call = 0;
         end;
-        if (Call == 1) then
-            WPL_Raise:SetText(L['Raise'].." "..delta.."+"..BetSize);
-        else
-            WPL_Raise:SetText(L['Raise'].." "..BetSize);
-        end;
-        if (Seats[5].chips <= delta) then
+        BetSize = delta + Blinds;
+        if (Seats[5].chips <= BetSize) then
             delta = -1;
             WPL_Call:Hide();
-            WPL_Raise:Hide();
-            WPL_Raise_Higher:Hide();
-            WPL_Raise_Lower:Hide();        
+            WPL_RaiseSlider:Hide();
+            WPL_Raise:SetText(L['All In']);
+        else
+            WPL_RaiseSlider:SetMinMaxValues(BetSize, Seats[5].chips);
+            WPL_RaiseSlider:SetValue(BetSize, false);
+            WPL_Raise:SetText(L['Raise'].." "..BetSize);
         end;
         if (WPL_AutoBetCheck:GetChecked()) then
             if (not WPL_AutoStickyCheck:GetChecked()) then
                 WPL_AutoBetCheck:SetChecked(false);
             end;
             if (delta == -1) then
-                WPL_AllInClick();
+                WPL_RaiseClick();
             else
                 WPL_CallClick();
             end;
@@ -660,16 +655,6 @@ function WPL_UpdateWhosTurn()
         WPL_Buttons:Hide();
         WPL_AutoButtons:Show();
     end;
-end;
-
-
-function WPL_RaiseChange(dir)
-    local CallAmount = 0;
-    CallAmount = HighestBet - Seats[5].bet;
-    BetSize = BetSize + (dir * 20);
-    if (BetSize < Blinds) then BetSize = Blinds; end;
-    if (BetSize > (Seats[5].chips - CallAmount)) then BetSize=Seats[5].chips - CallAmount; end;
-    WPL_UpdateWhosTurn();
 end;
 
 
@@ -735,8 +720,8 @@ function WPL_HandleAddonComms(msg, channel, sender)
         WhosTurn = j;
         WPL_UpdateWhosTurn();
     elseif (tab[3]=="betsize") then
-        Blinds=tonumber(tab[4])
-        BetSize=Blinds			
+        Blinds = tonumber(tab[4]);
+        BetSize = Blinds;
     elseif (tab[3]=="seat") then
         WPL_StartClient();
     elseif (tab[3]=="inout") then
@@ -985,7 +970,6 @@ end;
 function WPL_SetupXMLButtons()
     _G["WPL_Fold"]:SetText(L['Fold']);
     _G["WPL_Call"]:SetText(L['Call']);
-    _G["WPL_AllIn"]:SetText(L['All In']);
     _G["WPL_Raise"]:SetText(L['Raise']);
     _G["WPL_Pot_Text"]:SetText(L['WoW Poker Lerduzz']);
 end;
@@ -1097,10 +1081,8 @@ function WPL_SetupMiniMapButton()
     miniMapButton:SetScript("OnMouseUp",function(self, button) if (button=="RightButton") then WPL_DraggingIcon = 0; self:StopMovingOrSizing() end end);
     miniMapButton:SetScript("OnClick",function(self, button, down) WPL_LauncherClicked(button); end);
 
-    if ( not minimapIcon ) then
-        WPL_MapIconFrame:Hide();
-    end
-end
+    if (not minimapIcon) then WPL_MapIconFrame:Hide(); end;
+end;
 
 
 function WPL_SetupTopButtons()
@@ -1151,7 +1133,7 @@ function WPL_SetupTopButtons()
     sitInOutIconButton:SetPoint("CENTER", sitInOutButton, "CENTER", 0, 0);	
     sitInOutButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD");	
     sitInOutButton:SetScript("OnClick", function() WPL_SitOutInClick(); end);
-end
+end;
 
 
 function WPL_SetupButtonsFrame()
@@ -1172,64 +1154,44 @@ function WPL_SetupButtonsFrame()
     foldButton:SetNormalFontObject(WPL_ButtonFont);
     foldButton:SetHighlightFontObject(WPL_ButtonFont);
     foldButton:SetDisabledFontObject(WPL_ButtonFont);
-    foldButton:SetPoint("CENTER", buttonsFrame, "CENTER", -210, 0)
+    foldButton:SetPoint("TOPLEFT", buttonsFrame, "TOPLEFT", 0, 0)
     foldButton:SetScript("OnClick", function() WPL_FoldClick(); end);
-    
+
     local callButton = CreateFrame("Button", "WPL_Call", buttonsFrame, "UIPanelButtonTemplate");
     callButton:Hide();
     callButton:SetHeight(30);
-    callButton:SetWidth(130);
+    callButton:SetWidth(140);
     callButton:SetNormalFontObject(WPL_ButtonFont);
     callButton:SetHighlightFontObject(WPL_ButtonFont);
     callButton:SetDisabledFontObject(WPL_ButtonFont);
-    callButton:SetPoint("CENTER", buttonsFrame, "CENTER", -75, 0)
+    callButton:SetPoint("TOPLEFT", foldButton, "TOPRIGHT", 0, 0)
     callButton:SetScript("OnClick", function() WPL_CallClick(); end);
-    
+
     local raiseButton = CreateFrame("Button", "WPL_Raise", buttonsFrame, "UIPanelButtonTemplate");
     raiseButton:Hide();
     raiseButton:SetHeight(30);
-    raiseButton:SetWidth(145);
+    raiseButton:SetWidth(140);
     raiseButton:SetNormalFontObject(WPL_ButtonFont);
     raiseButton:SetHighlightFontObject(WPL_ButtonFont);
     raiseButton:SetDisabledFontObject(WPL_ButtonFont);
-    raiseButton:SetPoint("CENTER", buttonsFrame, "CENTER", 85, 0)
+    raiseButton:SetPoint("TOPRIGHT", buttonsFrame, "TOPRIGHT", 0, 0)
     raiseButton:SetScript("OnClick", function() WPL_RaiseClick(); end);
-    
-    local lowerButton = CreateFrame("Button", "WPL_Raise_Lower", buttonsFrame, "UIPanelButtonTemplate");
-    lowerButton:Hide();
-    lowerButton:SetText("-");
-    lowerButton:SetHeight(20);
-    lowerButton:SetWidth(20);
-    lowerButton:SetNormalFontObject(WPL_ButtonRaiseFont);
-    lowerButton:SetHighlightFontObject(WPL_ButtonRaiseFont);
-    lowerButton:SetDisabledFontObject(WPL_ButtonRaiseFont);
-    lowerButton:SetPoint("TOPRIGHT", raiseButton, "TOPLEFT", 2, -5)
-    lowerButton:SetScript("OnClick", function() WPL_RaiseChange(-1); end);
-    
-    local higherButton = CreateFrame("Button", "WPL_Raise_Higher", buttonsFrame, "UIPanelButtonTemplate");
-    higherButton:Hide();
-    higherButton:SetText("+");
-    higherButton:SetHeight(20);
-    higherButton:SetWidth(20);
-    higherButton:SetNormalFontObject(WPL_ButtonRaiseFont);
-    higherButton:SetHighlightFontObject(WPL_ButtonRaiseFont);
-    higherButton:SetDisabledFontObject(WPL_ButtonRaiseFont);
-    higherButton:SetPoint("TOPLEFT", raiseButton, "TOPRIGHT", -2, -5)
-    higherButton:SetScript("OnClick", function() WPL_RaiseChange(1); end);
 
-    local allInButton = CreateFrame("Button", "WPL_AllIn", buttonsFrame, "UIPanelButtonTemplate");
-    allInButton:Hide();
-    allInButton:SetText(L['All In']);
-    allInButton:SetHeight(30);
-    allInButton:SetWidth(100);
-    allInButton:SetNormalFontObject(WPL_ButtonFont);
-    allInButton:SetHighlightFontObject(WPL_ButtonFont);
-    allInButton:SetDisabledFontObject(WPL_ButtonFont);
-    allInButton:SetPoint("CENTER", buttonsFrame, "CENTER", 230, 0)
-    allInButton:SetScript("OnClick", function() WPL_AllInClick(); end);
+    local raiseSlider = CreateFrame("Slider", "WPL_RaiseSlider", buttonsFrame, "OptionsSliderTemplate");
+    raiseSlider:SetHeight(30);
+    raiseSlider:SetWidth(140);
+    raiseSlider:SetOrientation('HORIZONTAL');
+    raiseSlider:SetMinMaxValues(Blinds, 1000);
+    raiseSlider:SetValue(Blinds, false);
+    WPL_RaiseSliderLow:SetText("");
+    WPL_RaiseSliderHigh:SetText("");
+    raiseSlider:SetValueStep(1);
+    raiseSlider:SetPoint("TOPRIGHT", raiseButton, "TOPLEFT", 0, 0);
+    raiseSlider:SetScript("OnValueChanged", function(self, event, arg1) WPL_RaiseSlider_OnValueChange(); end);
+    raiseSlider:Show();
 
     WPL_Buttons:Hide();
-end
+end;
 
 
 function WPL_SetupAutoButtonsFrame()
@@ -1283,7 +1245,7 @@ function WPL_SetupAutoButtonsFrame()
     AutoStickyText:SetText(L['Sticky']);
     AutoStickyText:SetFont("Fonts\\MORPHEUS.ttf", 18, "");
     AutoStickyText:SetPoint("TOPRIGHT", AutoStickyCheck, "TOPLEFT", 0, -3);
-end
+end;
 
 
 function WPL_SetupPotFrame()
@@ -1301,7 +1263,7 @@ function WPL_SetupPotFrame()
     local potFrameString = potFrame:CreateFontString("WPL_Pot_Text", "BACKGROUND", "GameTooltipText");
     potFrameString:SetPoint("CENTER", potFrame, "CENTER", 0, 2);
 
-end
+end;
 
 
 function WPL_SetupStatusFrame()
@@ -1319,7 +1281,7 @@ function WPL_SetupStatusFrame()
     statusFrame:SetBackdropColor(0,0,0,0.5);
     local statusFrameString = statusFrame:CreateFontString("WPL_Status_Text","BACKGROUND","GameTooltipText");
     statusFrameString:SetPoint("CENTER",statusFrame,"CENTER",0,2);
-end
+end;
     
 
 function WPL_SetupSeatFrames()
@@ -1411,7 +1373,7 @@ function WPL_SetupSeatFrames()
             seatFrameRingSelect:SetPoint("CENTER", seatFrame, "CENTER", 16, -74);
         end
     end
-end		
+end;
 
 
 function WPL_SetupCardFrames()
