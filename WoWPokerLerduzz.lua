@@ -586,6 +586,14 @@ function WPL_RaiseSlider_OnValueChange()
 end;
 
 
+function WPL_RaiseSlider_Setup(min, max)
+    WPL_ConsoleFeedback("WPL_DEBUG: WPL_RaiseSlider_Setup(min = "..min..", max = "..max..").");
+    WPL_RaiseSlider:SetMinMaxValues(min, max);
+    WPL_RaiseSlider:SetValue(min, false);
+    WPL_Raise:SetText(L['Raise'].." "..min);
+end;
+
+
 function WPL_StartClient()
     WPL_ClearTable();
     WPL_PokerFrame:Show();
@@ -624,9 +632,7 @@ function WPL_UpdateWhosTurn()
                 WPL_RaiseSlider:Hide();
                 WPL_Raise:SetText(L['All In']);
             else
-                WPL_RaiseSlider:SetMinMaxValues(BetSize, Seats[5].chips);
-                WPL_RaiseSlider:SetValue(BetSize, false);
-                WPL_Raise:SetText(L['Raise'].." "..BetSize);
+                WPL_RaiseSlider_Setup(BetSize, Seats[5].chips);
             end;
         end;
         if (WPL_AutoBetCheck:GetChecked()) then
@@ -1186,13 +1192,12 @@ function WPL_SetupButtonsFrame()
     raiseSlider:SetHeight(30);
     raiseSlider:SetWidth(140);
     raiseSlider:SetOrientation('HORIZONTAL');
-    raiseSlider:SetMinMaxValues(Blinds, 1000);
-    raiseSlider:SetValue(Blinds, false);
     WPL_RaiseSliderLow:SetText("");
     WPL_RaiseSliderHigh:SetText("");
     raiseSlider:SetValueStep(1);
     raiseSlider:SetPoint("TOPRIGHT", raiseButton, "TOPLEFT", 0, 0);
     raiseSlider:SetScript("OnValueChanged", function(self, event, arg1) WPL_RaiseSlider_OnValueChange(); end);
+    WPL_RaiseSlider_Setup(Blinds, Blinds * 50);
     raiseSlider:Show();
 
     WPL_Buttons:Hide();
