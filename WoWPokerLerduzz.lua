@@ -763,7 +763,7 @@ function FHS_HandleAddonComms(msg, channel, sender)
     
     if (tab[3] == "ping!") then
         FHS_SendMessage("pong!", UnitName("player"));
-    elseif (tab[3]=="NoSeats") then
+    elseif (tab[3]=="noseats!") then
         FHS_Console_Feedback(string.format(L['%s has no seat available for you'], sender));
     elseif (tab[3]=="s") then
         FHS_Client_Sit(tonumber(tab[4]), tab[5], tonumber(tab[6]), tonumber(tab[7]))
