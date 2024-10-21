@@ -305,10 +305,9 @@ function FHSPoker_OnEvent(self, event, ...)
 end;
 
 
-function FHSPoker_Update(arg1)	
+function FHSPoker_Update(arg1)
     --Animation is handled here
     if (StuffLoaded==1) then
---		SetPortraitTexture(FHS_Seat_Port_9, "player");
         local time=GetTime();
 
         timedelta=time-lasttime;
@@ -648,7 +647,6 @@ function FHS_StartClient()
 end;
 
 
--- Enable or disable the buttons based on whats going on
 function FHS_UpdateWhosTurn()	
     if (Seats[5].seated == 0) then return; end;
 
@@ -682,9 +680,9 @@ function FHS_UpdateWhosTurn()
             Call=0;
         end
         
--- ******************
--- Need to change the raise ammount to be ateast the last raise instead of the blind
--- ******************
+        -- ******************
+        -- Need to change the raise ammount to be ateast the last raise instead of the blind
+        -- ******************
         -- Make sure we have enough chips
         if (Call==1) then
             FHS_Raise:SetText(L['Raise'].." "..delta.."+"..BetSize);
