@@ -1483,53 +1483,44 @@ end
 
 
 function FHS_SetupCardFrames()
-    local cardFrame
-    local thiscard
-    
+    local cardFrame;
+    local thiscard;
     cardFrame = CreateFrame("Frame", "FHS_CardFrame", FHSPokerFrame);
     cardFrame:SetHeight(560);
     cardFrame:SetWidth(860);
     cardFrame:SetPoint("CENTER", nil, nil, -330, 220);
-
     for card=0,12 do
-        -- Picas
         thiscard = cardFrame:CreateTexture("FHS_Card_C"..card, "ARTWORK");
         thiscard:SetHeight(128);
         thiscard:SetWidth(128);
         thiscard:SetPoint("CENTER", nil, nil);
         thiscard:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\cartas\\picas\\"..card);
-        
-        -- Diamantes
+
         thiscard = cardFrame:CreateTexture("FHS_Card_D"..card, "ARTWORK");
         thiscard:SetHeight(128);
         thiscard:SetWidth(128);
         thiscard:SetPoint("CENTER", nil, nil);
         thiscard:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\cartas\\diamantes\\"..card);
-        
-        -- Corazones
+
         thiscard = cardFrame:CreateTexture("FHS_Card_H"..card, "ARTWORK");
         thiscard:SetHeight(128);
         thiscard:SetWidth(128);
         thiscard:SetPoint("CENTER", nil, nil);
         thiscard:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\cartas\\corazones\\"..card);
-        
-        -- Trevoles
+
         thiscard = cardFrame:CreateTexture("FHS_Card_S"..card, "ARTWORK");
         thiscard:SetHeight(128);
         thiscard:SetWidth(128);
         thiscard:SetPoint("CENTER", nil, nil);
         thiscard:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\cartas\\trevoles\\"..card);
-        
-    end
-    
-    -- Reverso de cartas
+    end;
     for card=1,23 do
         thiscard = cardFrame:CreateTexture("FHS_Blank_"..card, "ARTWORK");
         thiscard:SetHeight(128);
         thiscard:SetWidth(128);
         thiscard:SetPoint("CENTER", nil, nil);
         thiscard:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\cartas\\reverso")
-    end
-end
+    end;
+end;
 
 FHSPoker_OnLoad();
