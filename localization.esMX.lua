@@ -64,7 +64,6 @@ MyLocalization = setmetatable(
 		['Use just /poker instead'] = 'Use just /poker instead',
 		['You did not act in time. Press I\'m Back to continue playing.'] = 'You did not act in time. Press I\'m Back to continue playing.',
 		['has left the table.'] = 'has left the table.',
-		['The dealer booted you.'] = 'The dealer booted you.',
 		['Total Pot'] = 'Apuesta Total',
 		['wins'] = 'ha ganado',
 		['Split'] = 'Split',

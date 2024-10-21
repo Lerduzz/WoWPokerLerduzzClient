@@ -21,16 +21,13 @@ local minimapIcon = true;
 local lasttime = 0;
 local timedelta = 0;
 
-local BigBlindStart = 20;
-local BlindIncrease = 0.25;
 local StartChips = 500;
-
 local NextRefresh = 0;
 
 local WhosTurn = 0;
 local HighestBet = 0;
 
-local BetSize = BigBlindStart;
+local BetSize = 20;
 
 local Blinds = 0;
 
@@ -291,8 +288,6 @@ function FHSPoker_OnEvent(self, event, ...)
         arg1 = ...;
         if (arg1 == "WoWPokerLerduzz") then
             if (FHS_StartChips) then StartChips = FHS_StartChips; end;
-            if (FHS_BlindIncrease) then FHS_SetBlindIncr(FHS_BlindIncrease); end;
-            if (FHS_BigBlindStart) then BigBlindStart = FHS_BigBlindStart; end;
             if (FHS_minimapIcon) then
                 minimapIcon = FHS_minimapIcon;
                 FHSPoker_MapIconFrame:Show();
@@ -1030,24 +1025,9 @@ function FHS_ShowCard(j, status)
 end;
 
 
-function FHS_Set_BigBlindStart(value)
-    if ( StartChips < value ) then value = StartChips; end;
-    BigBlindStart = value;
-    FHS_BigBlindStart = value;
-end;
-
-
-function FHS_SetBlindIncr(value)	
-    value = tonumber(('%g'):format(value));
-    BlindIncrease = value;
-    FHS_BlindIncrease = value;
-end;
-
-
 function FHS_Set_StartChips(value)
     StartChips = value;
     FHS_StartChips = value;
-    if ( StartChips < BigBlindStart ) then FHS_Set_BigBlindStart(value); end;
 end;
 
 
@@ -1062,34 +1042,6 @@ function FHS_SetupOptionsPanel()
         'setFunc', function(value) FHS_Toggle_MiniMap(value); end
     );
 
-    local PokerLerduzz_Options_Blind_slider = PokerLerduzz_options_panel:MakeSlider(
-        'name', L['Starting Blind'],
-        'description', L['Set the starting Blind'],
-        'minText', '10',
-        'maxText', ('%.0f'):format(StartChips),
-        'minValue', 10,
-        'maxValue', StartChips,
-        'step', 10,
-        'default', 20,
-        'current', BigBlindStart,
-        'setFunc', function(value) FHS_Set_BigBlindStart(value) end,
-        'currentTextFunc', function(value) return ("%.0f"):format(value) end
-    )
-
-    local PokerLerduzz_Options_Increment_slider = PokerLerduzz_options_panel:MakeSlider(
-        'name', L['Blind increase percent per round'],
-        'description', L['Set the by what percent the Blind increases each round'],
-        'minText', '0%',
-        'maxText', '100%',
-        'minValue', 0,
-        'maxValue', 1,
-        'step', 0.05,
-        'default', 0.25,
-        'current', BlindIncrease,
-        'setFunc', function(value) FHS_SetBlindIncr(value) end,
-        'currentTextFunc', function(value) return ("%.0f%%"):format(value*100) end
-    )
-
     local PokerLerduzz_Options_Chips_slider = PokerLerduzz_options_panel:MakeSlider(
         'name', L['Starting Chips'],
         'description', L['Set the starting Chips'],
@@ -1102,8 +1054,6 @@ function FHS_SetupOptionsPanel()
         'current', StartChips,
         'setFunc', function(value)
                 FHS_Set_StartChips(value);
-                PokerLerduzz_Options_Blind_slider:SetMinMaxValues(10, StartChips);
-                _G[PokerLerduzz_Options_Blind_slider:GetName() .. "High"]:SetText(('%.0f'):format(StartChips))
                 PokerLerduzz_options_panel:Refresh();
             end,
         'currentTextFunc', function(value) return ("%.0f"):format(value) end
@@ -1112,13 +1062,11 @@ function FHS_SetupOptionsPanel()
     local title, subText = PokerLerduzz_options_panel:MakeTitleTextAndSubText(
         L['WoW Poker Lerduzz Options'], 
         L['These options are saved between sessions']
-    )
+    );
 
-    PokerLerduzz_Options_Chips_slider:SetPoint("TOPLEFT", 50, -100)
-    PokerLerduzz_Options_Blind_slider:SetPoint("TOPLEFT", 50, -175)
-    PokerLerduzz_Options_Increment_slider:SetPoint("TOPLEFT", 50, -250)
-    PokerLerduzz_Options_Minimap_toggle:SetPoint("TOPLEFT", 250, -100)	
-end
+    PokerLerduzz_Options_Chips_slider:SetPoint("TOPLEFT", 50, -100);
+    PokerLerduzz_Options_Minimap_toggle:SetPoint("TOPLEFT", 50, -175);
+end;
 
 
 function FHS_SetupXMLButtons()

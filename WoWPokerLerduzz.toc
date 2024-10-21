@@ -3,7 +3,7 @@
 ## Author: Lerduzz
 ## Notes: Web: www.lerduzz.com
 ## Version: v4.1.7
-## SavedVariables: FHS_ArtWork, FHS_StartChips, FHS_BlindIncrease, FHS_BigBlindStart, FHS_minimapIcon
+## SavedVariables: FHS_StartChips, FHS_minimapIcon
 Libs\LibStub\LibStub.lua
 Libs\LibSimpleOptions-1.0\lib.xml
 ##Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
