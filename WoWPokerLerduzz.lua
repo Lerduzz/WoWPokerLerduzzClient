@@ -599,7 +599,7 @@ function FHS_FoldClick()
         FHS_Fold:Hide();
     else
         FHS_SendMessage("showcards_5_"..RoundCount, UnitName("player"));
-        FHS_Fold:Hide()
+        FHS_Fold:Hide();
     end;
     FHS_UpdateSeat(5);
     FHS_HideAllButtons(false);
@@ -643,7 +643,7 @@ function FHS_StartClient()
 end;
 
 
-function FHS_UpdateWhosTurn()	
+function FHS_UpdateWhosTurn()
     if (Seats[5].seated == 0) then return; end;
     if (Seats[5].dealt == 1) then
         FHS_Fold:SetText(L['Fold']);
@@ -672,20 +672,16 @@ function FHS_UpdateWhosTurn()
             FHS_Raise:SetText(L['Raise'].." "..BetSize);
         end;
         if (Seats[5].chips <= delta) then
-            delta = -1;			
-            if (Call == 1) then
-                FHS_Raise:SetText(L['Call'].." "..L['All In']);
-                FHS_Call:Hide();
-            else
-                FHS_Raise:SetText(L['All In']);
-            end;		
+            delta = -1;
+            FHS_Raise:SetText(L['All In']);
+            if (Call == 1) then FHS_Call:Hide(); end;		
         end;
         if (FHS_AutoBetCheck:GetChecked()) then
             if (not FHS_AutoStickyCheck:GetChecked()) then
                 FHS_AutoBetCheck:SetChecked(false);
             end;
-            if (Seats[5].chips <= delta and Call == 1) then
-                FHS_RaiseClick();
+            if (Seats[5].chips <= delta) then
+                FHS_AllInClick();
             else
                 FHS_CallClick();
             end;
@@ -716,7 +712,7 @@ end;
 
 function FHS_RaiseChange(dir)
     local CallAmount = 0;
-    CallAmount = HighestBet-Seats[5].bet;
+    CallAmount = HighestBet - Seats[5].bet;
     BetSize = BetSize + (dir * 20);
     if (BetSize < Blinds) then BetSize = Blinds; end;
     if (BetSize > (Seats[5].chips - CallAmount)) then BetSize=Seats[5].chips - CallAmount; end;
@@ -781,10 +777,10 @@ function FHS_HandleAddonComms(msg, channel, sender)
     elseif (tab[3]=="show") then
         FHS_Client_Show(tonumber(tab[4]), tonumber(tab[5]), tonumber(tab[6]), tab[7])
     elseif (tab[3]=="go") then
-        local j=tonumber(tab[4])
-        HighestBet=tonumber(tab[5])
-        WhosTurn=j
-        FHS_UpdateWhosTurn()
+        local j = tonumber(tab[4]);
+        HighestBet = tonumber(tab[5]);
+        WhosTurn = j;
+        FHS_UpdateWhosTurn();
     elseif (tab[3]=="betsize") then
         Blinds=tonumber(tab[4])
         BetSize=Blinds			
@@ -811,6 +807,7 @@ end;
 
 
 function FHS_Receive_Showdown(j, status)
+    -- TODO: Si eres el ganador por defecto, permitir mostrar cartas, de lo contrario mostrar los botones de juego automatico.
     FHS_HideAllButtons(false);
     FHS_Fold:SetText(L["Show Cards"]);
     Seats[5].dealt = 0;
