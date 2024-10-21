@@ -1230,38 +1230,43 @@ function WPL_SetupAutoButtonsFrame()
     autoButtonsFrame:SetBackdropColor(0, 0, 0, 0.5);
     
     local AutoFoldCheck = CreateFrame("CheckButton", "WPL_AutoFoldCheck", autoButtonsFrame, "UICheckButtonTemplate");
-    AutoFoldCheck:SetHeight(15);
-    AutoFoldCheck:SetWidth(15);
-    AutoFoldCheck:SetPoint("TOPLEFT", autoButtonsFrame, "TOPLEFT", 10, -8)
+    AutoFoldCheck:SetHeight(27);
+    AutoFoldCheck:SetWidth(27);
+    AutoFoldCheck:SetPoint("TOPLEFT", autoButtonsFrame, "TOPLEFT", 3, -2)
     AutoFoldCheck:SetScript("OnClick",function() if ( WPL_AutoFoldCheck:GetChecked() )then WPL_AutoBetCheck:SetChecked(false); WPL_AutoCheckCheck:SetChecked(false); end; end);
-    local AutoFoldText = autoButtonsFrame:CreateFontString("WPL_AutoFoldText", "BACKGROUND", "GameTooltipText");
+    local AutoFoldText = autoButtonsFrame:CreateFontString("WPL_AutoFoldText", "BACKGROUND", "GameFontNormal");
     AutoFoldText:SetText(L['Check/Fold']);
-    AutoFoldText:SetPoint("TOPLEFT", AutoFoldCheck, "TOPRIGHT", 1, 0);
+    AutoFoldText:SetFont("Fonts\\MORPHEUS.ttf", 18, "");
+    AutoFoldText:SetPoint("TOPLEFT", AutoFoldCheck, "TOPRIGHT", 0, -3);
 
     local AutoCheckCheck = CreateFrame("CheckButton", "WPL_AutoCheckCheck", autoButtonsFrame, "UICheckButtonTemplate");
-    AutoCheckCheck:SetHeight(15);
-    AutoCheckCheck:SetWidth(15);
-    AutoCheckCheck:SetPoint("TOPLEFT", AutoFoldText, "TOPRIGHT", 15, 0)
+    AutoCheckCheck:SetHeight(27);
+    AutoCheckCheck:SetWidth(27);
+    AutoCheckCheck:SetPoint("TOPLEFT", AutoFoldText, "TOPRIGHT", 12, 3)
     AutoCheckCheck:SetScript("OnClick",function() if ( WPL_AutoCheckCheck:GetChecked() )then WPL_AutoFoldCheck:SetChecked(false); WPL_AutoBetCheck:SetChecked(false); end; end);
-    local AutoCheckText = autoButtonsFrame:CreateFontString("WPL_AutoCheckText", "BACKGROUND", "GameTooltipText");
+    local AutoCheckText = autoButtonsFrame:CreateFontString("WPL_AutoCheckText", "BACKGROUND", "GameFontNormal");
     AutoCheckText:SetText(L['Check']);
-    AutoCheckText:SetPoint("TOPLEFT", AutoCheckCheck, "TOPRIGHT", 1, 0);
+    AutoCheckText:SetFont("Fonts\\MORPHEUS.ttf", 18, "");
+    AutoCheckText:SetPoint("TOPLEFT", AutoCheckCheck, "TOPRIGHT", 0, -3);
 
     local AutoBetCheck = CreateFrame("CheckButton", "WPL_AutoBetCheck", autoButtonsFrame, "UICheckButtonTemplate");
-    AutoBetCheck:SetHeight(15);AutoBetCheck:SetWidth(15);
-    AutoBetCheck:SetPoint("TOPLEFT", AutoCheckText, "TOPRIGHT", 15, 0);
+    AutoBetCheck:SetHeight(27);
+    AutoBetCheck:SetWidth(27);
+    AutoBetCheck:SetPoint("TOPLEFT", AutoCheckText, "TOPRIGHT", 12, 3);
     AutoBetCheck:SetScript("OnClick",function() if ( WPL_AutoBetCheck:GetChecked() )then WPL_AutoFoldCheck:SetChecked(false); WPL_AutoCheckCheck:SetChecked(false); end; end);
-    local AutoBetText = autoButtonsFrame:CreateFontString("WPL_AutoBetText","BACKGROUND","GameTooltipText");
+    local AutoBetText = autoButtonsFrame:CreateFontString("WPL_AutoBetText","BACKGROUND","GameFontNormal");
     AutoBetText:SetText(L['Call any']);
-    AutoBetText:SetPoint("TOPLEFT", AutoBetCheck, "TOPRIGHT", 1, 0);
+    AutoBetText:SetFont("Fonts\\MORPHEUS.ttf", 18, "");
+    AutoBetText:SetPoint("TOPLEFT", AutoBetCheck, "TOPRIGHT", 0, -3);
 
     local AutoStickyCheck = CreateFrame("CheckButton", "WPL_AutoStickyCheck", autoButtonsFrame, "UICheckButtonTemplate");
-    AutoStickyCheck:SetHeight(15);
-    AutoStickyCheck:SetWidth(15);
-    AutoStickyCheck:SetPoint("TOPRIGHT", autoButtonsFrame, "TOPRIGHT", -10, -8)
-    local AutoStickyText = autoButtonsFrame:CreateFontString("WPL_AutoStickyText", "BACKGROUND", "GameTooltipText");
+    AutoStickyCheck:SetHeight(27);
+    AutoStickyCheck:SetWidth(27);
+    AutoStickyCheck:SetPoint("TOPRIGHT", autoButtonsFrame, "TOPRIGHT", -3, -2)
+    local AutoStickyText = autoButtonsFrame:CreateFontString("WPL_AutoStickyText", "BACKGROUND", "GameFontNormal");
     AutoStickyText:SetText(L['Sticky']);
-    AutoStickyText:SetPoint("TOPRIGHT", AutoStickyCheck, "TOPLEFT", -1, 0);
+    AutoStickyText:SetFont("Fonts\\MORPHEUS.ttf", 18, "");
+    AutoStickyText:SetPoint("TOPRIGHT", AutoStickyCheck, "TOPLEFT", 0, -3);
 end
 
 
