@@ -1205,7 +1205,7 @@ end
 
 
 function FHS_Toggle_MiniMap(toggle)
-    if ( toggle ) then
+    if (toggle) then
         minimapIcon = true;
         FHS_minimapIcon = true;
         FHSPoker_MapIconFrame:Show();
@@ -1213,8 +1213,8 @@ function FHS_Toggle_MiniMap(toggle)
         minimapIcon = false;
         FHS_minimapIcon = false;
         FHSPoker_MapIconFrame:Hide();
-    end
-end
+    end;
+end;
 
 
 function FHS_SetupMiniMapButton()
