@@ -267,7 +267,7 @@ function FHS_ClearTable()
     end;
     FHS_ClearCards();
     FHS_SelectPlayerRing(0);
-    FHS_StatusText("");
+    FHS_Status_Text:SetText("");
     FHS_Pot_Text:SetText(L['WoW Poker Lerduzz'])
     FHS_HideAllButtons(true);
 end;
@@ -423,82 +423,69 @@ end;
 
 function FHS_BlinkWhosTurn()	
     if (BlinkOn == 0) then
-        BlinkOn = 1
-        if (WhosTurn>0) then
+        BlinkOn = 1;
+        if (WhosTurn > 0) then
             _G["FHS_Seat_"..WhosTurn.."_RingSelect"]:Show()
             _G["FHS_Seat_"..WhosTurn.."_Ring"]:Hide()
-        end
+        end;
     else
         BlinkOn = 0;
-        if (WhosTurn>0) then
-            _G["FHS_Seat_"..WhosTurn.."_RingSelect"]:Hide()
-            _G["FHS_Seat_"..WhosTurn.."_Ring"]:Show()
-        end
-    end
-end
-
-
-function FHS_StatusText(text)
-    FHS_Status_Text:SetText(text)
-end
+        if (WhosTurn > 0) then
+            _G["FHS_Seat_"..WhosTurn.."_RingSelect"]:Hide();
+            _G["FHS_Seat_"..WhosTurn.."_Ring"]:Show();
+        end;
+    end;
+end;
 
 
 function FHS_SetCard(index,dealerx,dealery,x,y,visible,fraction,fadeout,highlayer)
-    Cards[index].x=x
-    Cards[index].y=y
-    Cards[index].startx=dealerx
-    Cards[index].starty=dealery
-    Cards[index].fraction=fraction
-    Cards[index].fadetime=0
-    Cards[index].visible=visible
-    Cards[index].fadeout=fadeout
-    Cards[index].Artwork:SetAlpha(1)
-    Cards[index].high=highlayer
-    FHS_DrawCard(index)
-end
+    Cards[index].x = x;
+    Cards[index].y = y;
+    Cards[index].startx = dealerx;
+    Cards[index].starty = dealery;
+    Cards[index].fraction = fraction;
+    Cards[index].fadetime = 0;
+    Cards[index].visible = visible;
+    Cards[index].fadeout = fadeout;
+    Cards[index].Artwork:SetAlpha(1);
+    Cards[index].high = highlayer;
+    FHS_DrawCard(index);
+end;
 
 
 function FHS_DrawCard(index)
-    local dx
-    local dy
-    local card = Cards[index]
-    local frac = card.fraction
-    local mfrac = 1-frac	
-    
-    if (frac<0) then
-        card.Artwork:Hide()
-        return
+    local dx;
+    local dy;
+    local card = Cards[index];
+    local frac = card.fraction;
+    local mfrac = 1 - frac;
+    if (frac < 0) then
+        card.Artwork:Hide();
+        return;
     else
-         dx=(card.startx*mfrac)+(card.x*frac)
-        dy=(card.starty*mfrac)+(card.y*frac)
-    end
+        dx = (card.startx * mfrac) + (card.x * frac);
+        dy = (card.starty * mfrac) + (card.y * frac);
+    end;
 
-    if (card.visible==1) then
-        
-        card.Artwork:SetPoint("CENTER", "FHSPokerFrame", "CENTER", dx+29, dy)
-
-        -- Change the layer of the card to OVERLAY if high
-        if (card.high==1) then
-            card.Artwork:SetDrawLayer("OVERLAY")
-        end
-        card.Artwork:Show()
-        
-        if (card.fadeout>0)and(card.fadetime>0) then
-            delta = card.fadeout - card.fadetime
-            if (delta<0) then
-                card.Artwork:Hide()
+    if (card.visible == 1) then
+        card.Artwork:SetPoint("CENTER", "FHSPokerFrame", "CENTER", dx + 29, dy);
+        if (card.high == 1) then card.Artwork:SetDrawLayer("OVERLAY"); end;
+        card.Artwork:Show();
+        if (card.fadeout > 0) and (card.fadetime > 0) then
+            delta = card.fadeout - card.fadetime;
+            if (delta < 0) then
+                card.Artwork:Hide();
             else
-                delta = (delta/card.fadeout)
-                card.Artwork:SetAlpha(delta)
-            end
-        end
+                delta = (delta / card.fadeout);
+                card.Artwork:SetAlpha(delta);
+            end;
+        end;
     else
-        -- Otherwise hide cards
-        card.Artwork:SetDrawLayer("ARTWORK")
-        card.Artwork:SetPoint("CENTER", "FHSPokerFrame", "CENTER", 0, 0)
-        card.Artwork:Hide()
-    end
-end
+        card.Artwork:SetDrawLayer("ARTWORK");
+        card.Artwork:SetPoint("CENTER", "FHSPokerFrame", "CENTER", 0, 0);
+        card.Artwork:Hide();
+    end;
+end;
 
 
 function FHS_UpdateSeat(j)	
@@ -898,7 +885,7 @@ function FHS_Receive_Showdown(j, status)
     Seats[5].dealt = 0;
     ---
 
-    FHS_StatusText(status);
+    FHS_Status_Text:SetText(status);
 
     if (5 == j) then
         -- you won by default, you are allowed to flash your cards
@@ -1060,7 +1047,7 @@ function FHS_Client_Round0(thisRoundCount)
 
     BetSize=Blinds
     FHS_TotalPot()
-    FHS_StatusText("")
+    FHS_Status_Text:SetText("")
 end
 
 
