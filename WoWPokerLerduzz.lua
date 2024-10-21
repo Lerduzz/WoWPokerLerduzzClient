@@ -35,9 +35,7 @@ local RoundCount = 0;
 
 local PokerLerduzz_options_panel;
 
-
-local CardRank=
-{
+local CardRank = {
     "--",
     L['Two'],
     L['Three'],
@@ -54,8 +52,7 @@ local CardRank=
     L['Ace'],
 };
 
-local CardRanks=
-{
+local CardRanks = {
     "--",
     L['Twos'],
     L['Threes'],
@@ -73,8 +70,7 @@ local CardRanks=
 };
 
 
-local Cards = 
-{
+local Cards = {
     {object="FHS_Card_C0",	rank=14,	suit=1},
     {object="FHS_Card_C1",	rank=2,		suit=1},
     {object="FHS_Card_C2",	rank=3,		suit=1},
