@@ -586,7 +586,7 @@ function WPL_UpdateWhosTurn()
         WPL_AutoButtons:Hide();
         Call = 1;
         local delta = HighestBet - Seats[5].bet;
-        WPL_Call:SetText(L["Call"].." "..delta)
+        WPL_Call:SetText(L["Call"].." "..math.floor(delta / 10000));
         if (Seats[5].bet == HighestBet) then
             WPL_Call:SetText(L['Check']);
             delta = 0;
