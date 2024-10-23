@@ -916,12 +916,12 @@ function WPL_ClientRound0(thisRoundCount)
     RoundCount = thisRoundCount;
     for j=1,9 do
         Seats[j].bet = 0;
-        if(Seats[j].inout=="OUT") then
+        if(Seats[j].inout == "OUT") then
             Seats[j].status = "Sitting Out";
             Seats[j].alpha = 0.5;
         else
             Seats[j].status = "";
-            Seats[j].alpha = 0;
+            Seats[j].alpha = 1;
         end;
         WPL_UpdateSeat(j);
     end;
