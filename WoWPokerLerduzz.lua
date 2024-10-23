@@ -1398,7 +1398,7 @@ function WPL_SetupSeatFrames()
         elseif (seat == 7 or seat == 8) then seatFrameButton:SetPoint("TOPLEFT", seatFrame, "TOPLEFT", 198, -57);
         else seatFrameButton:SetPoint("TOPLEFT", seatFrame, "TOPLEFT", 40, -57); end;
 
-        local seatFrameName = seatFrame:CreateFontString(seatFrame:GetName().."_Name", "BACKGROUND", "GameFontNormal");
+        local seatFrameName = seatFrame:CreateFontString(seatFrame:GetName().."_Name", "BORDER", "GameFontNormal");
         seatFrameName:SetFont("Fonts\\MORPHEUS.ttf", 16, "");
         if (seat == 1 or seat == 9) then seatFrameName:SetPoint("CENTER", seatFrame, "TOPLEFT", 78, -10);
         elseif (seat == 2 or seat == 3) then seatFrameName:SetPoint("CENTER", seatFrame, "TOPLEFT", 185, -27);
@@ -1427,7 +1427,7 @@ function WPL_SetupSeatFrames()
         elseif (seat == 2 or seat == 3) then seatFrameSilverIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 229, -40);
         elseif (seat == 7 or seat == 8) then seatFrameSilverIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 115, -40);
         else seatFrameSilverIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 120, -103); end;
-        local seatFrameSilver = seatFrame:CreateFontString(seatFrame:GetName().."_Silver", "BACKGROUND", "GameFontNormal");
+        local seatFrameSilver = seatFrame:CreateFontString(seatFrame:GetName().."_Silver", "BORDER", "GameFontNormal");
         seatFrameSilver:SetFont("Fonts\\ARIALN.ttf", 14, "");
         seatFrameSilver:SetPoint("TOPRIGHT", seatFrameSilverIcon, "TOPLEFT", 0, 0);
 
@@ -1440,13 +1440,13 @@ function WPL_SetupSeatFrames()
         elseif (seat == 2 or seat == 3) then seatFrameGoldIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 198, -40);
         elseif (seat == 7 or seat == 8) then seatFrameGoldIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 84, -40);
         else seatFrameGoldIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 89, -103); end;
-        local seatFrameGold = seatFrame:CreateFontString(seatFrame:GetName().."_Gold", "BACKGROUND", "GameFontNormal");
+        local seatFrameGold = seatFrame:CreateFontString(seatFrame:GetName().."_Gold", "BORDER", "GameFontNormal");
         seatFrameGold:SetFont("Fonts\\ARIALN.ttf", 14, "");
         seatFrameGold:SetPoint("TOPRIGHT", seatFrameGoldIcon, "TOPLEFT", 0, 0);
 
         WPL_SetMoney(seat, 0);
 
-        local seatFrameStatus = seatFrame:CreateFontString(seatFrame:GetName().."_Status", "BACKGROUND", "GameFontNormal");
+        local seatFrameStatus = seatFrame:CreateFontString(seatFrame:GetName().."_Status", "BORDER", "GameFontNormal");
         seatFrameStatus:SetText("Escalera de Color");
         seatFrameStatus:SetFont("Fonts\\MORPHEUS.ttf", 11, "");
         if (seat == 1 or seat == 9) then seatFrameStatus:SetPoint("CENTER", seatFrame, "TOPLEFT", 78, -43);
