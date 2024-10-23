@@ -768,6 +768,7 @@ end;
 
 
 function WPL_ClientStatusUpdate(j, chips, bet, status, alpha)
+    if (j == 5 and status == "Winner!") then PlaySound("QUESTCOMPLETED", "SFX"); end;
     Seats[j].chips = tonumber(chips);
     local newBet = tonumber(bet);
     if (newBet > Seats[j].bet) then PlaySound("LOOTWINDOWCOINSOUND", "SFX"); end;
