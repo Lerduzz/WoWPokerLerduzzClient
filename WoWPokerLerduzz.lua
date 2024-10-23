@@ -699,7 +699,7 @@ function WPL_HandleAddonComms(msg, channel, sender)
         WhosTurn = j;
         WPL_UpdateWhosTurn();
     elseif (tab[3]=="betsize") then
-        Blinds = tonumber(tab[4]);
+        Blinds = tonumber(tab[4]) * 10000;
         BetSize = Blinds;
     elseif (tab[3]=="seat") then
         WPL_StartClient();
