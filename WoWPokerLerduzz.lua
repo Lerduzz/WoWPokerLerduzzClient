@@ -477,7 +477,7 @@ function WPL_UpdateSeat(j)
     if (Seats[j].seated == 0) then
         WPL_SetMoney(j, 0);  
         _G[seat.."_Name"]:SetText("");
-        --_G[seat.."_Status"]:SetText("");
+        _G[seat.."_Status"]:SetText("");
         _G[seat.."_Port"]:Hide();
         _G[seat.."_PortWho"]:Hide();
         _G[seat]:Hide();
@@ -487,7 +487,7 @@ function WPL_UpdateSeat(j)
         _G[seat]:SetAlpha(Seats[j].alpha);
         _G[seat.."_Name"]:SetText(Seats[j].name);
         local tempStatus = Seats[j].status;
-        --_G[seat.."_Status"]:SetText(L[Seats[j].status]);
+        _G[seat.."_Status"]:SetText(L[Seats[j].status]);
         _G[seat.."_PortWho"]:Hide();
         local portraitObj = _G[seat.."_Port"];
         portraitObj:Show();
@@ -1333,8 +1333,7 @@ end;
 
 function WPL_SetupSeatFrames()
     local seatFrame;
-    local seatlocations =
-    {
+    local seatlocations = {
         {x=266,  y=210},
         {x=495,  y=65},
         {x=497,  y=-222},
@@ -1449,7 +1448,6 @@ function WPL_SetupSeatFrames()
         WPL_SetMoney(seat, 0);
 
         local seatFrameStatus = seatFrame:CreateFontString(seatFrame:GetName().."_Status", "OVERLAY", "GameFontNormal");
-        seatFrameStatus:SetText("Escalera de Color");
         seatFrameStatus:SetFont("Fonts\\MORPHEUS.ttf", 11, "");
         if (seat == 1 or seat == 9) then seatFrameStatus:SetPoint("CENTER", seatFrame, "TOPLEFT", 78, -43);
         elseif (seat == 2 or seat == 3) then seatFrameStatus:SetPoint("CENTER", seatFrame, "TOPLEFT", 185, -61);
