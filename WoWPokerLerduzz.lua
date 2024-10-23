@@ -148,15 +148,15 @@ local Cards = {
 
 
 local Seats	= {
-    { object="WPL_Seat_1", name="", x=219,	y=120,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 },
-    { object="WPL_Seat_2", name="", x=360,  y=65,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 },
-    { object="WPL_Seat_3", name="", x=360,  y=-95,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 },
-    { object="WPL_Seat_4", name="", x=220,  y=-130,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 },
-    { object="WPL_Seat_5", name="", x=2,    y=-130,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 },
-    { object="WPL_Seat_6", name="", x=-220, y=-130,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 },
-    { object="WPL_Seat_7", name="", x=-360, y=-95,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 },
-    { object="WPL_Seat_8", name="", x=-355,	y=50,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 },
-    { object="WPL_Seat_9", name="", x=-220, y=120,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, dealt=0, alpha=1, inout="", blank1=0, blank2 = 0 },
+    {object="WPL_Seat_1", name="", x=219,	y=120,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1},
+    {object="WPL_Seat_2", name="", x=360,  y=65,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1},
+    {object="WPL_Seat_3", name="", x=360,  y=-95,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1},
+    {object="WPL_Seat_4", name="", x=220,  y=-130,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1},
+    {object="WPL_Seat_5", name="", x=2,    y=-130,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1},
+    {object="WPL_Seat_6", name="", x=-220, y=-130,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1},
+    {object="WPL_Seat_7", name="", x=-360, y=-95,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1},
+    {object="WPL_Seat_8", name="", x=-355,	y=50,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1},
+    {object="WPL_Seat_9", name="", x=-220, y=120,	chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1},
 };
 
 local Flop = {};
@@ -242,7 +242,6 @@ function WPL_InitializeSeat(j)
     Seats[j].blank1 = 0;
     Seats[j].blank2 = 0;
     Seats[j].alpha = 1;
-    Seats[j].inout = "IN";
 end;
 
 
@@ -537,20 +536,6 @@ function WPL_QuitClick()
 end;
 
 
-function WPL_SitOutInClick()
-    if(Seats[5].inout == "IN") then
-        WPL_FoldClick();
-        WPL_SendMessage("inout_5_OUT", UnitName("player"));
-        Seats[5].inout = "OUT";
-        WPL_SitInOutIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\sentarse");
-    else			
-        WPL_SendMessage("inout_5_IN", UnitName("player"));
-        Seats[5].inout = "IN";
-        WPL_SitInOutIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\pararse");
-    end;
-end;
-
-
 function WPL_HideAllButtons(fold)
     if (fold) then WPL_Fold:Hide(); end;
     WPL_Call:Hide();
@@ -725,8 +710,6 @@ function WPL_HandleAddonComms(msg, channel, sender)
         WPL_ClientStatusUpdate(tonumber(tab[4]), tab[5], tab[6], tab[7], tab[8])
     elseif (tab[3]=="b") then
         WPL_SelectPlayerButton(tonumber(tab[4]))
-    elseif (tab[3]=="forceout") then
-        WPL_SitOutInClick();
     elseif (tab[3]=="round0") then
         WPL_ClientRound0( tonumber(tab[4]) )
     elseif (tab[3]=="hole") then
@@ -755,24 +738,12 @@ function WPL_HandleAddonComms(msg, channel, sender)
         BetSize = Blinds;
     elseif (tab[3]=="seat") then
         WPL_StartClient();
-    elseif (tab[3]=="inout") then
-        WPL_ReceiveInOut( tonumber(tab[4]), tab[5], sender)
     elseif (tab[3]=="q") then
         WPL_ReceiveQuit( sender, tonumber(tab[4]))
     elseif (tab[3]=="showdown") then
         WPL_ReceiveShowdown(tonumber(tab[4]), tab[5]);
     end
 end
-
-
-function WPL_ReceiveInOut(j, inout, sender)
-    Seats[j].inout = inout;
-    if (sender == UnitName("player") and inout=="OUT") then
-        Seats[j].alpha = 0.5;
-        Seats[j].status = "Sitting Out";
-        WPL_UpdateSeat(j);
-    end;
-end;
 
 
 function WPL_ReceiveShowdown(j, status)
@@ -916,11 +887,11 @@ function WPL_ClientRound0(thisRoundCount)
     RoundCount = thisRoundCount;
     for j=1,9 do
         Seats[j].bet = 0;
-        if(Seats[j].inout == "OUT") then
-            Seats[j].status = "Sitting Out";
+        if(Seats[j].dealt == 0) then
+            Seats[j].status = "Default";
             Seats[j].alpha = 0.5;
         else
-            Seats[j].status = "";
+            Seats[j].status = "Playing";
             Seats[j].alpha = 1;
         end;
         WPL_UpdateSeat(j);
@@ -1168,18 +1139,6 @@ function WPL_SetupTopButtons()
     closeIconButton:SetPoint("CENTER", closeButton, "CENTER", 0, 0);	
     closeButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD");	
     closeButton:SetScript("OnClick", function() WPL_QuitClick(); end);
-
-    local sitInOutButton = CreateFrame("Button", "WPL_SitInOutButton", WPL_PokerFrame);
-    sitInOutButton:SetHeight(32);
-    sitInOutButton:SetWidth(32);
-    sitInOutButton:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 36, 217);	
-    local sitInOutIconButton = sitInOutButton:CreateTexture("WPL_SitInOutIcon", "BACKGROUND")
-    sitInOutIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\pararse");
-    sitInOutIconButton:SetHeight(32);
-    sitInOutIconButton:SetWidth(32);
-    sitInOutIconButton:SetPoint("CENTER", sitInOutButton, "CENTER", 0, 0);	
-    sitInOutButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD");	
-    sitInOutButton:SetScript("OnClick", function() WPL_SitOutInClick(); end);
 end;
 
 
