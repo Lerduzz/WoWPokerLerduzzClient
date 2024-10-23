@@ -812,19 +812,21 @@ function WPL_ClientSit(j, name, chips, bet, faction)
     Seats[j].name = name;
     Seats[j].chips = chips;
     Seats[j].bet = bet;
-    local seat = "WPL_Seat_"..j;
-    if (j == 1 or j == 9) then
-        _G[seat.."_Ring"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\AUN");
-        _G[seat.."_RingSelect"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\AUE");
-    elseif (j == 2 or j == 3) then
-        _G[seat.."_Ring"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\ARN");
-        _G[seat.."_RingSelect"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\ARE");
-    elseif (j == 7 or j == 8) then
-        _G[seat.."_Ring"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\ALN");
-        _G[seat.."_RingSelect"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\ALE");
-    else
-        _G[seat.."_Ring"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\ADN");
-        _G[seat.."_RingSelect"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\ADE");
+    if (faction == "A" || faction == "H") then
+        local seat = "WPL_Seat_"..j;
+        if (j == 1 or j == 9) then
+            _G[seat.."_Ring"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\"..faction.."UN");
+            _G[seat.."_RingSelect"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\"..faction.."UE");
+        elseif (j == 2 or j == 3) then
+            _G[seat.."_Ring"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\"..faction.."RN");
+            _G[seat.."_RingSelect"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\"..faction.."RE");
+        elseif (j == 7 or j == 8) then
+            _G[seat.."_Ring"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\"..faction.."LN");
+            _G[seat.."_RingSelect"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\"..faction.."LE");
+        else
+            _G[seat.."_Ring"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\"..faction.."DN");
+            _G[seat.."_RingSelect"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\"..faction.."DE");
+        end;
     end;
     WPL_UpdateSeat(j);
 end;
