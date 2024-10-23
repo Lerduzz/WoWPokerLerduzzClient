@@ -494,7 +494,7 @@ end;
 
 
 function WPL_QuitClick()
-    WPL_SendMessage("q_5", UnitName("player"));
+    WPL_SendMessage("quit", UnitName("player"));
     WPL_StopClient();
     WPL_HideAllButtons(true);
     WPL_PokerFrame:Hide();
