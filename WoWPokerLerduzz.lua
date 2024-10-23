@@ -29,41 +29,6 @@ local RoundCount = 0;
 
 local PokerLerduzz_options_panel;
 
-local CardRank = {
-    "--",
-    L['Two'],
-    L['Three'],
-    L['Four'],
-    L['Five'],
-    L['Six'],
-    L['Seven'],
-    L['Eight'],
-    L['Nine'],
-    L['Ten'],
-    L['Jack'],
-    L['Queen'],
-    L['King'],
-    L['Ace'],
-};
-
-local CardRanks = {
-    "--",
-    L['Twos'],
-    L['Threes'],
-    L['Fours'],
-    L['Fives'],
-    L['Sixes'],
-    L['Sevens'],
-    L['Eights'],
-    L['Nines'],
-    L['Tens'],
-    L['Jacks'],
-    L['Queens'],
-    L['Kings'],
-    L['Aces'],
-};
-
-
 local Cards = {
     {object="WPL_Card_C0",	rank=14,	suit=1},
     {object="WPL_Card_C1",	rank=2,		suit=1},
