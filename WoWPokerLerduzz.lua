@@ -726,8 +726,7 @@ function WPL_HandleAddonComms(msg, channel, sender)
     elseif (tab[3]=="b") then
         WPL_SelectPlayerButton(tonumber(tab[4]))
     elseif (tab[3]=="forceout") then
-        WPL_ConsoleFeedback(L['You did not act in time. Press I\'m Back to continue playing.'])
-        WPL_SitOutInClick()
+        WPL_SitOutInClick();
     elseif (tab[3]=="round0") then
         WPL_ClientRound0( tonumber(tab[4]) )
     elseif (tab[3]=="hole") then
@@ -778,7 +777,7 @@ end;
 
 function WPL_ReceiveShowdown(j, status)
     Seats[5].dealt = 0;
-    WPL_Status_Text:SetText(status);
+    WPL_Status_Text:SetText(L[status]);
     if (5 == j) then
         Seats[5].dealt = 0;
         WPL_HideAllButtons(false);
@@ -1391,7 +1390,7 @@ function WPL_SetupSeatFrames()
 
         local seatFrameButton = seatFrame:CreateTexture(seatFrame:GetName().."_Button", "OVERLAY");
         seatFrameButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\boton");
-        -- seatFrameButton:Hide();
+        seatFrameButton:Hide();
         seatFrameButton:SetWidth(20);
         seatFrameButton:SetHeight(20);
         seatFrameButton:SetTexCoord(0, 1, 0, 1);
