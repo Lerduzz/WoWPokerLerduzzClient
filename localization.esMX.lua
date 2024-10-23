@@ -47,6 +47,7 @@ MyLocalization = setmetatable(
 		['Raised'] = 'Subido',
 		['Playing'] = 'Jugando',
 		['Winner!'] = '¡Ganador!',
+		['Returned'] = 'Devuelto',
 		['Default'] = 'Predeterminado',
 		['Showdown'] = 'Confrontación',
 		['Your turn'] = 'Tu turno',
