@@ -812,7 +812,7 @@ function WPL_ClientSit(j, name, chips, bet, faction)
     Seats[j].name = name;
     Seats[j].chips = chips;
     Seats[j].bet = bet;
-    if (faction == "A" || faction == "H") then
+    if (faction == "A" or faction == "H") then
         local seat = "WPL_Seat_"..j;
         if (j == 1 or j == 9) then
             _G[seat.."_Ring"]:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\"..faction.."UN");
@@ -1352,7 +1352,7 @@ function WPL_SetupSeatFrames()
         seatFrame:SetWidth(256);
         seatFrame:SetPoint("CENTER", WPL_PokerFrame, "CENTER", seatlocations[seat].x, seatlocations[seat].y);
 
-        local seatFramePort = seatFrame:CreateTexture(seatFrame:GetName().."_Port", "BACKGROUND");
+        local seatFramePort = seatFrame:CreateTexture(seatFrame:GetName().."_Port", "BORDER");
         seatFramePort:SetWidth(66);
         seatFramePort:SetHeight(66);
         seatFramePort:SetTexCoord(0, 1, 0, 1);
@@ -1360,7 +1360,7 @@ function WPL_SetupSeatFrames()
         elseif (seat == 7 or seat == 8) then seatFramePort:SetPoint("TOPLEFT", seatFrame, "TOPLEFT", 148, -12);
         else seatFramePort:SetPoint("TOPLEFT", seatFrame, "TOPLEFT", 45, -12); end;
 
-        local seatFramePortWho = seatFrame:CreateTexture(seatFrame:GetName().."_PortWho", "BACKGROUND");
+        local seatFramePortWho = seatFrame:CreateTexture(seatFrame:GetName().."_PortWho", "BORDER");
         seatFramePortWho:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\unknown");
         seatFramePortWho:SetWidth(66);
         seatFramePortWho:SetHeight(66);
@@ -1369,7 +1369,7 @@ function WPL_SetupSeatFrames()
         elseif (seat == 7 or seat == 8) then seatFramePortWho:SetPoint("TOPLEFT", seatFrame, "TOPLEFT", 148, -12);
         else seatFramePortWho:SetPoint("TOPLEFT", seatFrame, "TOPLEFT", 45, -12); end;
         
-        local seatFrameRing = seatFrame:CreateTexture(seatFrame:GetName().."_Ring", "BACKGROUND");
+        local seatFrameRing = seatFrame:CreateTexture(seatFrame:GetName().."_Ring", "ARTWORK");
         if (seat == 1 or seat == 9) then seatFrameRing:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\AUN");
         elseif (seat == 2 or seat == 3) then seatFrameRing:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\ARN");
         elseif (seat == 7 or seat == 8) then seatFrameRing:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\ALN");
@@ -1379,7 +1379,7 @@ function WPL_SetupSeatFrames()
         seatFrameRing:SetTexCoord(0, 1, 0, 1);
         seatFrameRing:SetPoint("TOPLEFT", seatFrame, "TOPLEFT", 0, 0);
 
-        local seatFrameRingSelect = seatFrame:CreateTexture(seatFrame:GetName().."_RingSelect", "BORDER");
+        local seatFrameRingSelect = seatFrame:CreateTexture(seatFrame:GetName().."_RingSelect", "ARTWORK");
         if (seat == 1 or seat == 9) then seatFrameRingSelect:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\AUE");
         elseif (seat == 2 or seat == 3) then seatFrameRingSelect:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\ARE");
         elseif (seat == 7 or seat == 8) then seatFrameRingSelect:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marcos\\ALE");
@@ -1390,7 +1390,7 @@ function WPL_SetupSeatFrames()
         seatFrameRingSelect:SetTexCoord(0, 1, 0, 1);
         seatFrameRingSelect:SetPoint("TOPLEFT", seatFrame, "TOPLEFT", 0, 0);
 
-        local seatFrameButton = seatFrame:CreateTexture(seatFrame:GetName().."_Button", "BORDER");
+        local seatFrameButton = seatFrame:CreateTexture(seatFrame:GetName().."_Button", "OVERLAY");
         seatFrameButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\boton");
         -- seatFrameButton:Hide();
         seatFrameButton:SetWidth(20);
@@ -1400,14 +1400,14 @@ function WPL_SetupSeatFrames()
         elseif (seat == 7 or seat == 8) then seatFrameButton:SetPoint("TOPLEFT", seatFrame, "TOPLEFT", 198, -57);
         else seatFrameButton:SetPoint("TOPLEFT", seatFrame, "TOPLEFT", 40, -57); end;
 
-        local seatFrameName = seatFrame:CreateFontString(seatFrame:GetName().."_Name", "BORDER", "GameFontNormal");
+        local seatFrameName = seatFrame:CreateFontString(seatFrame:GetName().."_Name", "OVERLAY", "GameFontNormal");
         seatFrameName:SetFont("Fonts\\MORPHEUS.ttf", 16, "");
         if (seat == 1 or seat == 9) then seatFrameName:SetPoint("CENTER", seatFrame, "TOPLEFT", 78, -10);
         elseif (seat == 2 or seat == 3) then seatFrameName:SetPoint("CENTER", seatFrame, "TOPLEFT", 185, -27);
         elseif (seat == 7 or seat == 8) then seatFrameName:SetPoint("CENTER", seatFrame, "TOPLEFT", 73, -27);
         else seatFrameName:SetPoint("CENTER", seatFrame, "TOPLEFT", 78, -92); end;
 
-        local seatFrameCopperIcon = seatFrame:CreateTexture(seatFrame:GetName().."_CopperIcon", "BORDER");
+        local seatFrameCopperIcon = seatFrame:CreateTexture(seatFrame:GetName().."_CopperIcon", "OVERLAY");
         seatFrameCopperIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\monedas\\00");
         seatFrameCopperIcon:SetWidth(19);
         seatFrameCopperIcon:SetHeight(19);
@@ -1416,11 +1416,11 @@ function WPL_SetupSeatFrames()
         elseif (seat == 2 or seat == 3) then seatFrameCopperIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 260, -40);
         elseif (seat == 7 or seat == 8) then seatFrameCopperIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 146, -40);
         else seatFrameCopperIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 151, -103); end;
-        local seatFrameCopper = seatFrame:CreateFontString(seatFrame:GetName().."_Copper", "BACKGROUND", "GameFontNormal");
+        local seatFrameCopper = seatFrame:CreateFontString(seatFrame:GetName().."_Copper", "OVERLAY", "GameFontNormal");
         seatFrameCopper:SetFont("Fonts\\ARIALN.ttf", 14, "");
         seatFrameCopper:SetPoint("TOPRIGHT", seatFrameCopperIcon, "TOPLEFT", 0, 0);
 
-        local seatFrameSilverIcon = seatFrame:CreateTexture(seatFrame:GetName().."_SilverIcon", "BORDER");
+        local seatFrameSilverIcon = seatFrame:CreateTexture(seatFrame:GetName().."_SilverIcon", "OVERLAY");
         seatFrameSilverIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\monedas\\01");
         seatFrameSilverIcon:SetWidth(19);
         seatFrameSilverIcon:SetHeight(19);
@@ -1429,11 +1429,11 @@ function WPL_SetupSeatFrames()
         elseif (seat == 2 or seat == 3) then seatFrameSilverIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 229, -40);
         elseif (seat == 7 or seat == 8) then seatFrameSilverIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 115, -40);
         else seatFrameSilverIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 120, -103); end;
-        local seatFrameSilver = seatFrame:CreateFontString(seatFrame:GetName().."_Silver", "BORDER", "GameFontNormal");
+        local seatFrameSilver = seatFrame:CreateFontString(seatFrame:GetName().."_Silver", "OVERLAY", "GameFontNormal");
         seatFrameSilver:SetFont("Fonts\\ARIALN.ttf", 14, "");
         seatFrameSilver:SetPoint("TOPRIGHT", seatFrameSilverIcon, "TOPLEFT", 0, 0);
 
-        local seatFrameGoldIcon = seatFrame:CreateTexture(seatFrame:GetName().."_GoldIcon", "BORDER");
+        local seatFrameGoldIcon = seatFrame:CreateTexture(seatFrame:GetName().."_GoldIcon", "OVERLAY");
         seatFrameGoldIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\monedas\\02");
         seatFrameGoldIcon:SetWidth(19);
         seatFrameGoldIcon:SetHeight(19);
@@ -1442,13 +1442,13 @@ function WPL_SetupSeatFrames()
         elseif (seat == 2 or seat == 3) then seatFrameGoldIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 198, -40);
         elseif (seat == 7 or seat == 8) then seatFrameGoldIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 84, -40);
         else seatFrameGoldIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 89, -103); end;
-        local seatFrameGold = seatFrame:CreateFontString(seatFrame:GetName().."_Gold", "BORDER", "GameFontNormal");
+        local seatFrameGold = seatFrame:CreateFontString(seatFrame:GetName().."_Gold", "OVERLAY", "GameFontNormal");
         seatFrameGold:SetFont("Fonts\\ARIALN.ttf", 14, "");
         seatFrameGold:SetPoint("TOPRIGHT", seatFrameGoldIcon, "TOPLEFT", 0, 0);
 
         WPL_SetMoney(seat, 0);
 
-        local seatFrameStatus = seatFrame:CreateFontString(seatFrame:GetName().."_Status", "BORDER", "GameFontNormal");
+        local seatFrameStatus = seatFrame:CreateFontString(seatFrame:GetName().."_Status", "OVERLAY", "GameFontNormal");
         seatFrameStatus:SetText("Escalera de Color");
         seatFrameStatus:SetFont("Fonts\\MORPHEUS.ttf", 11, "");
         if (seat == 1 or seat == 9) then seatFrameStatus:SetPoint("CENTER", seatFrame, "TOPLEFT", 78, -43);
