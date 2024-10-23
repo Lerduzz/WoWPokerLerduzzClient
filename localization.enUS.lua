@@ -5,14 +5,11 @@ local debug = false
 MyLocalization = setmetatable(
 	{
 		['WoW Poker Lerduzz'] = 'WoW Poker Lerduzz',
-		['Quit'] = 'Quit',
-		['Sit Out'] = 'Sit Out',
-		['Play'] = 'Play',
 		['Fold'] = 'Fold',
 		['Call'] = 'Call',
 		['All In'] = 'All In',
 		['Raise'] = 'Raise',
-		['Chips'] = 'Chips',
+		['Check'] = 'Check',
 
 		['High Card'] = 'High Card',
 		['One Pair'] = 'One Pair',
@@ -24,15 +21,12 @@ MyLocalization = setmetatable(
 		['4 of a Kind'] = '4 of a Kind',
 		['Straight Flush'] = 'Straight Flush',
 		['Royal Flush'] = 'Royal Flush',
-		
+
 		["Do you want to start the game?"] = 'Do you want to start the game?',
 		['Start'] = 'Start',
 		['Cancel'] = 'Cancel',
 		['Options'] = 'Options',
-		['Sit Out'] = 'Sit Out',
 		['Show Cards'] = 'Show Cards',
-		['%s has seated you in Seat %d'] = '%s has seated you in Seat %d',
-		['Check'] = 'Check',
 		['Use just /poker instead'] = 'Use just /poker instead',
 		['has left the table.'] = 'has left the table.',
 		['Total Pot'] = 'Total Pot',
@@ -52,7 +46,6 @@ MyLocalization = setmetatable(
 		['Called'] = 'Called',
 		['Raised'] = 'Raised',
 		['Playing'] = 'Playing',
-		['Sitting Out'] = 'Sitting Out',
 		['Winner!'] = 'Winner!',
 		['Default'] = 'Default',
 		['Showdown'] = 'Showdown',
