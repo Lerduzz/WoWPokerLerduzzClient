@@ -579,6 +579,7 @@ function WPL_UpdateWhosTurn()
     end;
     WPL_SelectPlayerRing(WhosTurn);
     if (WhosTurn == 5) then
+        PlaySound("RaidWarning", "SFX");
         WPL_Call:Show();
         WPL_RaiseSlider:Show();
         WPL_Raise:Show();
