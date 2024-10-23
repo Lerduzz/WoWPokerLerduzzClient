@@ -769,7 +769,9 @@ end;
 
 function WPL_ClientStatusUpdate(j, chips, bet, status, alpha)
     Seats[j].chips = tonumber(chips);
-    Seats[j].bet = tonumber(bet);
+    local newBet = tonumber(bet);
+    if (newBet > Seats[j].bet) then PlaySound("LOOTWINDOWCOINSOUND", "SFX"); end;
+    Seats[j].bet = newBet;
     Seats[j].status = status;
     Seats[j].alpha = alpha;
     WPL_UpdateSeat(j);
