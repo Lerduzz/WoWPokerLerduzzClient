@@ -410,7 +410,7 @@ function WPL_SetMoney(j, money)
     local seat = "WPL_Seat_"..j;
     local copper = money - math.floor(money / 100) * 100;
     money = math.floor(money / 100);
-    if (copper < 10) then copper = "0"..copper; end;
+    if (copper < 10 and money > 0) then copper = "0"..copper; end;
     _G[seat.."_Copper"]:SetText(copper);
     if (money <= 0) then
         _G[seat.."_SilverIcon"]:Hide();
