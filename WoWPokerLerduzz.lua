@@ -23,8 +23,8 @@ local NextRefresh = 0;
 local WhosTurn = 0;
 local HighestBet = 0;
 
-local BetSize = 20;
-local Blinds = 20;
+local BetSize = 200000;
+local Blinds = 200000;
 local RoundCount = 0;
 
 local PokerLerduzz_options_panel;
@@ -551,7 +551,7 @@ function WPL_RaiseSlider_OnValueChange()
     if (value == maxValue) then
         WPL_Raise:SetText(L["All In"]);
     else
-        WPL_Raise:SetText(L["Raise"].." "..WPL_RaiseSlider:GetValue());
+        WPL_Raise:SetText(L["Raise"].." "..(math.floor(WPL_RaiseSlider:GetValue() / 10000)));
     end;
     BetSize = value;
 end;
@@ -560,7 +560,7 @@ end;
 function WPL_RaiseSlider_Setup(min, max)
     WPL_RaiseSlider:SetMinMaxValues(min, max);
     WPL_RaiseSlider:SetValue(min, false);
-    WPL_Raise:SetText(L['Raise'].." "..min);
+    WPL_Raise:SetText(L['Raise'].." "..math.floor(min / 10000));
 end;
 
 
@@ -1154,7 +1154,7 @@ function WPL_SetupButtonsFrame()
     raiseSlider:SetOrientation('HORIZONTAL');
     WPL_RaiseSliderLow:SetText("");
     WPL_RaiseSliderHigh:SetText("");
-    raiseSlider:SetValueStep(1);
+    raiseSlider:SetValueStep(10000);
     raiseSlider:SetPoint("TOPRIGHT", raiseButton, "TOPLEFT", 0, 0);
     raiseSlider:SetScript("OnValueChanged", function(self, event, arg1) WPL_RaiseSlider_OnValueChange(); end);
     WPL_RaiseSlider_Setup(Blinds, Blinds * 50);
