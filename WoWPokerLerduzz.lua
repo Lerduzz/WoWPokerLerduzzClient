@@ -1,10 +1,6 @@
 local L = MyLocalization;
-local ldb = LibStub:GetLibrary("LibDataBroker-1.1");
-local WPL_LDBObject;
 
 local UPDATEPERIOD, elapsed = 1, 0;
-local WPL_ldbIcon = true;
-
 local WPL_CLIENT_VERSION = "v1.0.0";
 local WPL_SERVER_VERSION = "v1.0.0";
 local StuffLoaded = 0;
@@ -12,13 +8,10 @@ local WPL_DraggingIcon = 0;
 
 local WPL_MapIconAngle = 0;
 local WPL_SetSize = 0;
-local WPL_MinimapIcon = true;
 
-local minimapIcon = true;
 local lasttime = 0;
 local timedelta = 0;
 
-local StartChips = 500;
 local NextRefresh = 0;
 local WhosTurn = 0;
 local HighestBet = 0;
@@ -26,8 +19,6 @@ local HighestBet = 0;
 local BetSize = 200000;
 local Blinds = 200000;
 local RoundCount = 0;
-
-local PokerLerduzz_options_panel;
 
 local Cards = {
     {object="WPL_Card_C0"},
@@ -143,14 +134,13 @@ function WPL_OnLoad()
         text = L["Do you want to start the game?"],
         button1 = L['Start'],
         button2 = L['Cancel'],
-        button3 = L['Options'],
         OnAccept = function() WPL_SendMessage("!seat", UnitName("player")); end,
-        OnAlt = function() InterfaceOptionsFrame_OpenToCategory(PokerLerduzz_options_panel) end,
         timeout = 0,
         whileDead = 1,
         hideOnEscape = 1
     };
-    WPL_SetupLDB();
+    local fU = CreateFrame("frame");
+    fU:SetScript("OnUpdate", function(self, elap) WPL_HiddenFrame_OnUpdate(self, elap); end);
     WPL_SetupFrames();
     WPL_RegisterEvents();
     WPL_ConsoleFeedback(L['WoW Poker Lerduzz'] .." ("..WPL_CLIENT_VERSION..").");
@@ -233,14 +223,7 @@ function WPL_OnEvent(self, event, ...)
     if (event == "ADDON_LOADED") then
         arg1 = ...;
         if (arg1 == "WoWPokerLerduzz") then
-            if (WPL_StartChips) then StartChips = WPL_StartChips; end;
-            if (WPL_MinimapIcon) then
-                minimapIcon = WPL_MinimapIcon;
-                WPL_MapIconFrame:Show();
-            else
-                WPL_MapIconFrame:Hide();
-            end;
-            WPL_SetupOptionsPanel();
+            WPL_MapIconFrame:Show();
             WPL_SetupXMLButtons();
         end
     elseif (event == "CHAT_MSG_ADDON") then
@@ -294,42 +277,17 @@ function WPL_MapIconUpdate()
 end;
 
 
-function WPL_LDB_OnUpdate()
-    if ((5 == WhosTurn) and (Seats[5].seated == 1)) then
-        varR = (sin(GetTime() * 400) * 128);
-        varG = (cos(GetTime() * 400) * 128);
-        varB = (sin(GetTime() * 400) * -128);
-        WPL_LDBObject.text = L['Your turn'];
-        WPL_LDBObject.iconB = varB;
-        WPL_LDBObject.iconG = varG;
-        WPL_LDBObject.iconR = varR;
-    else
-        WPL_LDBObject.text = L['WoW Poker Lerduzz'];
-        WPL_LDBObject.iconB = 255;
-        WPL_LDBObject.iconG = 255;
-        WPL_LDBObject.iconR = 255;
-    end;
-end;
-
-
 function WPL_HiddenFrame_OnUpdate(self, elap)
-    if (StuffLoaded == 1) then
-        if (minimapIcon) then WPL_MapIconUpdate(); end;
-        if (WPL_ldbIcon) then WPL_LDB_OnUpdate(); end;
-    end;
+    if (StuffLoaded == 1) then WPL_MapIconUpdate(); end;
 end;
 
 
 function WPL_LauncherClicked(button)
-    if (button == "RightButton") then
-        InterfaceOptionsFrame_OpenToCategory(PokerLerduzz_options_panel);
-    elseif (button == "LeftButton") then
-        if (Seats[5].seated == 0) then
-            StaticPopup_Show("WPL_START_DIALOG");
-            return;
-        end;
-        WPL_PokerFrame:Show();
+    if (Seats[5].seated == 0) then
+        StaticPopup_Show("WPL_START_DIALOG");
+        return;
     end;
+    WPL_PokerFrame:Show();
 end;
 
 
@@ -914,46 +872,6 @@ function WPL_ShowCard(j, status)
 end;
 
 
-function WPL_SetStartChips(value)
-    StartChips = value;
-    WPL_StartChips = value;
-end;
-
-
-function WPL_SetupOptionsPanel()
-    PokerLerduzz_options_panel = LibStub("LibSimpleOptions-1.0").AddOptionsPanel(L['WoW Poker Lerduzz'], function() end)
-    local PokerLerduzz_Options_Minimap_toggle = PokerLerduzz_options_panel:MakeToggle(
-        'name', L['Minimap Icon'],
-        'description', L['Turn minimap icon on/off'],
-        'default', true,
-        'getFunc', function() return WPL_MinimapIcon; end,
-        'setFunc', function(value) WPL_ToggleMiniMap(value); end
-    );
-    local PokerLerduzz_Options_Chips_slider = PokerLerduzz_options_panel:MakeSlider(
-        'name', L['Starting Chips'],
-        'description', L['Set the starting Chips'],
-        'minText', '500',
-        'maxText', '5000',
-        'minValue', 500,
-        'maxValue', 5000,
-        'step', 100,
-        'default', 500,
-        'current', StartChips,
-        'setFunc', function(value)
-            WPL_SetStartChips(value);
-            PokerLerduzz_options_panel:Refresh();
-        end,
-        'currentTextFunc', function(value) return ("%.0f"):format(value) end
-    );
-    local title, subText = PokerLerduzz_options_panel:MakeTitleTextAndSubText(
-        L['WoW Poker Lerduzz Options'], 
-        L['These options are saved between sessions']
-    );
-    PokerLerduzz_Options_Chips_slider:SetPoint("TOPLEFT", 50, -100);
-    PokerLerduzz_Options_Minimap_toggle:SetPoint("TOPLEFT", 50, -175);
-end;
-
-
 function WPL_SetupXMLButtons()
     _G["WPL_Fold"]:SetText(L['Fold']);
     _G["WPL_Call"]:SetText(L['Call']);
@@ -962,25 +880,6 @@ function WPL_SetupXMLButtons()
 end;
         
 
-function WPL_SetupLDB()
-    if ( WPL_ldbIcon ) then
-        WPL_LDBObject = ldb:NewDataObject(
-            "WoWPokerLerduzz",
-            {
-                type = "data source",
-                text = L['WoW Poker Lerduzz'],
-                label = "WoWPokerLerduzz",
-                icon = "interface\\addons\\wowpokerlerduzz\\textures\\mapicon",
-                OnClick  = function(clickedframe, button) WPL_LauncherClicked(button); end,
-                iconCoords = {0.25, .75, 0.25, .75},
-            }
-        );
-    end;
-    local f = CreateFrame("frame");
-    f:SetScript("OnUpdate", function(self, elap) WPL_HiddenFrame_OnUpdate(self, elap); end);
-end;
-
-            
 function WPL_SetupFrames()
     WPL_SetupTableFrame();
     WPL_SetupTopButtons();
@@ -1033,19 +932,6 @@ function WPL_SetupTableFrame()
 end
 
 
-function WPL_ToggleMiniMap(toggle)
-    if (toggle) then
-        minimapIcon = true;
-        WPL_MinimapIcon = true;
-        WPL_MapIconFrame:Show();
-    else
-        minimapIcon = false;
-        WPL_MinimapIcon = false;
-        WPL_MapIconFrame:Hide();
-    end;
-end;
-
-
 function WPL_SetupMiniMapButton()
     local miniMapButton = CreateFrame("Button", "WPL_MapIconFrame", Minimap)
     
@@ -1067,8 +953,6 @@ function WPL_SetupMiniMapButton()
     miniMapButton:SetScript("OnMouseDown",function(self, button) if (button=="RightButton") then WPL_DraggingIcon = 1; self:StartMoving() end end);
     miniMapButton:SetScript("OnMouseUp",function(self, button) if (button=="RightButton") then WPL_DraggingIcon = 0; self:StopMovingOrSizing() end end);
     miniMapButton:SetScript("OnClick",function(self, button, down) WPL_LauncherClicked(button); end);
-
-    if (not minimapIcon) then WPL_MapIconFrame:Hide(); end;
 end;
 
 

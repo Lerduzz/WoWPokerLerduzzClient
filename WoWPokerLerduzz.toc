@@ -3,12 +3,7 @@
 ## Author: Lerduzz
 ## Notes: Web: www.lerduzz.com
 ## Version: v1.0.0
-## SavedVariables: WPL_MapIconAngle, WPL_StartChips, WPL_MinimapIcon
-Libs\LibStub\LibStub.lua
-Libs\LibSimpleOptions-1.0\lib.xml
-##Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
-Libs\CallbackHandler-1.0\CallbackHandler-1.0\CallbackHandler-1.0.xml
-Libs\libdatabroker-1-1\LibDataBroker-1.1.lua
+## SavedVariables: WPL_MapIconAngle
 localization.enUS.lua
 localization.esMX.lua
 WoWPokerLerduzz.lua
