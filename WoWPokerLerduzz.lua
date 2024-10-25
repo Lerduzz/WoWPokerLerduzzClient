@@ -379,7 +379,7 @@ function WPL_SetMoney(j, money)
         _G[seat.."_Silver"]:Show();
         local silver = money - math.floor(money / 100) * 100;
         money = math.floor(money / 100);
-        if (silver < 10) then silver = "0"..silver; end;
+        if (silver < 10 and money > 0) then silver = "0"..silver; end;
         _G[seat.."_Silver"]:SetText(silver);
     end;
     if (money <= 0) then
