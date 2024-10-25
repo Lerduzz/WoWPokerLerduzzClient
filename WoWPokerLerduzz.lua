@@ -1,4 +1,4 @@
-local L = MyLocalization;
+local L = WPL_Locale;
 
 local UPDATEPERIOD, elapsed = 1, 0;
 local WPL_CLIENT_VERSION = "v1.0.0";
@@ -131,7 +131,7 @@ local BlinkOn = 1;
 
 function WPL_OnLoad()
     StaticPopupDialogs["WPL_START_DIALOG"] = {
-        text = L["Do you want to start the game?"],
+        text = L["Do you want to start a game of poker?"],
         button1 = L['Start'],
         button2 = L['Cancel'],
         OnAccept = function() WPL_SendMessage("!seat", UnitName("player")); end,

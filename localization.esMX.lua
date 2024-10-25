@@ -1,8 +1,8 @@
-if( 0 ~= 0) then return end
+if(0 ~= 0) then return end;
 
-local debug = false
+local debug = false;
 
-MyLocalization = setmetatable(
+WPL_Locale = setmetatable(
 	{
 		['WoW Poker Lerduzz'] = 'WoW Poker Lerduzz',
 		['Fold'] = 'Retirarse',
@@ -22,7 +22,7 @@ MyLocalization = setmetatable(
 		['Straight Flush'] = 'Escalera de Color',
 		['Royal Flush'] = 'Escalera Real',
 
-		["Do you want to start the game?"] = '¿Deseas comenzar la partida?',
+		["Do you want to start a game of poker?"] = '¿Deseas comenzar una partida de poker?',
 		['Start'] = 'Comenzar',
 		['Cancel'] = 'Cancelar',
 		['Show Cards'] = 'Mostrar Cartas',
@@ -46,12 +46,12 @@ MyLocalization = setmetatable(
 		['Call any'] = 'Igualar todo',
 		['Check/Fold'] = 'Pasar/Retirarse',
 		['Sticky'] = 'Mantener',
+	},
+	{
+		__index = function(self, key)
+			if debug then ChatFrame3:AddMessage('Por favor traducir: '..tostring(key)) end;
+			rawset(self, key, key)
+			return key
+		end;
 	}
-	,
-	{__index = function(self, key)
-		if debug then ChatFrame3:AddMessage('Please localize: '..tostring(key)) end
-		rawset(self, key, key)
-		return key
-	end
-	}
-)
+);
