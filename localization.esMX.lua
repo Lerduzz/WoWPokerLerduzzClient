@@ -14,11 +14,11 @@ WPL_Locale = setmetatable(
 		['High Card'] = 'Carta Alta',
 		['One Pair'] = 'Una Pareja',
 		['Two Pairs'] = 'Dos Parejas',
-		['3 of a Kind'] = 'Trío',
+		['Three of a Kind'] = 'Trío',
 		['Straight'] = 'Escalera',
 		['Flush'] = 'Color',
 		['Full House'] = 'Full',
-		['4 of a Kind'] = 'Poker',
+		['Four of a Kind'] = 'Poker',
 		['Straight Flush'] = 'Escalera de Color',
 		['Royal Flush'] = 'Escalera Real',
 
