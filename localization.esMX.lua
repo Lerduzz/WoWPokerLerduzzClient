@@ -27,7 +27,6 @@ MyLocalization = setmetatable(
 		['Cancel'] = 'Cancelar',
 		['Show Cards'] = 'Mostrar Cartas',
 		['has left the table.'] = 'ha dejado la mesa.',
-		['Total Pot'] = 'Apuesta Total',
 		['wins'] = 'ha ganado',
 		['Split'] = 'Dividir',
 		['Folded'] = 'Retirado',
