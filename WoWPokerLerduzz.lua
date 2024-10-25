@@ -292,9 +292,9 @@ end;
 
 
 function WPL_IconPos(angle)
-    local xpos = cos(angle) * 81;
-    local ypos = sin(angle) * 81;
-    WPL_MapIconFrame:SetPoint("TOPLEFT", "Minimap", "TOPLEFT", 53 - xpos, -55 + ypos);
+    local xpos = cos(angle) * 77;
+    local ypos = sin(angle) * 77;
+    WPL_MapIconFrame:SetPoint("TOPLEFT", "Minimap", "TOPLEFT", 55 - xpos, -58 + ypos);
 end;
 
 
@@ -905,21 +905,20 @@ end
 
 
 function WPL_SetupMiniMapButton()
-    local miniMapButton = CreateFrame("Button", "WPL_MapIconFrame", Minimap)
-    
+    local miniMapButton = CreateFrame("Button", "WPL_MapIconFrame", Minimap)    
     miniMapButton:SetFrameStrata("MEDIUM");
     miniMapButton:SetMovable(true);
     miniMapButton:EnableMouse(true);
-    miniMapButton:SetWidth(32);miniMapButton:SetHeight(32);
-    miniMapButton:SetPoint("TOPLEFT",Minimap,"TOPLEFT",-25,-80);
+    miniMapButton:SetWidth(27);
+    miniMapButton:SetHeight(27);
+    miniMapButton:SetPoint("TOPLEFT", Minimap, "TOPLEFT", -25, -80);
     
-    local miniMapButtonTexture = miniMapButton:CreateTexture("WPL_MapIcon", "BACKGROUND")
-    
-    miniMapButtonTexture:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\mapicon");
-    miniMapButtonTexture:SetWidth(32);miniMapButtonTexture:SetHeight(32);
-    miniMapButtonTexture:SetPoint("CENTER",miniMapButton,"CENTER",0,0);
-    
-    miniMapButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight","ADD");
+    local miniMapButtonTexture = miniMapButton:CreateTexture("WPL_MapIcon", "BACKGROUND")    
+    miniMapButtonTexture:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\icono");
+    miniMapButtonTexture:SetWidth(27);
+    miniMapButtonTexture:SetHeight(27);
+    miniMapButtonTexture:SetPoint("CENTER", miniMapButton, "CENTER", 0, 0);    
+    miniMapButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD");
     
     miniMapButton:SetScript("OnLoad",function() this:RegisterForClicks("LeftButtonUp","RightButtonUp"); this:RegisterForDrag("RightButton"); end);
     miniMapButton:SetScript("OnMouseDown",function(self, button) if (button=="RightButton") then WPL_DraggingIcon = 1; self:StartMoving() end end);
