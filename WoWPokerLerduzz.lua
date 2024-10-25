@@ -607,7 +607,7 @@ function WPL_HandleAddonComms(msg, channel, sender)
     elseif (tab[3]=="round0") then
         WPL_ClientRound0( tonumber(tab[4]) )
     elseif (tab[3]=="hole") then
-        WPL_ClientHole( tonumber(tab[4]), tonumber(tab[5]) )
+        WPL_ClientHole(tonumber(tab[4]), tonumber(tab[5]), tab[6]);
     elseif (tab[3]=="deal") then
         WPL_ClientDeal( tonumber(tab[4]))
     elseif (tab[3]=="flop0") then
@@ -636,7 +636,10 @@ function WPL_HandleAddonComms(msg, channel, sender)
         WPL_ReceiveQuit( sender, tonumber(tab[4]))
     elseif (tab[3]=="showdown") then
         WPL_ReceiveShowdown(tonumber(tab[4]), tab[5]);
-    end
+    elseif (tab[3]=="hand") then
+        Seats[5].status = tab[4];
+        WPL_UpdateSeat(5);
+    end;
 end
 
 
@@ -760,7 +763,7 @@ function WPL_ClientDeal(j)
 end;
 
 
-function WPL_ClientHole(hole1, hole2)
+function WPL_ClientHole(hole1, hole2, hand)
     local ThisSeat = Seats[5];
     ThisSeat.hole1 = hole1;
     ThisSeat.hole2 = hole2;
@@ -768,7 +771,7 @@ function WPL_ClientHole(hole1, hole2)
     CC = CC - 1;
     WPL_SetCard(hole1, DealerX, DealerY, ThisSeat.x, ThisSeat.y, 1, CC * DealerDelay, 0, 1);
     CC = CC - 1;
-    ThisSeat.status = L["Playing"];
+    ThisSeat.status = hand;
     ThisSeat.dealt = 1;
     ThisSeat.alpha = 1;
     WPL_UpdateSeat(5);
