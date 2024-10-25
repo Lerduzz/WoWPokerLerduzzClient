@@ -1123,8 +1123,7 @@ function WPL_SetupSeatFrames()
         {x=-495, y=-232},
         {x=-500, y=58},
         {x=-171, y=210},
-    }	
-    
+    }
     for seat=1,9 do
         seatFrame = CreateFrame("Frame", "WPL_Seat_"..seat, WPL_PokerFrame, BackdropTemplateMixin and "BackdropTemplate");
         seatFrame:SetHeight(256);
