@@ -827,11 +827,16 @@ end;
 
 
 function WPL_SetPotIcon(total)
+    if (total == 0) then
+        WPL_Pot_Icon:Hide();
+        return;
+    end;
     local potSize = 1;
     if (total >= 100 and total < 1000) then potSize = 2;
     elseif (total >= 1000 and total < 10000) then potSize = 3;
     elseif (total >= 10000) then potSize = 4; end;
     WPL_Pot_Icon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\monedas\\"..potSize);
+    WPL_Pot_Icon:Show();
 end;
 
 
