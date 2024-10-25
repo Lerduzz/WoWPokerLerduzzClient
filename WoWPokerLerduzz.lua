@@ -104,21 +104,21 @@ local Cards = {
 
 
 local Seats	= {
-    {object="WPL_Seat_1", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=219,  y=120},
-    {object="WPL_Seat_2", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=360,  y=65},
-    {object="WPL_Seat_3", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=360,  y=-95},
-    {object="WPL_Seat_4", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=220,  y=-130},
-    {object="WPL_Seat_5", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=2,    y=-130},
-    {object="WPL_Seat_6", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=-220, y=-130},
-    {object="WPL_Seat_7", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=-360, y=-95},
-    {object="WPL_Seat_8", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=-355, y=50},
-    {object="WPL_Seat_9", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=-220, y=120},
+    {object="WPL_Seat_1", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=235,  y=118},
+    {object="WPL_Seat_2", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=365,  y=40},
+    {object="WPL_Seat_3", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=365,  y=-81},
+    {object="WPL_Seat_4", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=235,  y=-124},
+    {object="WPL_Seat_5", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=15,   y=-124},
+    {object="WPL_Seat_6", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=-205, y=-124},
+    {object="WPL_Seat_7", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=-335, y=-81},
+    {object="WPL_Seat_8", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=-335, y=40},
+    {object="WPL_Seat_9", name="", chips=0, bet=0, status="", seated=0, hole1=0, hole2=0, blank1=0, blank2 = 0, dealt=0, alpha=1, x=-205, y=118},
 };
 
 local Flop = {};
 local FlopBlank = {};
 
-local CardWidth = 80;
+local CardWidth = 90;
 
 local DealerX = 0;
 local DealerY = 250;
@@ -207,8 +207,8 @@ function WPL_ClearTable()
     end;
     WPL_ClearCards();
     WPL_SelectPlayerRing(0);
-    WPL_Status_Text:SetText("");
-    WPL_Pot_Text:SetText(L['WoW Poker Lerduzz']);
+    WPL_Pot_Text:SetText("0");
+    WPL_SetPotIcon(0);
     WPL_HideAllButtons(true);
 end;
 
@@ -616,10 +616,10 @@ function WPL_HandleAddonComms(msg, channel, sender)
         WPL_ClientFlop1(tonumber(tab[4]), tonumber(tab[5]), tonumber(tab[6]))
     elseif (tab[3]=="turn") then
         Flop[4]=tonumber(tab[4]);
-        WPL_SetCard(Flop[4],DealerX,DealerY, CardWidth*1,0,1,0,0,0)
+        WPL_SetCard(Flop[4], DealerX, DealerY, CardWidth * 1 + 3, 0, 1, 0, 0, 0);
     elseif (tab[3]=="river") then
         Flop[5]=tonumber(tab[4]);
-        WPL_SetCard(Flop[5],DealerX,DealerY, CardWidth*2,0,1,0,0,0)
+        WPL_SetCard(Flop[5], DealerX, DealerY, CardWidth * 2 + 3, 0, 1, 0, 0, 0);
     elseif (tab[3]=="show") then
         WPL_ClientShow(tonumber(tab[4]), tonumber(tab[5]), tonumber(tab[6]), tab[7])
     elseif (tab[3]=="go") then
@@ -642,7 +642,6 @@ end
 
 function WPL_ReceiveShowdown(j, status)
     Seats[5].dealt = 0;
-    WPL_Status_Text:SetText(L[status]);
     if (5 == j) then
         Seats[5].dealt = 0;
         WPL_HideAllButtons(false);
@@ -717,7 +716,7 @@ function WPL_ClientShow(hole1, hole2, j, status)
     WPL_SetCard(Seats[j].blank1, 0, 0, 0, 0, 0, 0, 0, 0);
     WPL_SetCard(Seats[j].blank2, 0, 0, 0, 0, 0, 0, 0, 0);
     WPL_SetCard(hole1, DealerX, DealerY, Seats[j].x, Seats[j].y, 1, 1, 0, 1);
-    WPL_SetCard(hole2, DealerX, DealerY, Seats[j].x - 12, Seats[j].y + 12, 1, 1, 0, 0);
+    WPL_SetCard(hole2, DealerX, DealerY, Seats[j].x - 24, Seats[j].y + 4, 1, 1, 0, 0);
     WPL_UpdateSeat(j);
 end;
 
@@ -728,7 +727,7 @@ function WPL_ClientFlop1(flop1, flop2, flop3)
     Flop[2] = flop2;
     Flop[3] = flop3;
     for i=1,3 do
-        WPL_SetCard(Flop[i], DealerX, DealerY, -CardWidth * (3 - i), 0, 1, 1, 0, 0);
+        WPL_SetCard(Flop[i], DealerX, DealerY, -CardWidth * (3 - i) + 3, 0, 1, 1, 0, 0);
         if (getn(FlopBlank) > 0) then WPL_SetCard(FlopBlank[i], 0, 0, 0, 0, 0, 0, 0, 0); end;
     end;
     FlopBlank = {};
@@ -738,7 +737,7 @@ end;
 function WPL_ClientFlop0()
     for i=1,3 do
         FlopBlank[i] = BlankCard;
-        WPL_SetCard(BlankCard, DealerX, DealerY, -CardWidth * (3 - i), 0, 1, CC * DealerDelay, 0, 0);
+        WPL_SetCard(BlankCard, DealerX, DealerY, -CardWidth * (3 - i) + 3, 0, 1, CC * DealerDelay, 0, 0);
         BlankCard = BlankCard + 1;
         CC = CC - 1;
     end;
@@ -747,7 +746,7 @@ end;
 
 function WPL_ClientDeal(j)
     Seats[j].blank1 = BlankCard;
-    WPL_SetCard(BlankCard, DealerX, DealerY, Seats[j].x - 12, Seats[j].y + 12, 1, CC * DealerDelay, 0, 0);
+    WPL_SetCard(BlankCard, DealerX, DealerY, Seats[j].x - 24, Seats[j].y + 4, 1, CC * DealerDelay, 0, 0);
     BlankCard = BlankCard + 1;
     CC = CC - 1;
     Seats[j].blank2 = BlankCard;
@@ -761,11 +760,11 @@ function WPL_ClientDeal(j)
 end;
 
 
-function WPL_ClientHole( hole1, hole2)
+function WPL_ClientHole(hole1, hole2)
     local ThisSeat = Seats[5];
     ThisSeat.hole1 = hole1;
     ThisSeat.hole2 = hole2;
-    WPL_SetCard(hole2, DealerX, DealerY, ThisSeat.x - 12, ThisSeat.y + 12, 1, CC * DealerDelay, 0, 0);
+    WPL_SetCard(hole2, DealerX, DealerY, ThisSeat.x - 24, ThisSeat.y + 4, 1, CC * DealerDelay, 0, 0);
     CC = CC - 1;
     WPL_SetCard(hole1, DealerX, DealerY, ThisSeat.x, ThisSeat.y, 1, CC * DealerDelay, 0, 1);
     CC = CC - 1;
@@ -795,7 +794,6 @@ function WPL_ClientRound0(thisRoundCount)
     end;
     BetSize = Blinds;
     WPL_TotalPot();
-    WPL_Status_Text:SetText("");
 end;
 
 
@@ -822,12 +820,18 @@ function WPL_TotalPot()
     for j=1,9 do
         if (Seats[j].seated==1) then total = total + Seats[j].bet; end;
     end;
-    if (total == 0) then
-        WPL_Pot_Text:SetText(L['WoW Poker Lerduzz']);
-    else
-        WPL_Pot_Text:SetText(L['Total Pot']..": "..total);
-    end;
+    WPL_Pot_Text:SetText(total);
+    WPL_SetPotIcon(total)
     return total;
+end;
+
+
+function WPL_SetPotIcon(total)
+    local potSize = 1;
+    if (total >= 100 and total < 1000) then potSize = 2;
+    elseif (total >= 1000 and total < 10000) then potSize = 3;
+    elseif (total >= 10000) then potSize = 4; end;
+    WPL_Pot_Icon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\monedas\\"..potSize);
 end;
 
 
@@ -835,7 +839,7 @@ function WPL_ShowCard(j, status)
     if ((Seats[j].seated==1)) then
         Seats[j].status=status;
         if ((Seats[j].hole1 == 0) or (Seats[j].hole2 == 0)) then return; end;
-        WPL_SetCard(Seats[j].hole2, DealerX, DealerY, Seats[j].x - 12, Seats[j].y + 12, 1, 1, 0, 0);
+        WPL_SetCard(Seats[j].hole2, DealerX, DealerY, Seats[j].x - 24, Seats[j].y + 4, 1, 1, 0, 0);
         WPL_SetCard(Seats[j].hole1, DealerX, DealerY, Seats[j].x, Seats[j].y, 1, 1, 0, 1);
         WPL_UpdateSeat(j);
     end;
@@ -846,7 +850,6 @@ function WPL_SetupXMLButtons()
     _G["WPL_Fold"]:SetText(L['Fold']);
     _G["WPL_Call"]:SetText(L['Call']);
     _G["WPL_Raise"]:SetText(L['Raise']);
-    _G["WPL_Pot_Text"]:SetText(L['WoW Poker Lerduzz']);
 end;
         
 
@@ -854,7 +857,6 @@ function WPL_SetupFrames()
     WPL_SetupTableFrame();
     WPL_SetupTopButtons();
     WPL_SetupButtonsFrame();
-    WPL_SetupStatusFrame();
     WPL_SetupPotFrame();
     WPL_SetupSeatFrames();
     WPL_SetupCardFrames();
@@ -890,7 +892,7 @@ function WPL_SetupTableFrame()
         end);
         
     tableFrame:SetWidth(1024);
-    tableFrame:SetHeight(627);
+    tableFrame:SetHeight(640);
     tableFrame:SetPoint("CENTER",UIParent,"CENTER",0,0);
     
     local circleTexture = tableFrame:CreateTexture("WPL_CCirc", "OVERLAY");
@@ -930,7 +932,7 @@ function WPL_SetupTopButtons()
     local minimizeButton = CreateFrame("Button", "WPL_MinimizeButton", WPL_PokerFrame);
     minimizeButton:SetHeight(32);
     minimizeButton:SetWidth(32);
-    minimizeButton:SetPoint("CENTER", WPL_PokerFrame, "CENTER", -18, 217);	
+    minimizeButton:SetPoint("CENTER", WPL_PokerFrame, "CENTER", -25, 219);	
     local minimizeIconButton = minimizeButton:CreateTexture("WPL_MinimizeIcon", "BACKGROUND")
     minimizeIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\minimizar");
     minimizeIconButton:SetHeight(32);
@@ -942,7 +944,7 @@ function WPL_SetupTopButtons()
     local setSizeButton = CreateFrame("Button", "WPL_SetSizeButton", WPL_PokerFrame);
     setSizeButton:SetHeight(32);
     setSizeButton:SetWidth(32);
-    setSizeButton:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 0, 217);	
+    setSizeButton:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 0, 219);	
     local setSizeIconButton = setSizeButton:CreateTexture("WPL_SetSizeIcon", "BACKGROUND")
     setSizeIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\maximizar");
     setSizeIconButton:SetHeight(32);
@@ -954,7 +956,7 @@ function WPL_SetupTopButtons()
     local closeButton = CreateFrame("Button", "WPL_CloseButton", WPL_PokerFrame);
     closeButton:SetHeight(32);
     closeButton:SetWidth(32);
-    closeButton:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 18, 217);	
+    closeButton:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 25, 219);	
     local closeIconButton = closeButton:CreateTexture("WPL_CloseIcon", "BACKGROUND")
     closeIconButton:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\botones\\cerrar");
     closeIconButton:SetHeight(32);
@@ -1012,7 +1014,7 @@ function WPL_SetupButtonsFrame()
     raiseSlider:SetOrientation('HORIZONTAL');
     WPL_RaiseSliderLow:SetText("");
     WPL_RaiseSliderHigh:SetText("");
-    raiseSlider:SetValueStep(10000);
+    raiseSlider:SetValueStep(1);
     raiseSlider:SetPoint("TOPRIGHT", raiseButton, "TOPLEFT", 0, 0);
     raiseSlider:SetScript("OnValueChanged", function(self, event, arg1) WPL_RaiseSlider_OnValueChange(); end);
     WPL_RaiseSlider_Setup(Blinds, Blinds * 50);
@@ -1080,49 +1082,40 @@ function WPL_SetupPotFrame()
     local potFrame = CreateFrame("Frame", "WPL_Pot", WPL_PokerFrame, BackdropTemplateMixin and "BackdropTemplate");
     potFrame:SetHeight(30);
     potFrame:SetWidth(180);
-    potFrame:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 0, 135);
-    potFrame:SetBackdrop( { 
-        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
-        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-        tile = false, tileSize = 16, edgeSize = 16, 
-        insets = { left = 5, right = 5, top = 5, bottom = 5 }
-    });
-    potFrame:SetBackdropColor(0, 0, 0, .5);
-    local potFrameString = potFrame:CreateFontString("WPL_Pot_Text", "BACKGROUND", "GameTooltipText");
-    potFrameString:SetPoint("CENTER", potFrame, "CENTER", 0, 2);
+    potFrame:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 0, 129);
+
+    local potFrameBox = potFrame:CreateTexture("WPL_Pot_Box", "ARTWORK");
+    potFrameBox:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\marco");
+    potFrameBox:SetWidth(256);
+    potFrameBox:SetHeight(64);
+    potFrameBox:SetTexCoord(0, 1, 0, 1);
+    potFrameBox:SetPoint("CENTER", potFrame, "CENTER", 36, -17);
+
+    local potFrameString = potFrame:CreateFontString("WPL_Pot_Text", "OVERLAY", "GameFontNormal");
+    potFrameString:SetFont("Fonts\\ARIALN.ttf", 20, "");
+    potFrameString:SetPoint("CENTER", potFrame, "CENTER", 0, 0);
+
+    local potFrameIcon = potFrame:CreateTexture("WPL_Pot_Icon", "BORDER");
+    potFrameIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\monedas\\1");
+    potFrameIcon:SetWidth(78);
+    potFrameIcon:SetHeight(78);
+    potFrameIcon:SetTexCoord(0, 1, 0, 1);
+    potFrameIcon:SetPoint("CENTER", potFrame, "CENTER", 0, 30);
 end;
 
-
-function WPL_SetupStatusFrame()
-    local statusFrame = CreateFrame("Frame", "WPL_Status", WPL_PokerFrame, BackdropTemplateMixin and "BackdropTemplate");
-    statusFrame:SetHeight(30);
-    statusFrame:SetWidth(340);
-    statusFrame:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 0, 85);
-    statusFrame:SetBackdrop( { 
-        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", 
-        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-        tile = false, tileSize = 16, edgeSize = 16, 
-        insets = { left = 5, right = 5, top = 5, bottom = 5 }
-    });
-    -- alpha appears to have changed from 0-255 to 0-1 a while back, but in API 10 it started erroring
-    statusFrame:SetBackdropColor(0,0,0,0.5);
-    local statusFrameString = statusFrame:CreateFontString("WPL_Status_Text","BACKGROUND","GameTooltipText");
-    statusFrameString:SetPoint("CENTER",statusFrame,"CENTER",0,2);
-end;
-    
 
 function WPL_SetupSeatFrames()
     local seatFrame;
     local seatlocations = {
-        {x=266,  y=210},
-        {x=495,  y=65},
-        {x=497,  y=-222},
-        {x=267,  y=-330},
-        {x=50,   y=-330},
-        {x=-172, y=-330},
-        {x=-495, y=-232},
-        {x=-500, y=58},
-        {x=-171, y=210},
+        {x=272,  y=215},
+        {x=497,  y=62},
+        {x=497,  y=-226},
+        {x=272,  y=-338},
+        {x=50,   y=-338},
+        {x=-172, y=-338},
+        {x=-500, y=-226},
+        {x=-500, y=62},
+        {x=-172, y=215},
     }
     for seat=1,9 do
         seatFrame = CreateFrame("Frame", "WPL_Seat_"..seat, WPL_PokerFrame, BackdropTemplateMixin and "BackdropTemplate");
@@ -1139,7 +1132,7 @@ function WPL_SetupSeatFrames()
         else seatFramePort:SetPoint("TOPLEFT", seatFrame, "TOPLEFT", 45, -12); end;
 
         local seatFramePortWho = seatFrame:CreateTexture(seatFrame:GetName().."_PortWho", "BORDER");
-        seatFramePortWho:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\unknown");
+        seatFramePortWho:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\desconocido");
         seatFramePortWho:SetWidth(66);
         seatFramePortWho:SetHeight(66);
         seatFramePortWho:SetTexCoord(0, 1, 0, 1);
@@ -1186,7 +1179,7 @@ function WPL_SetupSeatFrames()
         else seatFrameName:SetPoint("CENTER", seatFrame, "TOPLEFT", 78, -92); end;
 
         local seatFrameGoldIcon = seatFrame:CreateTexture(seatFrame:GetName().."_GoldIcon", "OVERLAY");
-        seatFrameGoldIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\monedas\\02");
+        seatFrameGoldIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\monedas\\0");
         seatFrameGoldIcon:SetWidth(19);
         seatFrameGoldIcon:SetHeight(19);
         seatFrameGoldIcon:SetTexCoord(0, 1, 0, 1);
@@ -1218,33 +1211,33 @@ function WPL_SetupCardFrames()
     cardFrame:SetPoint("CENTER", nil, nil, -330, 220);
     for card=0,12 do
         thiscard = cardFrame:CreateTexture("WPL_Card_C"..card, "ARTWORK");
-        thiscard:SetHeight(128);
-        thiscard:SetWidth(128);
+        thiscard:SetHeight(150);
+        thiscard:SetWidth(150);
         thiscard:SetPoint("CENTER", nil, nil);
         thiscard:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\cartas\\picas\\"..card);
 
         thiscard = cardFrame:CreateTexture("WPL_Card_D"..card, "ARTWORK");
-        thiscard:SetHeight(128);
-        thiscard:SetWidth(128);
+        thiscard:SetHeight(150);
+        thiscard:SetWidth(150);
         thiscard:SetPoint("CENTER", nil, nil);
         thiscard:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\cartas\\diamantes\\"..card);
 
         thiscard = cardFrame:CreateTexture("WPL_Card_H"..card, "ARTWORK");
-        thiscard:SetHeight(128);
-        thiscard:SetWidth(128);
+        thiscard:SetHeight(150);
+        thiscard:SetWidth(150);
         thiscard:SetPoint("CENTER", nil, nil);
         thiscard:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\cartas\\corazones\\"..card);
 
         thiscard = cardFrame:CreateTexture("WPL_Card_S"..card, "ARTWORK");
-        thiscard:SetHeight(128);
-        thiscard:SetWidth(128);
+        thiscard:SetHeight(150);
+        thiscard:SetWidth(150);
         thiscard:SetPoint("CENTER", nil, nil);
         thiscard:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\cartas\\trevoles\\"..card);
     end;
     for card=1,23 do
         thiscard = cardFrame:CreateTexture("WPL_Blank_"..card, "ARTWORK");
-        thiscard:SetHeight(128);
-        thiscard:SetWidth(128);
+        thiscard:SetHeight(150);
+        thiscard:SetWidth(150);
         thiscard:SetPoint("CENTER", nil, nil);
         thiscard:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\cartas\\reverso")
     end;
