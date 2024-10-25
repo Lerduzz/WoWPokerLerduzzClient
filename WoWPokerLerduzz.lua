@@ -16,8 +16,8 @@ local NextRefresh = 0;
 local WhosTurn = 0;
 local HighestBet = 0;
 
-local BetSize = 200000;
-local Blinds = 200000;
+local BetSize = 20;
+local Blinds = 20;
 local RoundCount = 0;
 
 local Cards = {
@@ -364,50 +364,20 @@ function WPL_DrawCard(index)
 end;
 
 
-function WPL_SetMoney(j, money)
-    local seat = "WPL_Seat_"..j;
-    local copper = money - math.floor(money / 100) * 100;
-    money = math.floor(money / 100);
-    if (copper < 10 and money > 0) then copper = "0"..copper; end;
-    _G[seat.."_Copper"]:SetText(copper);
-    if (money <= 0) then
-        _G[seat.."_SilverIcon"]:Hide();
-        _G[seat.."_Silver"]:Hide();
-        _G[seat.."_Silver"]:SetText("00");
-    else
-        _G[seat.."_SilverIcon"]:Show();
-        _G[seat.."_Silver"]:Show();
-        local silver = money - math.floor(money / 100) * 100;
-        money = math.floor(money / 100);
-        if (silver < 10 and money > 0) then silver = "0"..silver; end;
-        _G[seat.."_Silver"]:SetText(silver);
-    end;
-    if (money <= 0) then
-        _G[seat.."_GoldIcon"]:Hide();
-        _G[seat.."_Gold"]:Hide();
-        _G[seat.."_Gold"]:SetText("0");
-    else
-        _G[seat.."_GoldIcon"]:Show();
-        _G[seat.."_Gold"]:Show();
-        _G[seat.."_Gold"]:SetText(money);
-    end;
-end;
-
-
 function WPL_UpdateSeat(j)
     local seat = "WPL_Seat_"..j;
     if (Seats[j].seated == 0) then
-        WPL_SetMoney(j, 0);  
         _G[seat.."_Name"]:SetText("");
+        _G[seat.."_Gold"]:SetText("0");
         _G[seat.."_Status"]:SetText("");
         _G[seat.."_Port"]:Hide();
         _G[seat.."_PortWho"]:Hide();
         _G[seat]:Hide();
     else
-        WPL_SetMoney(j, Seats[j].chips);
         _G[seat]:Show();
         _G[seat]:SetAlpha(Seats[j].alpha);
         _G[seat.."_Name"]:SetText(Seats[j].name);
+        _G[seat.."_Gold"]:SetText(Seats[j].chips);
         local tempStatus = Seats[j].status;
         _G[seat.."_Status"]:SetText(L[Seats[j].status]);
         _G[seat.."_PortWho"]:Hide();
@@ -509,7 +479,7 @@ function WPL_RaiseSlider_OnValueChange()
     if (value == maxValue) then
         WPL_Raise:SetText(L["All In"]);
     else
-        WPL_Raise:SetText(L["Raise"].." "..(math.floor(WPL_RaiseSlider:GetValue() / 10000)));
+        WPL_Raise:SetText(L["Raise"].." "..WPL_RaiseSlider:GetValue());
     end;
     BetSize = value;
 end;
@@ -518,7 +488,7 @@ end;
 function WPL_RaiseSlider_Setup(min, max)
     WPL_RaiseSlider:SetMinMaxValues(min, max);
     WPL_RaiseSlider:SetValue(min, false);
-    WPL_Raise:SetText(L['Raise'].." "..math.floor(min / 10000));
+    WPL_Raise:SetText(L['Raise'].." "..min);
 end;
 
 
@@ -545,7 +515,7 @@ function WPL_UpdateWhosTurn()
         WPL_AutoButtons:Hide();
         Call = 1;
         local delta = HighestBet - Seats[5].bet;
-        WPL_Call:SetText(L["Call"].." "..math.floor(delta / 10000));
+        WPL_Call:SetText(L["Call"].." "..delta);
         if (Seats[5].bet == HighestBet) then
             WPL_Call:SetText(L['Check']);
             delta = 0;
@@ -658,7 +628,7 @@ function WPL_HandleAddonComms(msg, channel, sender)
         WhosTurn = j;
         WPL_UpdateWhosTurn();
     elseif (tab[3]=="betsize") then
-        Blinds = tonumber(tab[4]) * 10000;
+        Blinds = tonumber(tab[4]);
         BetSize = Blinds;
     elseif (tab[3]=="seat") then
         WPL_StartClient();
@@ -1120,7 +1090,6 @@ function WPL_SetupPotFrame()
     potFrame:SetBackdropColor(0, 0, 0, .5);
     local potFrameString = potFrame:CreateFontString("WPL_Pot_Text", "BACKGROUND", "GameTooltipText");
     potFrameString:SetPoint("CENTER", potFrame, "CENTER", 0, 2);
-
 end;
 
 
@@ -1217,46 +1186,19 @@ function WPL_SetupSeatFrames()
         elseif (seat == 7 or seat == 8) then seatFrameName:SetPoint("CENTER", seatFrame, "TOPLEFT", 73, -27);
         else seatFrameName:SetPoint("CENTER", seatFrame, "TOPLEFT", 78, -92); end;
 
-        local seatFrameCopperIcon = seatFrame:CreateTexture(seatFrame:GetName().."_CopperIcon", "OVERLAY");
-        seatFrameCopperIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\monedas\\00");
-        seatFrameCopperIcon:SetWidth(19);
-        seatFrameCopperIcon:SetHeight(19);
-        seatFrameCopperIcon:SetTexCoord(0, 1, 0, 1);
-        if (seat == 1 or seat == 9) then seatFrameCopperIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 151, -22);
-        elseif (seat == 2 or seat == 3) then seatFrameCopperIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 260, -40);
-        elseif (seat == 7 or seat == 8) then seatFrameCopperIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 146, -40);
-        else seatFrameCopperIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 151, -103); end;
-        local seatFrameCopper = seatFrame:CreateFontString(seatFrame:GetName().."_Copper", "OVERLAY", "GameFontNormal");
-        seatFrameCopper:SetFont("Fonts\\ARIALN.ttf", 14, "");
-        seatFrameCopper:SetPoint("TOPRIGHT", seatFrameCopperIcon, "TOPLEFT", 0, 0);
-
-        local seatFrameSilverIcon = seatFrame:CreateTexture(seatFrame:GetName().."_SilverIcon", "OVERLAY");
-        seatFrameSilverIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\monedas\\01");
-        seatFrameSilverIcon:SetWidth(19);
-        seatFrameSilverIcon:SetHeight(19);
-        seatFrameSilverIcon:SetTexCoord(0, 1, 0, 1);
-        if (seat == 1 or seat == 9) then seatFrameSilverIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 120, -22);
-        elseif (seat == 2 or seat == 3) then seatFrameSilverIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 229, -40);
-        elseif (seat == 7 or seat == 8) then seatFrameSilverIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 115, -40);
-        else seatFrameSilverIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 120, -103); end;
-        local seatFrameSilver = seatFrame:CreateFontString(seatFrame:GetName().."_Silver", "OVERLAY", "GameFontNormal");
-        seatFrameSilver:SetFont("Fonts\\ARIALN.ttf", 14, "");
-        seatFrameSilver:SetPoint("TOPRIGHT", seatFrameSilverIcon, "TOPLEFT", 0, 0);
-
         local seatFrameGoldIcon = seatFrame:CreateTexture(seatFrame:GetName().."_GoldIcon", "OVERLAY");
         seatFrameGoldIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\monedas\\02");
         seatFrameGoldIcon:SetWidth(19);
         seatFrameGoldIcon:SetHeight(19);
         seatFrameGoldIcon:SetTexCoord(0, 1, 0, 1);
-        if (seat == 1 or seat == 9) then seatFrameGoldIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 89, -22);
-        elseif (seat == 2 or seat == 3) then seatFrameGoldIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 198, -40);
-        elseif (seat == 7 or seat == 8) then seatFrameGoldIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 84, -40);
-        else seatFrameGoldIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 89, -103); end;
+        if (seat == 1 or seat == 9) then seatFrameGoldIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 151, -22);
+        elseif (seat == 2 or seat == 3) then seatFrameGoldIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 260, -40);
+        elseif (seat == 7 or seat == 8) then seatFrameGoldIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 146, -40);
+        else seatFrameGoldIcon:SetPoint("TOPRIGHT", seatFrame, "TOPLEFT", 151, -103); end;
         local seatFrameGold = seatFrame:CreateFontString(seatFrame:GetName().."_Gold", "OVERLAY", "GameFontNormal");
         seatFrameGold:SetFont("Fonts\\ARIALN.ttf", 14, "");
         seatFrameGold:SetPoint("TOPRIGHT", seatFrameGoldIcon, "TOPLEFT", 0, 0);
-
-        WPL_SetMoney(seat, 0);
+        seatFrameGold:SetText("0");
 
         local seatFrameStatus = seatFrame:CreateFontString(seatFrame:GetName().."_Status", "OVERLAY", "GameFontNormal");
         seatFrameStatus:SetFont("Fonts\\MORPHEUS.ttf", 11, "");
