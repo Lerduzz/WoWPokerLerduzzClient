@@ -15,6 +15,7 @@ local timedelta = 0;
 local NextRefresh = 0;
 local WhosTurn = 0;
 local HighestBet = 0;
+local StartGold = 500;
 
 local BetSize = 20;
 local Blinds = 20;
@@ -130,15 +131,6 @@ local BlinkOn = 1;
 
 
 function WPL_OnLoad()
-    StaticPopupDialogs["WPL_START_DIALOG"] = {
-        text = L["Do you want to start a game of poker?"],
-        button1 = L['Start'],
-        button2 = L['Cancel'],
-        OnAccept = function() WPL_SendMessage("!seat", UnitName("player")); end,
-        timeout = 0,
-        whileDead = 1,
-        hideOnEscape = 1
-    };
     local fU = CreateFrame("frame");
     fU:SetScript("OnUpdate", function(self, elap) WPL_HiddenFrame_OnUpdate(self, elap); end);
     WPL_SetupFrames();
@@ -284,7 +276,7 @@ end;
 
 function WPL_LauncherClicked(button)
     if (Seats[5].seated == 0) then
-        StaticPopup_Show("WPL_START_DIALOG");
+        WPL_JoinFrame:Show();
         return;
     end;
     WPL_PokerFrame:Show();
@@ -592,10 +584,9 @@ function WPL_HandleAddonComms(msg, channel, sender)
     local tab = { strsplit( "_", msg) };
     if (table.getn(tab) < 3) then return; end;
     if (tab[1] ~= "WPL" or tab[2] ~= WPL_SERVER_VERSION) then return; end;
-    if (UnitName("player") ~= sender) then return; end;
-    
+    if (UnitName("player") ~= sender) then return; end;    
     if (tab[3] == "ping!") then
-        WPL_SendMessage("pong!", UnitName("player"));
+        WPL_SendMessage("join_"..StartGold, UnitName("player"));
     elseif (tab[3]=="noseats!") then
         WPL_ConsoleFeedback(string.format(L['%s has no seat available for you'], sender));
     elseif (tab[3]=="s") then
@@ -862,6 +853,7 @@ end;
         
 
 function WPL_SetupFrames()
+    WPL_SetupJoinFrame();
     WPL_SetupTableFrame();
     WPL_SetupTopButtons();
     WPL_SetupButtonsFrame();
@@ -870,6 +862,73 @@ function WPL_SetupFrames()
     WPL_SetupCardFrames();
     WPL_SetupMiniMapButton();
     WPL_SetupAutoButtonsFrame();
+end;
+
+
+function WPL_SetupJoinFrame()
+    local joinFrame = CreateFrame("Frame", "WPL_JoinFrame", UIParent, BackdropTemplateMixin and "BackdropTemplate");
+    joinFrame:Hide();
+    joinFrame:SetBackdrop({
+        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+        tile = true, tileSize = 32, edgeSize = 32,
+        insets = {left = 5, right = 5, top = 5, bottom = 5}
+    });
+    joinFrame:SetFrameStrata("TOOLTIP");
+    joinFrame:SetWidth(360);
+    joinFrame:SetHeight(140);
+    joinFrame:SetPoint("CENTER", UIParent, "CENTER", 0, UIParent:GetHeight() / 4);
+
+    local joinFrameTitle = joinFrame:CreateFontString(joinFrame:GetName().."_Title", "BACKGROUND", "GameFontNormal");
+    joinFrameTitle:SetText(L["Do you want to start a game of poker?"]);
+    joinFrameTitle:SetFont("Fonts\\MORPHEUS.ttf", 18, "");
+    joinFrameTitle:SetPoint("CENTER", joinFrame, "CENTER", 0, 45);
+
+    local joinFrameSlider = CreateFrame("Slider", joinFrame:GetName().."_Slider", joinFrame, "OptionsSliderTemplate");
+    joinFrameSlider:SetHeight(30);
+    joinFrameSlider:SetWidth(320);
+    joinFrameSlider:SetOrientation('HORIZONTAL');
+    _G[joinFrame:GetName().."_SliderLow"]:SetText("");
+    _G[joinFrame:GetName().."_SliderHigh"]:SetText("");
+    joinFrameSlider:SetMinMaxValues(500, 200000);
+    joinFrameSlider:SetValueStep(1);
+    joinFrameSlider:SetValue(500);
+    joinFrameSlider:SetPoint("CENTER", joinFrame, "CENTER", 0, 10);
+    joinFrameSlider:SetScript("OnValueChanged", function(self, event, arg1) WPL_JoinFrame_Gold:SetText(WPL_JoinFrame_Slider:GetValue()); end);
+
+    local joinFrameGoldIcon = joinFrame:CreateTexture(joinFrame:GetName().."_GoldIcon", "OVERLAY");
+    joinFrameGoldIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\monedas\\0");
+    joinFrameGoldIcon:SetWidth(26);
+    joinFrameGoldIcon:SetHeight(26);
+    joinFrameGoldIcon:SetTexCoord(0, 1, 0, 1);
+    joinFrameGoldIcon:SetPoint("CENTER", joinFrame, "CENTER", 156, -18);
+    local joinFrameGold = joinFrame:CreateFontString(joinFrame:GetName().."_Gold", "OVERLAY", "GameFontNormal");
+    joinFrameGold:SetFont("Fonts\\ARIALN.ttf", 17, "");
+    joinFrameGold:SetPoint("TOPRIGHT", joinFrameGoldIcon, "TOPLEFT", -2, 0);
+    joinFrameGold:SetText("500");
+
+    CreateFont("WPL_JoinButtonFont");
+    WPL_JoinButtonFont:SetFont("Fonts\\MORPHEUS.ttf", 16, "");
+
+    local startButton = CreateFrame("Button", "WPL_Start", joinFrame, "UIPanelButtonTemplate");
+    startButton:SetText(L["Start"]);
+    startButton:SetHeight(30);
+    startButton:SetWidth(120);
+    startButton:SetNormalFontObject(WPL_JoinButtonFont);
+    startButton:SetHighlightFontObject(WPL_JoinButtonFont);
+    startButton:SetDisabledFontObject(WPL_JoinButtonFont);
+    startButton:SetPoint("CENTER", joinFrame, "CENTER", -60, -42)
+    startButton:SetScript("OnClick", function() StartGold = WPL_JoinFrame_Slider:GetValue(); WPL_SendMessage("!seat", UnitName("player")); WPL_JoinFrame:Hide(); end);
+
+    local cancelButton = CreateFrame("Button", "WPL_Cancel", joinFrame, "UIPanelButtonTemplate");
+    cancelButton:SetText(L["Cancel"]);
+    cancelButton:SetHeight(30);
+    cancelButton:SetWidth(120);
+    cancelButton:SetNormalFontObject(WPL_JoinButtonFont);
+    cancelButton:SetHighlightFontObject(WPL_JoinButtonFont);
+    cancelButton:SetDisabledFontObject(WPL_JoinButtonFont);
+    cancelButton:SetPoint("CENTER", joinFrame, "CENTER", 60, -42)
+    cancelButton:SetScript("OnClick", function() StartGold = 500; WPL_JoinFrame_Slider:SetValue(500); WPL_JoinFrame:Hide(); end);
 end;
 
 
@@ -909,7 +968,7 @@ function WPL_SetupTableFrame()
     circleTexture:SetWidth(1024);
     circleTexture:SetHeight(1024);
     circleTexture:SetPoint("TOPLEFT", tableFrame, "TOPLEFT", 0, 0)	
-end
+end;
 
 
 function WPL_SetupMiniMapButton()
@@ -982,8 +1041,6 @@ function WPL_SetupButtonsFrame()
 
     CreateFont("WPL_ButtonFont");
     WPL_ButtonFont:SetFont("Fonts\\MORPHEUS.ttf", 16, "");
-    CreateFont("WPL_ButtonRaiseFont");
-    WPL_ButtonRaiseFont:SetFont("Fonts\\ARIALN.ttf", 16, "");
 
     local foldButton = CreateFrame("Button", "WPL_Fold", buttonsFrame, "UIPanelButtonTemplate");
     foldButton:Hide();
