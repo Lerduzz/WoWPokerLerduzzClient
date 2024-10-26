@@ -152,6 +152,7 @@ end;
 
 
 function WPL_SizeClick()
+    PlaySound("ACTIONBARBUTTONDOWN", "SFX");
     WPL_SetSize = WPL_SetSize + 1;
     if (WPL_SetSize > 2) then WPL_SetSize = 0; end;
     if (WPL_SetSize == 0) then
@@ -434,6 +435,7 @@ end;
 
 
 function WPL_FoldClick()
+    PlaySound("ACTIONBARBUTTONDOWN", "SFX");
     if (Seats[5].dealt == 1) then
         WPL_SendMessage("fold_5", UnitName("player"));
         Seats[5].dealt = 0;	
@@ -450,6 +452,7 @@ end;
 
 
 function WPL_RaiseClick()
+    PlaySound("ACTIONBARBUTTONDOWN", "SFX");
     if (Seats[5].seated == 0) then return; end;
     local delta = HighestBet - Seats[5].bet;
     if (BetSize < delta + Blinds) then BetSize = delta + Blinds; end;
@@ -459,6 +462,7 @@ end;
 
 
 function WPL_CallClick()
+    PlaySound("ACTIONBARBUTTONDOWN", "SFX");
     if (Seats[5].seated == 0) then return; end;
     delta = -1;
     if (Seats[5].bet < HighestBet) then
