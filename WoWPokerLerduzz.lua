@@ -278,9 +278,11 @@ function WPL_LauncherClicked(button)
         WPL_JoinFrame_Slider:SetValue(WPL_StartGold);
         WPL_JoinFrame_Gold:SetText(WPL_StartGold);
         WPL_JoinFrame:Show();
+        PlaySound("GAMEDIALOGOPEN", "SFX");
         return;
     end;
     WPL_PokerFrame:Show();
+    PlaySound("GAMEDIALOGOPEN", "SFX");
 end;
 
 
@@ -419,6 +421,7 @@ function WPL_QuitClick()
     WPL_StopClient();
     WPL_HideAllButtons(true);
     WPL_PokerFrame:Hide();
+    PlaySound("GAMEDIALOGCLOSE", "SFX");
 end;
 
 
@@ -488,6 +491,7 @@ end;
 function WPL_StartClient()
     WPL_ClearTable();
     WPL_PokerFrame:Show();
+    PlaySound("GAMEDIALOGOPEN", "SFX");
 end;
 
 
@@ -919,7 +923,7 @@ function WPL_SetupJoinFrame()
     startButton:SetHighlightFontObject(WPL_JoinButtonFont);
     startButton:SetDisabledFontObject(WPL_JoinButtonFont);
     startButton:SetPoint("CENTER", joinFrame, "CENTER", -60, -42)
-    startButton:SetScript("OnClick", function() WPL_SendMessage("!seat", UnitName("player")); WPL_JoinFrame:Hide(); end);
+    startButton:SetScript("OnClick", function() WPL_SendMessage("!seat", UnitName("player")); WPL_JoinFrame:Hide(); PlaySound("GAMEDIALOGCLOSE", "SFX"); end);
 
     local cancelButton = CreateFrame("Button", "WPL_Cancel", joinFrame, "UIPanelButtonTemplate");
     cancelButton:SetText(L["Cancel"]);
@@ -929,7 +933,7 @@ function WPL_SetupJoinFrame()
     cancelButton:SetHighlightFontObject(WPL_JoinButtonFont);
     cancelButton:SetDisabledFontObject(WPL_JoinButtonFont);
     cancelButton:SetPoint("CENTER", joinFrame, "CENTER", 60, -42)
-    cancelButton:SetScript("OnClick", function() WPL_JoinFrame:Hide(); end);
+    cancelButton:SetScript("OnClick", function() WPL_JoinFrame:Hide(); PlaySound("GAMEDIALOGCLOSE", "SFX"); end);
 end;
 
 
@@ -1006,7 +1010,7 @@ function WPL_SetupTopButtons()
     minimizeIconButton:SetWidth(32);
     minimizeIconButton:SetPoint("CENTER", minimizeButton, "CENTER", 0, 0);	
     minimizeButton:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight","ADD");	
-    minimizeButton:SetScript("OnClick", function() WPL_PokerFrame:Hide(); end);
+    minimizeButton:SetScript("OnClick", function() WPL_PokerFrame:Hide(); PlaySound("GAMEDIALOGCLOSE", "SFX"); end);
 
     local setSizeButton = CreateFrame("Button", "WPL_SetSizeButton", WPL_PokerFrame);
     setSizeButton:SetHeight(32);
