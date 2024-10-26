@@ -3,7 +3,7 @@
 ## Author: Lerduzz
 ## Notes: Web: www.lerduzz.com
 ## Version: v1.0.0
-## SavedVariables: WPL_MapIconAngle
+## SavedVariables: WPL_MapIconAngle, WPL_StartGold
 localization.enUS.lua
 localization.esMX.lua
 WoWPokerLerduzz.lua

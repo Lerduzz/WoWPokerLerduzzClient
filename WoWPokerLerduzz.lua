@@ -6,7 +6,6 @@ local WPL_SERVER_VERSION = "v1.0.0";
 local StuffLoaded = 0;
 local WPL_DraggingIcon = 0;
 
-local WPL_MapIconAngle = 0;
 local WPL_SetSize = 0;
 
 local lasttime = 0;
@@ -15,7 +14,6 @@ local timedelta = 0;
 local NextRefresh = 0;
 local WhosTurn = 0;
 local HighestBet = 0;
-local StartGold = 500;
 
 local BetSize = 20;
 local Blinds = 20;
@@ -276,6 +274,9 @@ end;
 
 function WPL_LauncherClicked(button)
     if (Seats[5].seated == 0) then
+        if (not WPL_StartGold or WPL_StartGold < 500 or WPL_StartGold > 200000) then WPL_StartGold = 500; end;
+        WPL_JoinFrame_Slider:SetValue(WPL_StartGold);
+        WPL_JoinFrame_Gold:SetText(WPL_StartGold);
         WPL_JoinFrame:Show();
         return;
     end;
@@ -586,7 +587,7 @@ function WPL_HandleAddonComms(msg, channel, sender)
     if (tab[1] ~= "WPL" or tab[2] ~= WPL_SERVER_VERSION) then return; end;
     if (UnitName("player") ~= sender) then return; end;    
     if (tab[3] == "ping!") then
-        WPL_SendMessage("join_"..StartGold, UnitName("player"));
+        WPL_SendMessage("join_"..WPL_StartGold, UnitName("player"));
     elseif (tab[3]=="noseats!") then
         WPL_ConsoleFeedback(string.format(L['%s has no seat available for you'], sender));
     elseif (tab[3]=="s") then
@@ -894,7 +895,7 @@ function WPL_SetupJoinFrame()
     joinFrameSlider:SetValueStep(1);
     joinFrameSlider:SetValue(500);
     joinFrameSlider:SetPoint("CENTER", joinFrame, "CENTER", 0, 10);
-    joinFrameSlider:SetScript("OnValueChanged", function(self, event, arg1) WPL_JoinFrame_Gold:SetText(WPL_JoinFrame_Slider:GetValue()); end);
+    joinFrameSlider:SetScript("OnValueChanged", function(self, event, arg1) WPL_StartGold = WPL_JoinFrame_Slider:GetValue(); WPL_JoinFrame_Gold:SetText(WPL_StartGold); end);
 
     local joinFrameGoldIcon = joinFrame:CreateTexture(joinFrame:GetName().."_GoldIcon", "OVERLAY");
     joinFrameGoldIcon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\monedas\\0");
@@ -918,7 +919,7 @@ function WPL_SetupJoinFrame()
     startButton:SetHighlightFontObject(WPL_JoinButtonFont);
     startButton:SetDisabledFontObject(WPL_JoinButtonFont);
     startButton:SetPoint("CENTER", joinFrame, "CENTER", -60, -42)
-    startButton:SetScript("OnClick", function() StartGold = WPL_JoinFrame_Slider:GetValue(); WPL_SendMessage("!seat", UnitName("player")); WPL_JoinFrame:Hide(); end);
+    startButton:SetScript("OnClick", function() WPL_SendMessage("!seat", UnitName("player")); WPL_JoinFrame:Hide(); end);
 
     local cancelButton = CreateFrame("Button", "WPL_Cancel", joinFrame, "UIPanelButtonTemplate");
     cancelButton:SetText(L["Cancel"]);
@@ -928,7 +929,7 @@ function WPL_SetupJoinFrame()
     cancelButton:SetHighlightFontObject(WPL_JoinButtonFont);
     cancelButton:SetDisabledFontObject(WPL_JoinButtonFont);
     cancelButton:SetPoint("CENTER", joinFrame, "CENTER", 60, -42)
-    cancelButton:SetScript("OnClick", function() StartGold = 500; WPL_JoinFrame_Slider:SetValue(500); WPL_JoinFrame:Hide(); end);
+    cancelButton:SetScript("OnClick", function() WPL_JoinFrame:Hide(); end);
 end;
 
 
