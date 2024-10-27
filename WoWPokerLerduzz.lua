@@ -130,7 +130,7 @@ local BlinkOn = 1;
 
 function WPL_OnLoad()
     local fU = CreateFrame("frame");
-    fU:SetScript("OnUpdate", function(self, elap) WPL_HiddenFrame_OnUpdate(self, elap); end);
+    fU:SetScript("OnUpdate", function(self, elap) if (StuffLoaded == 1) then WPL_MapIconUpdate(); end; end);
     WPL_SetupFrames();
     WPL_RegisterEvents();
     WPL_ConsoleFeedback(L['WoW Poker Lerduzz'] .." ("..WPL_CLIENT_VERSION..").");
@@ -265,11 +265,6 @@ function WPL_MapIconUpdate()
         var = (sin(GetTime() * 400 ) +1 ) / 2;
         WPL_MapIcon:SetAlpha(var);
     end;
-end;
-
-
-function WPL_HiddenFrame_OnUpdate(self, elap)
-    if (StuffLoaded == 1) then WPL_MapIconUpdate(); end;
 end;
 
 
