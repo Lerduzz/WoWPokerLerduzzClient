@@ -491,6 +491,25 @@ function WPL_StartClient()
     WPL_ClearTable();
     WPL_PokerFrame:Show();
     PlaySound("GAMEDIALOGOPEN", "SFX");
+
+    -- Debug
+    for j=1,9 do
+        if (j ~= 5) then
+            WPL_ClientSit(j, "Jugador "..j, 500, 1500, "H");
+            WPL_ClientDeal(j);
+        else
+            WPL_ClientHole(1, 2, L["Straight Flush"]);
+        end;
+    end;
+    WPL_ClientFlop0();
+    WPL_ClientFlop1(3, 4, 5);
+    WPL_SetCard(14, DealerX, DealerY, CardWidth * 1 + 3, 0, 1, 0, 0, 0);
+    WPL_SetCard(34, DealerX, DealerY, CardWidth * 2 + 3, 0, 1, 0, 0, 0);
+    WPL_TotalPot();
+
+    HighestBet = 1500;
+    WhosTurn = 5;
+    WPL_UpdateWhosTurn();
 end;
 
 
@@ -1266,6 +1285,12 @@ function WPL_SetupSeatFrames()
         elseif (seat == 2 or seat == 3) then seatFrameStatus:SetPoint("CENTER", seatFrame, "TOPLEFT", 185, -61);
         elseif (seat == 7 or seat == 8) then seatFrameStatus:SetPoint("CENTER", seatFrame, "TOPLEFT", 73, -61);
         else seatFrameStatus:SetPoint("CENTER", seatFrame, "TOPLEFT", 78, -123); end;
+
+        -- NUEVO: Texto de ganador encima de las cartas.
+        local seatFrameWinner = seatFrame:CreateFontString(seatFrame:GetName().."_Winner", "OVERLAY", "GameFontNormal");
+        seatFrameWinner:SetFont("Fonts\\MORPHEUS.ttf", 30, "");
+        seatFrameWinner:SetText(L["Winner!"]);
+        seatFrameWinner:SetPoint("CENTER", WPL_PokerFrame, "CENTER", Seats[seat].x - 18, Seats[seat].y + 20);
     end
 end;
 
