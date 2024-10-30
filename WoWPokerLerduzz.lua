@@ -641,7 +641,6 @@ end
 function WPL_ReceiveShowdown(j, status)
     Seats[5].dealt = 0;
     if (5 == j) then
-        Seats[5].dealt = 0;
         WPL_HideAllButtons(false);
         WPL_Buttons:Show();
         WPL_AutoButtons:Hide();
@@ -694,7 +693,10 @@ end;
 
 
 function WPL_ClientStatusUpdate(j, chips, bet, status, alpha)
-    if (j == 5 and status == "Winner!") then PlaySound("QUESTCOMPLETED", "SFX"); end;
+    if (status == "Winner!") then
+        if (j == 5) then PlaySound("QUESTCOMPLETED", "SFX"); end;
+        _G["WPL_Seat_"..j.."_Winner"]:Show();
+    end;
     Seats[j].chips = tonumber(chips);
     local newBet = tonumber(bet);
     if (newBet > Seats[j].bet) then PlaySound("LOOTWINDOWCOINSOUND", "SFX"); end;
@@ -839,8 +841,8 @@ end;
 
 
 function WPL_ShowCard(j, status)
-    if ((Seats[j].seated==1)) then
-        Seats[j].status=status;
+    if ((Seats[j].seated == 1)) then
+        Seats[j].status = status;
         if ((Seats[j].hole1 == 0) or (Seats[j].hole2 == 0)) then return; end;
         WPL_SetCard(Seats[j].hole2, DealerX, DealerY, Seats[j].x - 24, Seats[j].y + 4, 1, 1, 0, 0);
         WPL_SetCard(Seats[j].hole1, DealerX, DealerY, Seats[j].x, Seats[j].y, 1, 1, 0, 1);
