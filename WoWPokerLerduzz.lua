@@ -270,11 +270,7 @@ end;
 
 function WPL_LauncherClicked(button)
     if (Seats[5].seated == 0) then
-        if (not WPL_StartGold or WPL_StartGold < 500 or WPL_StartGold > 200000) then WPL_StartGold = 500; end;
-        WPL_JoinFrame_Slider:SetValue(WPL_StartGold);
-        WPL_JoinFrame_Gold:SetText(WPL_StartGold);
-        WPL_JoinFrame:Show();
-        PlaySound("GAMEDIALOGOPEN", "SFX");
+        WPL_SendMessage("!init", UnitName("player"));
         return;
     end;
     WPL_PokerFrame:Show();
@@ -589,10 +585,28 @@ function WPL_HandleAddonComms(msg, channel, sender)
     if (table.getn(tab) < 3) then return; end;
     if (tab[1] ~= "WPL" or tab[2] ~= WPL_SERVER_VERSION) then return; end;
     if (UnitName("player") ~= sender) then return; end;    
-    if (tab[3] == "ping!") then
+    if (tab[3] == "init!") then
+        local gold = tonumber(tab[4]);
+        if (gold < 500) then gold = 500; end;
+        if (gold > 200000) then gold = 200000; end;
+        if (not WPL_StartGold or WPL_StartGold < 500 or WPL_StartGold > gold) then WPL_StartGold = 500; end;
+        WPL_JoinFrame_Slider:SetMinMaxValues(500, gold);
+        WPL_JoinFrame_Slider:SetValue(WPL_StartGold);
+        WPL_JoinFrame_Gold:SetText(WPL_StartGold);
+        WPL_JoinFrame:Show();
+        PlaySound("GAMEDIALOGOPEN", "SFX");
+    elseif (tab[3] == "ping!") then
         WPL_SendMessage("join_"..WPL_StartGold, UnitName("player"));
+    elseif (tab[3]=="noplayer!") then
+        message("["..L["WoW Poker Lerduzz"].."]: "..L["Player not found."]);
+    elseif (tab[3]=="nogold!") then
+        message("["..L["WoW Poker Lerduzz"].."]: "..L["Not enough gold."]);
+    elseif (tab[3]=="goldrange!") then
+        message("["..L["WoW Poker Lerduzz"].."]: "..L["Gold out of range."]);
+    elseif (tab[3]=="tablegold!") then
+        message("["..L["WoW Poker Lerduzz"].."]: "..L["Table is full of gold."]);
     elseif (tab[3]=="noseats!") then
-        WPL_ConsoleFeedback(string.format(L['%s has no seat available for you'], sender));
+        message("["..L["WoW Poker Lerduzz"].."]: "..L["There are no seats available at this time."]);
     elseif (tab[3]=="s") then
         WPL_ClientSit(tonumber(tab[4]), tab[5], tonumber(tab[6]), tonumber(tab[7]), tab[8]);
     elseif (tab[3]=="st") then

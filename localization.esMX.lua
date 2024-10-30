@@ -42,10 +42,14 @@ WPL_Locale = setmetatable(
 		['Returned'] = 'Devuelto',
 		['Default'] = 'Predeterminado',
 		['Showdown'] = 'Confrontación',
-		['%s has no seat available for you'] = '%s no tiene asientos disponibles',
 		['Call any'] = 'Igualar todo',
 		['Check/Fold'] = 'Pasar/Retirarse',
 		['Sticky'] = 'Mantener',
+		['Player not found.'] = 'Jugador no encontrado.',
+		['Not enough gold.'] = 'No tienes suficiente oro.',
+		['Gold out of range.'] = 'Oro fuera del rango permitido.',
+		['Table is full of gold.'] = 'La mesa ha alcanzado el límite de oro.',
+		['There are no seats available at this time.'] = 'No hay asientos disponibles en este momento.',
 	},
 	{
 		__index = function(self, key)

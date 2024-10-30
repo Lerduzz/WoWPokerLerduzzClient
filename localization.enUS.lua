@@ -42,10 +42,14 @@ WPL_Locale = setmetatable(
 		['Returned'] = 'Returned',
 		['Default'] = 'Default',
 		['Showdown'] = 'Showdown',
-		['%s has no seat available for you'] = '%s has no seat available for you',
 		['Call any'] = 'Call any',
 		['Check/Fold'] = 'Check/Fold',
 		['Sticky'] = 'Sticky',
+		['Player not found.'] = 'Player not found.',
+		['Not enough gold.'] = 'Not enough gold.',
+		['Gold out of range.'] = 'Gold out of range.',
+		['Table is full of gold.'] = 'Table is full of gold.',
+		['There are no seats available at this time.'] = 'There are no seats available at this time.',
 	},
 	{
 		__index = function(self, key)
