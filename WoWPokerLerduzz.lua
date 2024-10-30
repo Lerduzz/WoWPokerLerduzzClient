@@ -819,7 +819,7 @@ end;
 function WPL_TotalPot()
     local total = 0;
     for j=1,9 do
-        if (Seats[j].seated==1) then total = total + Seats[j].bet; end;
+        if (Seats[j].dealt == 1) then total = total + Seats[j].bet; end;
     end;
     WPL_Pot_Text:SetText(total);
     WPL_SetPotIcon(total)
