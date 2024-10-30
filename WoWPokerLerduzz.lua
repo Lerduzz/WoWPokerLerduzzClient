@@ -438,7 +438,7 @@ function WPL_FoldClick()
         WPL_Fold:SetText(L['Show Cards']);
         WPL_Fold:Hide();
     else
-        WPL_SendMessage("showcards_5_"..RoundCount, UnitName("player"));
+        WPL_SendMessage("showcards", UnitName("player"));
         WPL_Fold:Hide();
     end;
     WPL_UpdateSeat(5);
