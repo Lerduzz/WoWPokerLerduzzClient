@@ -558,6 +558,11 @@ function WPL_UpdateWhosTurn()
         WPL_Buttons:Hide();
         WPL_AutoButtons:Show();
     end;
+    for j=1,9 do
+        _G["WPL_Seat_"..j.."_Countdown"]:Hide();
+    end;
+    _G["WPL_Seat_"..WhosTurn.."_Countdown"]:Show();
+    _G["WPL_Seat_"..WhosTurn.."_Countdown"]:SetText("?");
 end;
 
 
@@ -658,6 +663,8 @@ function WPL_HandleAddonComms(msg, channel, sender)
     elseif (tab[3]=="hand") then
         Seats[5].status = tab[4];
         WPL_UpdateSeat(5);
+    elseif (tab[3]=="countdown") then
+        _G["WPL_Seat_"..WhosTurn.."_Countdown"]:SetText(tab[4]);
     end;
 end
 
@@ -1306,9 +1313,17 @@ function WPL_SetupSeatFrames()
         seatFrameButton:SetWidth(20);
         seatFrameButton:SetHeight(20);
         seatFrameButton:SetTexCoord(0, 1, 0, 1);
-        if (seat == 1 or seat == 9) then seatFrameButton:SetPoint("TOPLEFT", seatFrame, "TOPLEFT", 40, -101);
-        elseif (seat == 7 or seat == 8) then seatFrameButton:SetPoint("TOPLEFT", seatFrame, "TOPLEFT", 198, -57);
-        else seatFrameButton:SetPoint("TOPLEFT", seatFrame, "TOPLEFT", 40, -57); end;
+        local dX = Seats[seat].x;
+        local dY = Seats[seat].y;
+        if (seat == 1 or seat == 4) then dX = dX - 82; end;
+        if (seat == 1 or seat == 9) then dY = dY + 67; end;
+        if (seat == 2 or seat == 8) then dY = dY + 92; end;
+        if (seat == 2 or seat == 3) then dX = dX + 8; end;
+        if (seat == 3 or seat == 7) then dY = dY - 50; end;
+        if (seat == 4 or seat == 5 or seat == 6) then dY = dY - 25; end;
+        if (seat == 5 or seat == 6 or seat == 9) then dX = dX + 50; end;
+        if (seat == 7 or seat == 8) then dX = dX - 40; end;
+        seatFrameButton:SetPoint("CENTER", WPL_PokerFrame, "CENTER", dX, dY);
 
         local seatFrameName = seatFrame:CreateFontString(seatFrame:GetName().."_Name", "OVERLAY", "GameFontNormal");
         seatFrameName:SetFont("Fonts\\MORPHEUS.ttf", 16, "");
@@ -1344,6 +1359,15 @@ function WPL_SetupSeatFrames()
         seatFrameWinner:SetText(L["Winner!"]);
         seatFrameWinner:SetTextColor(.2, 1, .2, 1);
         seatFrameWinner:SetPoint("CENTER", WPL_PokerFrame, "CENTER", Seats[seat].x - 18, Seats[seat].y + 20);
+
+        local seatFrameCountdown = seatFrame:CreateFontString(seatFrame:GetName().."_Countdown", "OVERLAY", "GameFontNormal");
+        seatFrameCountdown:Hide();
+        seatFrameCountdown:SetFont("Fonts\\ARIALN.ttf", 18, "");
+        seatFrameCountdown:SetText("15");
+        seatFrameCountdown:SetTextColor(1, 0, 0, 1);
+        if (seat == 1 or seat == 9) then seatFrameCountdown:SetPoint("CENTER", seatFrame, "TOPLEFT", 49, -111);
+        elseif (seat == 7 or seat == 8) then seatFrameCountdown:SetPoint("CENTER", seatFrame, "TOPLEFT", 208, -66);
+        else seatFrameCountdown:SetPoint("CENTER", seatFrame, "TOPLEFT", 49, -66); end;
     end;
 end;
 
