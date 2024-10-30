@@ -405,6 +405,8 @@ end;
 function WPL_StopClient()
     WhosTurn = 0;
     WPL_ClearTable();
+    WPL_PokerFrame:Hide();
+    PlaySound("GAMEDIALOGCLOSE", "SFX");
 end;
 
 
@@ -412,8 +414,6 @@ function WPL_QuitClick()
     WPL_SendMessage("quit", UnitName("player"));
     WPL_StopClient();
     WPL_HideAllButtons(true);
-    WPL_PokerFrame:Hide();
-    PlaySound("GAMEDIALOGCLOSE", "SFX");
 end;
 
 
@@ -682,7 +682,7 @@ function WPL_ReceiveQuit(sender, j)
     if (sender == UnitName("player")) then
         Seats[j].seated = 0;
         Seats[j].HavePort = 0;
-        if (WPL_IsPlaying(sender) == 1) then								
+        if (WPL_IsPlaying(sender) == 1) then
             WPL_UpdateSeat(j);
             WPL_ConsoleFeedback(Seats[j].name.." "..L['has left the table.']);
         end;
