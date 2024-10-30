@@ -600,7 +600,7 @@ function WPL_HandleAddonComms(msg, channel, sender)
     elseif (tab[3]=="b") then
         WPL_SelectPlayerButton(tonumber(tab[4]))
     elseif (tab[3]=="round0") then
-        WPL_ClientRound0( tonumber(tab[4]) )
+        WPL_ClientRound0(tonumber(tab[4]));
     elseif (tab[3]=="hole") then
         WPL_ClientHole(tonumber(tab[4]), tonumber(tab[5]), tab[6]);
     elseif (tab[3]=="deal") then
@@ -782,6 +782,7 @@ function WPL_ClientRound0(thisRoundCount)
     WPL_ClearCards();
     RoundCount = thisRoundCount;
     for j=1,9 do
+        _G["WPL_Seat_"..j.."_Winner"]:Hide();
         Seats[j].bet = 0;
         if(Seats[j].dealt == 0) then
             Seats[j].status = "Default";
