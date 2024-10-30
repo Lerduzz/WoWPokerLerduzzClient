@@ -561,8 +561,6 @@ function WPL_UpdateWhosTurn()
     for j=1,9 do
         _G["WPL_Seat_"..j.."_Countdown"]:Hide();
     end;
-    _G["WPL_Seat_"..WhosTurn.."_Countdown"]:Show();
-    _G["WPL_Seat_"..WhosTurn.."_Countdown"]:SetText("?");
 end;
 
 
@@ -665,6 +663,7 @@ function WPL_HandleAddonComms(msg, channel, sender)
         WPL_UpdateSeat(5);
     elseif (tab[3]=="countdown") then
         _G["WPL_Seat_"..WhosTurn.."_Countdown"]:SetText(tab[4]);
+        _G["WPL_Seat_"..WhosTurn.."_Countdown"]:Show();
     end;
 end
 
