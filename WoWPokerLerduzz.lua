@@ -198,9 +198,9 @@ function WPL_ClearTable()
     end;
     WPL_ClearCards();
     WPL_SelectPlayerRing(0);
-    WPL_Pot_Text:SetText("0");
-    WPL_SetPotIcon(0);
+    WPL_TotalPot();
     WPL_HideAllButtons(true);
+    WPL_AutoButtons:Hide();
 end;
 
 
@@ -803,6 +803,7 @@ end;
 
 function WPL_ClientRound0(thisRoundCount)
     WPL_HideAllButtons(true);
+    WPL_AutoButtons:Hide();
     WPL_ClearCards();
     RoundCount = thisRoundCount;
     for j=1,9 do
@@ -853,7 +854,7 @@ end;
 
 function WPL_SetPotIcon(total)
     if (total == 0) then
-        WPL_Pot_Icon:Hide();
+        WPL_Pot:Hide();
         return;
     end;
     local potSize = 1;
@@ -861,7 +862,7 @@ function WPL_SetPotIcon(total)
     elseif (total >= 1000 and total < 10000) then potSize = 3;
     elseif (total >= 10000) then potSize = 4; end;
     WPL_Pot_Icon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\monedas\\"..potSize);
-    WPL_Pot_Icon:Show();
+    WPL_Pot:Show();
 end;
 
 
@@ -1163,6 +1164,7 @@ end;
 
 function WPL_SetupAutoButtonsFrame()
     local autoButtonsFrame = CreateFrame("Frame", "WPL_AutoButtons", WPL_PokerFrame, BackdropTemplateMixin and "BackdropTemplate");
+    autoButtonsFrame:Hide();
     autoButtonsFrame:SetHeight(30);
     autoButtonsFrame:SetWidth(560);
     autoButtonsFrame:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 0, -183);
