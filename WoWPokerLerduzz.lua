@@ -198,9 +198,9 @@ function WPL_ClearTable()
     end;
     WPL_ClearCards();
     WPL_SelectPlayerRing(0);
-    WPL_Pot_Text:SetText("0");
-    WPL_SetPotIcon(0);
+    WPL_TotalPot();
     WPL_HideAllButtons(true);
+    WPL_AutoButtons:Hide();
 end;
 
 
@@ -232,7 +232,7 @@ function WPL_OnUpdate(arg1)
         lasttime = time;
         for key, object in pairs(Cards) do		
             if (Cards[key].fraction < 1) then
-                Cards[key].fraction = Cards[key].fraction +(timedelta * CardSpeed);
+                Cards[key].fraction = Cards[key].fraction + (timedelta * CardSpeed);
             else
                 if (Cards[key].fadeout > 0) then
                     Cards[key].fadetime = Cards[key].fadetime + (timedelta * 1000);
@@ -270,11 +270,7 @@ end;
 
 function WPL_LauncherClicked(button)
     if (Seats[5].seated == 0) then
-        if (not WPL_StartGold or WPL_StartGold < 500 or WPL_StartGold > 200000) then WPL_StartGold = 500; end;
-        WPL_JoinFrame_Slider:SetValue(WPL_StartGold);
-        WPL_JoinFrame_Gold:SetText(WPL_StartGold);
-        WPL_JoinFrame:Show();
-        PlaySound("GAMEDIALOGOPEN", "SFX");
+        WPL_SendMessage("!init", UnitName("player"));
         return;
     end;
     WPL_PokerFrame:Show();
@@ -438,7 +434,7 @@ function WPL_FoldClick()
         WPL_Fold:SetText(L['Show Cards']);
         WPL_Fold:Hide();
     else
-        WPL_SendMessage("showcards_5_"..RoundCount, UnitName("player"));
+        WPL_SendMessage("showcards", UnitName("player"));
         WPL_Fold:Hide();
     end;
     WPL_UpdateSeat(5);
@@ -585,14 +581,42 @@ end;
 
 
 function WPL_HandleAddonComms(msg, channel, sender)
-    local tab = { strsplit( "_", msg) };
+    local tab = {strsplit( "_", msg)};
     if (table.getn(tab) < 3) then return; end;
     if (tab[1] ~= "WPL" or tab[2] ~= WPL_SERVER_VERSION) then return; end;
     if (UnitName("player") ~= sender) then return; end;    
-    if (tab[3] == "ping!") then
+    if (tab[3] == "init!") then
+        local gold = tonumber(tab[4]);
+        if (gold < 500) then gold = 500; end;
+        if (gold > 200000) then gold = 200000; end;
+        if (not WPL_StartGold or WPL_StartGold < 500 or WPL_StartGold > gold) then WPL_StartGold = 500; end;
+        WPL_JoinFrame_Slider:SetMinMaxValues(500, gold);
+        WPL_JoinFrame_Slider:SetValue(WPL_StartGold);
+        WPL_JoinFrame_Gold:SetText(WPL_StartGold);
+        WPL_JoinFrame:Show();
+        PlaySound("GAMEDIALOGOPEN", "SFX");
+    elseif (tab[3] == "ping!") then
         WPL_SendMessage("join_"..WPL_StartGold, UnitName("player"));
+    elseif (tab[3]=="noplayer!") then
+        WPL_ErrorFrame_Text:SetText(L["Player not found!"]);
+        WPL_ErrorFrame:Show();
+        PlaySound("GAMEDIALOGOPEN", "SFX");
+    elseif (tab[3]=="nogold!") then
+        WPL_ErrorFrame_Text:SetText(L["Not enough gold!"]);
+        WPL_ErrorFrame:Show();
+        PlaySound("GAMEDIALOGOPEN", "SFX");
+    elseif (tab[3]=="goldrange!") then
+        WPL_ErrorFrame_Text:SetText(L["Gold out of range!"]);
+        WPL_ErrorFrame:Show();
+        PlaySound("GAMEDIALOGOPEN", "SFX");
+    elseif (tab[3]=="tablegold!") then
+        WPL_ErrorFrame_Text:SetText(L["Table is full of gold!"]);
+        WPL_ErrorFrame:Show();
+        PlaySound("GAMEDIALOGOPEN", "SFX");
     elseif (tab[3]=="noseats!") then
-        WPL_ConsoleFeedback(string.format(L['%s has no seat available for you'], sender));
+        WPL_ErrorFrame_Text:SetText(L["There are no seats available at this time!"]);
+        WPL_ErrorFrame:Show();
+        PlaySound("GAMEDIALOGOPEN", "SFX");
     elseif (tab[3]=="s") then
         WPL_ClientSit(tonumber(tab[4]), tab[5], tonumber(tab[6]), tonumber(tab[7]), tab[8]);
     elseif (tab[3]=="st") then
@@ -600,7 +624,7 @@ function WPL_HandleAddonComms(msg, channel, sender)
     elseif (tab[3]=="b") then
         WPL_SelectPlayerButton(tonumber(tab[4]))
     elseif (tab[3]=="round0") then
-        WPL_ClientRound0( tonumber(tab[4]) )
+        WPL_ClientRound0(tonumber(tab[4]));
     elseif (tab[3]=="hole") then
         WPL_ClientHole(tonumber(tab[4]), tonumber(tab[5]), tab[6]);
     elseif (tab[3]=="deal") then
@@ -641,7 +665,6 @@ end
 function WPL_ReceiveShowdown(j, status)
     Seats[5].dealt = 0;
     if (5 == j) then
-        Seats[5].dealt = 0;
         WPL_HideAllButtons(false);
         WPL_Buttons:Show();
         WPL_AutoButtons:Hide();
@@ -694,12 +717,15 @@ end;
 
 
 function WPL_ClientStatusUpdate(j, chips, bet, status, alpha)
-    if (j == 5 and status == "Winner!") then PlaySound("QUESTCOMPLETED", "SFX"); end;
+    if (status == "Winner!") then
+        if (j == 5) then PlaySound("QUESTCOMPLETED", "SFX"); end;
+        _G["WPL_Seat_"..j.."_Winner"]:Show();
+    end;
     Seats[j].chips = tonumber(chips);
     local newBet = tonumber(bet);
     if (newBet > Seats[j].bet) then PlaySound("LOOTWINDOWCOINSOUND", "SFX"); end;
     Seats[j].bet = newBet;
-    Seats[j].status = status;
+    if (j ~= 5) then Seats[j].status = status; end;
     Seats[j].alpha = alpha;
     WPL_UpdateSeat(j);
     WPL_TotalPot();
@@ -777,9 +803,11 @@ end;
 
 function WPL_ClientRound0(thisRoundCount)
     WPL_HideAllButtons(true);
+    WPL_AutoButtons:Hide();
     WPL_ClearCards();
     RoundCount = thisRoundCount;
     for j=1,9 do
+        _G["WPL_Seat_"..j.."_Winner"]:Hide();
         Seats[j].bet = 0;
         if(Seats[j].dealt == 0) then
             Seats[j].status = "Default";
@@ -816,7 +844,7 @@ end;
 function WPL_TotalPot()
     local total = 0;
     for j=1,9 do
-        if (Seats[j].seated==1) then total = total + Seats[j].bet; end;
+        if (Seats[j].dealt == 1) then total = total + Seats[j].bet; end;
     end;
     WPL_Pot_Text:SetText(total);
     WPL_SetPotIcon(total)
@@ -826,7 +854,7 @@ end;
 
 function WPL_SetPotIcon(total)
     if (total == 0) then
-        WPL_Pot_Icon:Hide();
+        WPL_Pot:Hide();
         return;
     end;
     local potSize = 1;
@@ -834,13 +862,13 @@ function WPL_SetPotIcon(total)
     elseif (total >= 1000 and total < 10000) then potSize = 3;
     elseif (total >= 10000) then potSize = 4; end;
     WPL_Pot_Icon:SetTexture("interface\\addons\\wowpokerlerduzz\\textures\\monedas\\"..potSize);
-    WPL_Pot_Icon:Show();
+    WPL_Pot:Show();
 end;
 
 
 function WPL_ShowCard(j, status)
-    if ((Seats[j].seated==1)) then
-        Seats[j].status=status;
+    if ((Seats[j].seated == 1)) then
+        Seats[j].status = status;
         if ((Seats[j].hole1 == 0) or (Seats[j].hole2 == 0)) then return; end;
         WPL_SetCard(Seats[j].hole2, DealerX, DealerY, Seats[j].x - 24, Seats[j].y + 4, 1, 1, 0, 0);
         WPL_SetCard(Seats[j].hole1, DealerX, DealerY, Seats[j].x, Seats[j].y, 1, 1, 0, 1);
@@ -857,6 +885,7 @@ end;
         
 
 function WPL_SetupFrames()
+    WPL_SetupErrorFrame();
     WPL_SetupJoinFrame();
     WPL_SetupTableFrame();
     WPL_SetupTopButtons();
@@ -866,6 +895,47 @@ function WPL_SetupFrames()
     WPL_SetupCardFrames();
     WPL_SetupMiniMapButton();
     WPL_SetupAutoButtonsFrame();
+end;
+
+
+function WPL_SetupErrorFrame()
+    local errorFrame = CreateFrame("Frame", "WPL_ErrorFrame", UIParent, BackdropTemplateMixin and "BackdropTemplate");
+    errorFrame:Hide();
+    errorFrame:SetBackdrop({
+        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+        tile = true, tileSize = 32, edgeSize = 32,
+        insets = {left = 5, right = 5, top = 5, bottom = 5}
+    });
+    errorFrame:SetFrameStrata("TOOLTIP");
+    errorFrame:SetWidth(360);
+    errorFrame:SetHeight(140);
+    errorFrame:SetPoint("CENTER", UIParent, "CENTER", 0, UIParent:GetHeight() / 4);
+
+    local errorFrameTitle = errorFrame:CreateFontString(errorFrame:GetName().."_Title", "BACKGROUND", "GameFontNormal");
+    errorFrameTitle:SetText(L["Error joining poker table"]);
+    errorFrameTitle:SetTextColor(1, .5, 0, 1);
+    errorFrameTitle:SetFont("Fonts\\MORPHEUS.ttf", 18, "");
+    errorFrameTitle:SetPoint("CENTER", errorFrame, "CENTER", 0, 45);
+
+    local errorFrameText = errorFrame:CreateFontString(errorFrame:GetName().."_Text", "BACKGROUND", "GameFontNormal");
+    errorFrameText:SetText(L["There are no seats available at this time!"]);
+    errorFrameText:SetTextColor(1, 0, 0, 1);
+    errorFrameText:SetFont("Fonts\\MORPHEUS.ttf", 15, "");
+    errorFrameText:SetPoint("CENTER", errorFrame, "CENTER", 0, 5);
+
+    CreateFont("WPL_ErrorButtonFont");
+    WPL_ErrorButtonFont:SetFont("Fonts\\MORPHEUS.ttf", 16, "");
+
+    local okButton = CreateFrame("Button", "WPL_Ok", errorFrame, "UIPanelButtonTemplate");
+    okButton:SetText(L["Ok"]);
+    okButton:SetHeight(30);
+    okButton:SetWidth(120);
+    okButton:SetNormalFontObject(WPL_ErrorButtonFont);
+    okButton:SetHighlightFontObject(WPL_ErrorButtonFont);
+    okButton:SetDisabledFontObject(WPL_ErrorButtonFont);
+    okButton:SetPoint("CENTER", errorFrame, "CENTER", 0, -42)
+    okButton:SetScript("OnClick", function() WPL_ErrorFrame:Hide(); PlaySound("GAMEDIALOGCLOSE", "SFX"); end);
 end;
 
 
@@ -1094,6 +1164,7 @@ end;
 
 function WPL_SetupAutoButtonsFrame()
     local autoButtonsFrame = CreateFrame("Frame", "WPL_AutoButtons", WPL_PokerFrame, BackdropTemplateMixin and "BackdropTemplate");
+    autoButtonsFrame:Hide();
     autoButtonsFrame:SetHeight(30);
     autoButtonsFrame:SetWidth(560);
     autoButtonsFrame:SetPoint("CENTER", WPL_PokerFrame, "CENTER", 0, -183);
@@ -1241,9 +1312,9 @@ function WPL_SetupSeatFrames()
 
         local seatFrameName = seatFrame:CreateFontString(seatFrame:GetName().."_Name", "OVERLAY", "GameFontNormal");
         seatFrameName:SetFont("Fonts\\MORPHEUS.ttf", 16, "");
-        if (seat == 1 or seat == 9) then seatFrameName:SetPoint("CENTER", seatFrame, "TOPLEFT", 78, -10);
-        elseif (seat == 2 or seat == 3) then seatFrameName:SetPoint("CENTER", seatFrame, "TOPLEFT", 185, -27);
-        elseif (seat == 7 or seat == 8) then seatFrameName:SetPoint("CENTER", seatFrame, "TOPLEFT", 73, -27);
+        if (seat == 1 or seat == 9) then seatFrameName:SetPoint("CENTER", seatFrame, "TOPLEFT", 78, -11);
+        elseif (seat == 2 or seat == 3) then seatFrameName:SetPoint("CENTER", seatFrame, "TOPLEFT", 185, -29);
+        elseif (seat == 7 or seat == 8) then seatFrameName:SetPoint("CENTER", seatFrame, "TOPLEFT", 73, -29);
         else seatFrameName:SetPoint("CENTER", seatFrame, "TOPLEFT", 78, -92); end;
 
         local seatFrameGoldIcon = seatFrame:CreateTexture(seatFrame:GetName().."_GoldIcon", "OVERLAY");
@@ -1266,7 +1337,14 @@ function WPL_SetupSeatFrames()
         elseif (seat == 2 or seat == 3) then seatFrameStatus:SetPoint("CENTER", seatFrame, "TOPLEFT", 185, -61);
         elseif (seat == 7 or seat == 8) then seatFrameStatus:SetPoint("CENTER", seatFrame, "TOPLEFT", 73, -61);
         else seatFrameStatus:SetPoint("CENTER", seatFrame, "TOPLEFT", 78, -123); end;
-    end
+
+        local seatFrameWinner = seatFrame:CreateFontString(seatFrame:GetName().."_Winner", "OVERLAY", "GameFontNormal");
+        seatFrameWinner:Hide();
+        seatFrameWinner:SetFont("Fonts\\MORPHEUS.ttf", 30, "");
+        seatFrameWinner:SetText(L["Winner!"]);
+        seatFrameWinner:SetTextColor(.2, 1, .2, 1);
+        seatFrameWinner:SetPoint("CENTER", WPL_PokerFrame, "CENTER", Seats[seat].x - 18, Seats[seat].y + 20);
+    end;
 end;
 
 
