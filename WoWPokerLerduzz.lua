@@ -701,7 +701,7 @@ function WPL_ClientStatusUpdate(j, chips, bet, status, alpha)
     local newBet = tonumber(bet);
     if (newBet > Seats[j].bet) then PlaySound("LOOTWINDOWCOINSOUND", "SFX"); end;
     Seats[j].bet = newBet;
-    Seats[j].status = status;
+    if (j ~= 5) then Seats[j].status = status; end;
     Seats[j].alpha = alpha;
     WPL_UpdateSeat(j);
     WPL_TotalPot();
