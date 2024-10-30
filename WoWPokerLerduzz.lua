@@ -581,7 +581,7 @@ end;
 
 
 function WPL_HandleAddonComms(msg, channel, sender)
-    local tab = { strsplit( "_", msg) };
+    local tab = {strsplit( "_", msg)};
     if (table.getn(tab) < 3) then return; end;
     if (tab[1] ~= "WPL" or tab[2] ~= WPL_SERVER_VERSION) then return; end;
     if (UnitName("player") ~= sender) then return; end;    
@@ -598,15 +598,25 @@ function WPL_HandleAddonComms(msg, channel, sender)
     elseif (tab[3] == "ping!") then
         WPL_SendMessage("join_"..WPL_StartGold, UnitName("player"));
     elseif (tab[3]=="noplayer!") then
-        message("["..L["WoW Poker Lerduzz"].."]: "..L["Player not found."]);
+        WPL_ErrorFrame_Text:SetText(L["Player not found!"]);
+        WPL_ErrorFrame:Show();
+        PlaySound("GAMEDIALOGOPEN", "SFX");
     elseif (tab[3]=="nogold!") then
-        message("["..L["WoW Poker Lerduzz"].."]: "..L["Not enough gold."]);
+        WPL_ErrorFrame_Text:SetText(L["Not enough gold!"]);
+        WPL_ErrorFrame:Show();
+        PlaySound("GAMEDIALOGOPEN", "SFX");
     elseif (tab[3]=="goldrange!") then
-        message("["..L["WoW Poker Lerduzz"].."]: "..L["Gold out of range."]);
+        WPL_ErrorFrame_Text:SetText(L["Gold out of range!"]);
+        WPL_ErrorFrame:Show();
+        PlaySound("GAMEDIALOGOPEN", "SFX");
     elseif (tab[3]=="tablegold!") then
-        message("["..L["WoW Poker Lerduzz"].."]: "..L["Table is full of gold."]);
+        WPL_ErrorFrame_Text:SetText(L["Table is full of gold!"]);
+        WPL_ErrorFrame:Show();
+        PlaySound("GAMEDIALOGOPEN", "SFX");
     elseif (tab[3]=="noseats!") then
-        message("["..L["WoW Poker Lerduzz"].."]: "..L["There are no seats available at this time."]);
+        WPL_ErrorFrame_Text:SetText(L["There are no seats available at this time!"]);
+        WPL_ErrorFrame:Show();
+        PlaySound("GAMEDIALOGOPEN", "SFX");
     elseif (tab[3]=="s") then
         WPL_ClientSit(tonumber(tab[4]), tab[5], tonumber(tab[6]), tonumber(tab[7]), tab[8]);
     elseif (tab[3]=="st") then
@@ -874,6 +884,7 @@ end;
         
 
 function WPL_SetupFrames()
+    WPL_SetupErrorFrame();
     WPL_SetupJoinFrame();
     WPL_SetupTableFrame();
     WPL_SetupTopButtons();
@@ -883,6 +894,47 @@ function WPL_SetupFrames()
     WPL_SetupCardFrames();
     WPL_SetupMiniMapButton();
     WPL_SetupAutoButtonsFrame();
+end;
+
+
+function WPL_SetupErrorFrame()
+    local errorFrame = CreateFrame("Frame", "WPL_ErrorFrame", UIParent, BackdropTemplateMixin and "BackdropTemplate");
+    errorFrame:Hide();
+    errorFrame:SetBackdrop({
+        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+        tile = true, tileSize = 32, edgeSize = 32,
+        insets = {left = 5, right = 5, top = 5, bottom = 5}
+    });
+    errorFrame:SetFrameStrata("TOOLTIP");
+    errorFrame:SetWidth(360);
+    errorFrame:SetHeight(140);
+    errorFrame:SetPoint("CENTER", UIParent, "CENTER", 0, UIParent:GetHeight() / 4);
+
+    local errorFrameTitle = errorFrame:CreateFontString(errorFrame:GetName().."_Title", "BACKGROUND", "GameFontNormal");
+    errorFrameTitle:SetText(L["Error joining poker table"]);
+    errorFrameTitle:SetTextColor(1, .5, 0, 1);
+    errorFrameTitle:SetFont("Fonts\\MORPHEUS.ttf", 18, "");
+    errorFrameTitle:SetPoint("CENTER", errorFrame, "CENTER", 0, 45);
+
+    local errorFrameText = errorFrame:CreateFontString(errorFrame:GetName().."_Text", "BACKGROUND", "GameFontNormal");
+    errorFrameText:SetText(L["There are no seats available at this time!"]);
+    errorFrameText:SetTextColor(1, 0, 0, 1);
+    errorFrameText:SetFont("Fonts\\MORPHEUS.ttf", 15, "");
+    errorFrameText:SetPoint("CENTER", errorFrame, "CENTER", 0, 5);
+
+    CreateFont("WPL_ErrorButtonFont");
+    WPL_ErrorButtonFont:SetFont("Fonts\\MORPHEUS.ttf", 16, "");
+
+    local okButton = CreateFrame("Button", "WPL_Ok", errorFrame, "UIPanelButtonTemplate");
+    okButton:SetText(L["Ok"]);
+    okButton:SetHeight(30);
+    okButton:SetWidth(120);
+    okButton:SetNormalFontObject(WPL_ErrorButtonFont);
+    okButton:SetHighlightFontObject(WPL_ErrorButtonFont);
+    okButton:SetDisabledFontObject(WPL_ErrorButtonFont);
+    okButton:SetPoint("CENTER", errorFrame, "CENTER", 0, -42)
+    okButton:SetScript("OnClick", function() WPL_ErrorFrame:Hide(); PlaySound("GAMEDIALOGCLOSE", "SFX"); end);
 end;
 
 

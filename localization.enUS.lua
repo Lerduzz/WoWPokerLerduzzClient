@@ -45,11 +45,13 @@ WPL_Locale = setmetatable(
 		['Call any'] = 'Call any',
 		['Check/Fold'] = 'Check/Fold',
 		['Sticky'] = 'Sticky',
-		['Player not found.'] = 'Player not found.',
-		['Not enough gold.'] = 'Not enough gold.',
-		['Gold out of range.'] = 'Gold out of range.',
-		['Table is full of gold.'] = 'Table is full of gold.',
-		['There are no seats available at this time.'] = 'There are no seats available at this time.',
+		['Error joining poker table'] = 'Error joining poker table',
+		['Player not found!'] = 'Player not found!',
+		['Not enough gold!'] = 'Not enough gold!',
+		['Gold out of range!'] = 'Gold out of range!',
+		['Table is full of gold!'] = 'Table is full of gold!',
+		['There are no seats available at this time!'] = 'There are no seats available at this time!',
+		['Ok'] = 'Ok',
 	},
 	{
 		__index = function(self, key)
