@@ -448,7 +448,7 @@ function WPL_RaiseClick()
     local delta = HighestBet - Seats[5].bet;
     if (BetSize < delta + Blinds) then BetSize = delta + Blinds; end;
     if (BetSize >= Seats[5].chips) then BetSize = Seats[5].chips; end;
-    WPL_SendMessage("call_5_"..BetSize, UnitName("player"));
+    WPL_SendMessage("call_"..BetSize, UnitName("player"));
 end;
 
 
@@ -461,7 +461,7 @@ function WPL_CallClick()
         if (delta > Seats[5].chips) then delta = -1; end;
     end;
     if (Seats[5].bet == HighestBet) then delta = 0; end;
-    if (delta > -1) then WPL_SendMessage("call_5_"..delta, UnitName("player")); end;
+    if (delta > -1) then WPL_SendMessage("call_"..delta, UnitName("player")); end;
 end;
 
 function WPL_RaiseSlider_OnValueChange()
