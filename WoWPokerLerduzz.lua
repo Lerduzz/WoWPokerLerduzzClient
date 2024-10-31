@@ -589,11 +589,10 @@ function WPL_HandleAddonComms(msg, channel, sender)
     if (tab[1] ~= "WPL" or tab[2] ~= WPL_SERVER_VERSION) then return; end;
     if (UnitName("player") ~= sender) then return; end;    
     if (tab[3] == "init!") then
-        local gold = tonumber(tab[4]);
-        if (gold < 500) then gold = 500; end;
-        if (gold > 200000) then gold = 200000; end;
-        if (not WPL_StartGold or WPL_StartGold < 500 or WPL_StartGold > gold) then WPL_StartGold = 500; end;
-        WPL_JoinFrame_Slider:SetMinMaxValues(500, gold);
+        local minGold = tonumber(tab[4]);
+        local maxGold = tonumber(tab[5]);
+        if (not WPL_StartGold or WPL_StartGold < minGold or WPL_StartGold > maxGold) then WPL_StartGold = minGold; end;
+        WPL_JoinFrame_Slider:SetMinMaxValues(minGold, maxGold);
         WPL_JoinFrame_Slider:SetValue(WPL_StartGold);
         WPL_JoinFrame_Gold:SetText(WPL_StartGold);
         WPL_JoinFrame:Show();
