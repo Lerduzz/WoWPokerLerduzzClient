@@ -662,8 +662,10 @@ function WPL_HandleAddonComms(msg, channel, sender)
         Seats[5].status = tab[4];
         WPL_UpdateSeat(5);
     elseif (tab[3]=="countdown") then
-        _G["WPL_Seat_"..WhosTurn.."_Countdown"]:SetText(tab[4]);
-        _G["WPL_Seat_"..WhosTurn.."_Countdown"]:Show();
+        if (WhosTurn > 0) then
+            _G["WPL_Seat_"..WhosTurn.."_Countdown"]:SetText(tab[4]);
+            _G["WPL_Seat_"..WhosTurn.."_Countdown"]:Show();
+        end;
     end;
 end
 
